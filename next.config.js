@@ -1,9 +1,15 @@
 /** @type {import('next').NextConfig} */
+const repoName = 'codementor-ai-platform'
+const isGithubPages = process.env.GITHUB_PAGES === 'true'
+const skipRewrites = process.env.SKIP_REWRITES === 'true'
+
 const nextConfig = {
   experimental: {
     appDir: true,
     serverComponentsExternalPackages: ['monaco-editor'],
   },
+  // Enable static export for GitHub Pages demo
+  output: 'export',
   webpack: (config, { isServer }) => {
     // Handle Monaco Editor
     if (!isServer) {
@@ -24,6 +30,8 @@ const nextConfig = {
     return config
   },
   async rewrites() {
+    // Rewrites are not supported in static export. Allow overriding via env.
+    if (skipRewrites) return []
     return [
       {
         source: '/api/ai/:path*',
@@ -36,8 +44,14 @@ const nextConfig = {
     ]
   },
   images: {
+    // For static export on GitHub Pages, disable Next Image optimization
+    unoptimized: true,
     domains: ['localhost', 'res.cloudinary.com'],
   },
+  trailingSlash: true,
+  // Prefix assets/links when published under project pages
+  assetPrefix: isGithubPages ? `/${repoName}` : undefined,
+  basePath: isGithubPages ? `/${repoName}` : undefined,
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
     MONGODB_URI: process.env.MONGODB_URI,
