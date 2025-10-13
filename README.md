@@ -1,5 +1,7 @@
 # CodeMentor AI - Intelligent Programming Learning Platform
 
+[![View Demo - GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](https://nickscherbakov.github.io/codementor-ai-platform/)
+
 ![CodeMentor AI Logo](./public/logo.png)
 
 A revolutionary full-stack application that combines artificial intelligence with proven educational methods to create the most effective programming learning platform. Built with cutting-edge technologies and designed for scalability.
