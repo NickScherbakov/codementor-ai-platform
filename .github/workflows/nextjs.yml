@@ -31,6 +31,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check for lock file
+        run: |
+          if [ ! -f "${{ github.workspace }}/package-lock.json" ] && [ ! -f "${{ github.workspace }}/yarn.lock" ] && [ ! -f "${{ github.workspace }}/npm-shrinkwrap.json" ]; then
+            echo "❌ Error: No lock file found!"
+            echo "A lock file (package-lock.json, yarn.lock, or npm-shrinkwrap.json) is required for reproducible builds."
+            echo "Please generate one by running:"
+            echo "  - For npm: npm install --package-lock-only"
+            echo "  - For yarn: yarn install"
+            exit 1
+          else
+            echo "✅ Lock file found"
+          fi
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -38,6 +50,11 @@ jobs:
             echo "manager=yarn" >> $GITHUB_OUTPUT
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
+            exit 0
+          elif [ -f "${{ github.workspace }}/package-lock.json" ] || [ -f "${{ github.workspace }}/npm-shrinkwrap.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             exit 0
           elif [ -f "${{ github.workspace }}/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
