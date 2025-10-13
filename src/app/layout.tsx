@@ -29,6 +29,27 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
+          {/* Demo banner for GitHub Pages static build */}
+          <div className="w-full bg-yellow-50 border-b border-yellow-200 px-4 py-2 text-sm text-yellow-900">
+            <div className="mx-auto flex max-w-7xl flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                You are viewing a static demo deployed to GitHub Pages. Interactive features requiring backend / AI engine are
+                disabled.
+              </p>
+              <div className="flex gap-3">
+                <a
+                  className="underline hover:no-underline"
+                  href="https://github.com/NickScherbakov/codementor-ai-platform"
+                  target="_blank" rel="noreferrer"
+                >
+                  View Source
+                </a>
+                <a className="underline hover:no-underline" href="/demo/limitations/">
+                  Demo limitations
+                </a>
+              </div>
+            </div>
+          </div>
           {children}
           <Toaster
             position="top-right"
