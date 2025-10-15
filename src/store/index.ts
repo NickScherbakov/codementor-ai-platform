@@ -119,15 +119,21 @@ export const useUserStore = create<UserState>()(
                     language: 'python',
                     level: 4,
                     xp: 800,
+                    completedLessons: 10,
+                    totalLessons: 20,
                     completedChallenges: 15,
-                    totalChallenges: 25
+                    totalChallenges: 25,
+                    lastActivity: new Date()
                   },
                   {
                     language: 'javascript',
                     level: 3,
                     xp: 450,
+                    completedLessons: 8,
+                    totalLessons: 20,
                     completedChallenges: 8,
-                    totalChallenges: 25
+                    totalChallenges: 25,
+                    lastActivity: new Date()
                   }
                 ],
                 skillsProgress: [
