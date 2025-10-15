@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "export": "next export",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -17,9 +16,7 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\" \"npm run ai-engine\"",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "gh:build": "set GITHUB_PAGES=true&& set SKIP_REWRITES=true&& npm run build && npm run export",
-    "gh:deploy": "echo Use GitHub Actions to deploy to Pages"
+    "docker:down": "docker-compose down"
   },
   "dependencies": {
     "next": "^14.0.0",
