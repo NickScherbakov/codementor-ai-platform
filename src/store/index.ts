@@ -110,38 +110,45 @@ export const useUserStore = create<UserState>()(
               achievements: [],
               progress: {
                 totalXP: 1250,
-                currentLevel: 5,
+                level: 5,
+                currentStreak: 7,
+                longestStreak: 10,
                 completedChallenges: 23,
-                totalChallenges: 50,
-                streak: 7,
+                completedProjects: 8,
                 languageProgress: [
                   {
                     language: 'python',
                     level: 4,
                     xp: 800,
                     completedChallenges: 15,
-                    totalChallenges: 25
+                    totalChallenges: 25,
+                    completedLessons: 12,
+                    totalLessons: 20,
+                    lastActivity: new Date()
                   },
                   {
                     language: 'javascript',
                     level: 3,
                     xp: 450,
                     completedChallenges: 8,
-                    totalChallenges: 25
+                    totalChallenges: 25,
+                    completedLessons: 8,
+                    totalLessons: 20,
+                    lastActivity: new Date()
                   }
                 ],
-                skillsProgress: [
+                skillProgress: [
                   {
                     skill: 'algorithms',
                     level: 3,
                     xp: 600,
-                    completedProjects: 4
+                    masteryPercentage: 60
                   },
                   {
                     skill: 'web-development',
                     level: 4,
                     xp: 650,
-                    completedProjects: 6
+                    masteryPercentage: 75
                   }
                 ]
               },
@@ -183,12 +190,13 @@ export const useUserStore = create<UserState>()(
               achievements: [],
               progress: {
                 totalXP: 0,
-                currentLevel: 1,
+                level: 1,
+                currentStreak: 0,
+                longestStreak: 0,
                 completedChallenges: 0,
-                totalChallenges: 0,
-                streak: 0,
+                completedProjects: 0,
                 languageProgress: [],
-                skillsProgress: []
+                skillProgress: []
               },
               createdAt: new Date(),
               updatedAt: new Date()
@@ -476,7 +484,7 @@ export const useProgressStore = create<ProgressState>()(
             progress: {
               ...progress,
               totalXP: newTotalXP,
-              currentLevel: newLevel
+              level: newLevel
             }
           })
         },
