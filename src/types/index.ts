@@ -48,6 +48,8 @@ export interface LanguageProgress {
   level: number
   completedLessons: number
   totalLessons: number
+  completedChallenges: number
+  totalChallenges: number
   lastActivity: Date
 }
 
