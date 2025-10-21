@@ -132,13 +132,29 @@ redis-server
 
 ## 📚 Documentation
 
-### 📖 Complete Documentation
-- **[API Reference](docs/api/README.md)** - Interactive API documentation with Swagger UI
-- **[Architecture Guide](docs/architecture/README.md)** - System architecture and design patterns
-- **[Deployment Guide](docs/deployment/README.md)** - Production deployment instructions
-- **[Performance Benchmarks](docs/performance/README.md)** - Performance metrics and optimization
-- **[Examples & Tutorials](docs/EXAMPLES.md)** - Code examples and demos
-- **[Getting Started Tutorial](docs/TUTORIAL.md)** - Step-by-step learning guide
+### 📖 **Complete Documentation Hub**
+- **[📋 Documentation Index](docs/README.md)** - Complete documentation overview and navigation
+- **[🚀 Quick Start Tutorial](docs/TUTORIAL.md)** - Step-by-step getting started guide
+- **[💡 Examples & Demos](docs/EXAMPLES.md)** - Interactive examples and real-world use cases
+- **[🤝 Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
+
+### 🏗️ **Architecture & Design**
+- **[🏛️ System Architecture](docs/architecture/README.md)** - High-level system overview and design principles
+- **[🔄 Service Interactions](docs/architecture/service-interaction.md)** - Microservices communication patterns
+- **[📊 Data Flow Diagrams](docs/architecture/data-flow.md)** - Request/response flows and data processing
+- **[🗄️ Database Schema](docs/architecture/database-schema.md)** - Data models and relationships
+
+### 🔌 **API Reference**
+- **[📡 Complete API Guide](docs/api/README.md)** - Comprehensive API documentation with examples
+- **[⚡ OpenAPI Specification](docs/api/openapi.yaml)** - Machine-readable API specification
+- **[🧪 API Examples](docs/api/examples/README.md)** - Code examples for all endpoints
+- **[🔗 Interactive API Explorer](docs/api/swagger-ui/index.html)** - Try APIs live in your browser
+
+### 🚀 **Deployment & Operations**
+- **[🐳 Deployment Guide](docs/deployment/README.md)** - Production deployment instructions
+- **[☸️ Kubernetes Setup](docs/deployment/kubernetes.md)** - Enterprise Kubernetes deployment
+- **[🔧 Troubleshooting](docs/deployment/troubleshooting.md)** - Common issues and solutions
+- **[📊 Performance Metrics](docs/performance/README.md)** - Benchmarks and optimization guides
 
 ### 🚀 Quick API Reference
 ```typescript
