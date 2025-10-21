@@ -1,5 +1,7 @@
 # CodeMentor AI - Intelligent Programming Learning Platform
 
+[![View Demo - GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](https://nickscherbakov.github.io/codementor-ai-platform/)
+
 ![CodeMentor AI Logo](./public/logo.png)
 
 A revolutionary full-stack application that combines artificial intelligence with proven educational methods to create the most effective programming learning platform. Built with cutting-edge technologies and designed for scalability.
@@ -72,8 +74,8 @@ A revolutionary full-stack application that combines artificial intelligence wit
 
 ### 1. Clone and Setup
 ```bash
-git clone https://github.com/codementor-ai/platform.git
-cd platform
+git clone https://github.com/NickScherbakov/codementor-ai-platform.git
+cd codementor-ai-platform
 
 # Install frontend dependencies
 npm install
@@ -86,18 +88,40 @@ cd ai-engine && pip install -r requirements.txt && cd ..
 ```
 
 ### 2. Environment Configuration
-```bash
-# Create .env files
-cp .env.example .env
-cp backend/.env.example backend/.env
-cp ai-engine/.env.example ai-engine/.env
 
-# Configure your environment variables
-# - MongoDB connection string
-# - OpenAI API key
-# - JWT secrets
-# - Redis URL
+**⚠️ Important**: You need to configure environment variables before running the application.
+
+```bash
+# Copy the example environment file
+cp .env.example .env
 ```
+
+**Required Environment Variables:**
+- `OPENAI_API_KEY`: Get from [OpenAI API](https://platform.openai.com/api-keys)
+- `MONGODB_URI`: MongoDB connection string (or use Docker)
+- `JWT_SECRET`: Generate a secure random string
+- `REDIS_URL`: Redis connection URL (or use Docker)
+
+**Example .env setup:**
+```bash
+# Essential for AI features
+OPENAI_API_KEY=sk-your-openai-key-here
+
+# Database (use Docker or local MongoDB)
+MONGODB_URI=mongodb://localhost:27017/codementor-ai
+
+# Security
+JWT_SECRET=your-super-secure-jwt-secret-here
+
+# Cache (use Docker or local Redis)
+REDIS_URL=redis://localhost:6379
+
+# Development URLs
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_AI_API_URL=http://localhost:5000
+```
+
+💡 **Tip**: See `.env.example` for all available configuration options.
 
 ### 3. Start with Docker (Recommended)
 ```bash
@@ -279,11 +303,28 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🔒 Security
+
+### Environment Variables
+- **Never commit** `.env` files to version control
+- **Use strong secrets** for JWT_SECRET and other sensitive values
+- **Rotate API keys** regularly in production
+- **Use environment-specific** configurations for different deployments
+
+### Development Security
+- All API keys are loaded from environment variables
+- No hardcoded secrets in the codebase
+- Rate limiting enabled on API endpoints
+- Input validation on all user inputs
+
+### Reporting Security Issues
+If you discover a security vulnerability, please email security@codementor-ai.com instead of using the public issue tracker.
+
 ## 🆘 Support
 
 - **Documentation**: [docs.codementor-ai.com](https://docs.codementor-ai.com)
 - **Community Forum**: [community.codementor-ai.com](https://community.codementor-ai.com)
-- **Issues**: [GitHub Issues](https://github.com/codementor-ai/platform/issues)
+- **Issues**: [GitHub Issues](https://github.com/NickScherbakov/codementor-ai-platform/issues)
 - **Email**: support@codementor-ai.com
 
 ## 🌟 Roadmap
