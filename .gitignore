@@ -69,6 +69,8 @@ pip-delete-this-directory.txt
 data/
 datasets/
 models/weights/
+model_cache/
+/tmp/model_cache
 
 # Docker
 .dockerignore

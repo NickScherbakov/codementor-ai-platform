@@ -51,7 +51,8 @@ A revolutionary full-stack application that combines artificial intelligence wit
 
 ### AI Engine
 - **Framework**: Python Flask
-- **AI/ML**: OpenAI GPT, TensorFlow, scikit-learn
+- **AI/ML**: Custom ML Models (TinyLlama, CodeT5), TensorFlow, scikit-learn
+- **Local Models**: No external API dependencies
 - **NLP**: Custom language processing for code analysis
 - **Recommendation Engine**: Collaborative filtering algorithms
 
@@ -85,6 +86,9 @@ cd backend && npm install && cd ..
 
 # Install AI engine dependencies
 cd ai-engine && pip install -r requirements.txt && cd ..
+
+# Download ML models (first time only)
+cd ai-engine && python init_models.py && cd ..
 ```
 
 ### 2. Environment Configuration
@@ -97,15 +101,16 @@ cp .env.example .env
 ```
 
 **Required Environment Variables:**
-- `OPENAI_API_KEY`: Get from [OpenAI API](https://platform.openai.com/api-keys)
 - `MONGODB_URI`: MongoDB connection string (or use Docker)
 - `JWT_SECRET`: Generate a secure random string
 - `REDIS_URL`: Redis connection URL (or use Docker)
 
+**Optional:**
+- `OPENAI_API_KEY`: No longer required! Using custom ML models
+
 **Example .env setup:**
 ```bash
-# Essential for AI features
-OPENAI_API_KEY=sk-your-openai-key-here
+# No OpenAI API key needed anymore!
 
 # Database (use Docker or local MongoDB)
 MONGODB_URI=mongodb://localhost:27017/codementor-ai

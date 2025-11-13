@@ -8,13 +8,13 @@ from flask_cors import CORS
 import os
 import json
 import redis
-import openai
 from datetime import datetime
 import tensorflow as tf
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import logging
+from models import get_custom_tutor, get_custom_analyzer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,7 +26,7 @@ CORS(app)
 
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
-openai.api_key = os.getenv('OPENAI_API_KEY')
+# Note: OpenAI API key is no longer required - using custom ML models
 
 # Initialize Redis for caching
 try:
@@ -48,30 +48,14 @@ class AITutor:
             'practical': "You are a practical and results-oriented programming tutor. Focus on real-world applications and industry best practices."
         }
     
-    async def generate_response(self, user_message, context, personality='encouraging'):
+    def generate_response(self, user_message, context, personality='encouraging'):
         """Generate AI tutor response based on user input and context"""
         try:
-            system_prompt = self.personality_prompts.get(personality, self.personality_prompts['encouraging'])
+            # Use custom local ML model instead of OpenAI
+            custom_tutor = get_custom_tutor()
+            response = custom_tutor.generate_response(user_message, context, personality)
             
-            # Construct the conversation context
-            conversation = [
-                {"role": "system", "content": system_prompt},
-                {"role": "system", "content": f"Context: {json.dumps(context)}"},
-                {"role": "user", "content": user_message}
-            ]
-            
-            response = await openai.ChatCompletion.acreate(
-                model="gpt-3.5-turbo",
-                messages=conversation,
-                max_tokens=500,
-                temperature=0.7
-            )
-            
-            return {
-                'message': response.choices[0].message.content,
-                'suggestions': self._extract_suggestions(response.choices[0].message.content),
-                'resources': self._recommend_resources(user_message, context)
-            }
+            return response
             
         except Exception as e:
             logger.error(f"AI tutor error: {e}")
@@ -285,6 +269,9 @@ class CodeAnalyzer:
     def analyze_code(self, code, language, challenge_context=None):
         """Analyze submitted code and provide feedback"""
         try:
+            # Get custom analyzer for AI-enhanced analysis
+            custom_analyzer = get_custom_analyzer()
+            
             analysis = {
                 'syntax_errors': self._check_syntax(code, language),
                 'code_quality': self._analyze_quality(code, language),
@@ -292,6 +279,18 @@ class CodeAnalyzer:
                 'best_practices': self._check_best_practices(code, language),
                 'suggestions': self._generate_suggestions(code, language, challenge_context)
             }
+            
+            # Add AI-powered analysis if available
+            try:
+                ai_analysis = custom_analyzer.analyze_with_ai(code, language)
+                analysis['ai_insights'] = ai_analysis
+            except Exception as e:
+                logger.warning(f"AI analysis unavailable: {e}")
+                analysis['ai_insights'] = {
+                    'ai_analysis': 'AI analysis temporarily unavailable',
+                    'confidence': 0.0,
+                    'model_used': 'none'
+                }
             
             return analysis
             
@@ -405,7 +404,7 @@ def health_check():
     })
 
 @app.route('/ai-tutor/chat', methods=['POST'])
-async def ai_tutor_chat():
+def ai_tutor_chat():
     """Handle AI tutor chat interactions"""
     try:
         data = request.get_json()
@@ -417,7 +416,7 @@ async def ai_tutor_chat():
         if not user_message:
             return jsonify({'error': 'Message is required'}), 400
         
-        response = await ai_tutor.generate_response(user_message, context, personality)
+        response = ai_tutor.generate_response(user_message, context, personality)
         
         return jsonify({
             'success': True,
