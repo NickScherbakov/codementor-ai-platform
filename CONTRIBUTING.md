@@ -622,6 +622,42 @@ class TestChallengeGenerator:
 
 ## 📚 Documentation Contributions
 
+### 📋 **Documentation Maintenance**
+
+Our documentation is a key asset for the GitHub community. Here's how to contribute:
+
+#### **Updating API Documentation**
+```bash
+# 1. Update OpenAPI specification
+vim docs/api/openapi.yaml
+
+# 2. Add code examples
+vim docs/api/examples/README.md
+
+# 3. Test documentation locally
+npm run docs:serve
+
+# 4. Validate OpenAPI spec
+npm run docs:validate
+```
+
+#### **Architecture Diagrams**
+```bash
+# Update Mermaid diagrams in docs/architecture/
+# Validate diagram syntax
+npm run diagrams:validate
+
+# Generate diagram images (optional)
+npm run diagrams:build
+```
+
+#### **Performance Documentation**
+```bash
+# Run benchmarks and update docs
+npm run benchmark
+npm run docs:update-performance
+```
+
 ### API Documentation
 ```yaml
 # Example: OpenAPI specification contribution

@@ -16,7 +16,14 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\" \"npm run ai-engine\"",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "docs:serve": "cd docs && python -m http.server 8080",
+    "docs:validate": "node scripts/validate-docs.js",
+    "docs:generate-api": "node scripts/generate-openapi.js",
+    "docs:update-performance": "node scripts/update-performance-docs.js",
+    "diagrams:validate": "node scripts/validate-diagrams.js",
+    "diagrams:build": "mmdc -i docs/architecture/*.md -o docs/architecture/images/",
+    "benchmark": "node scripts/run-benchmarks.js"
   },
   "dependencies": {
     "next": "^14.0.0",

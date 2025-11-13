@@ -1,0 +1,1475 @@
+openapi: 3.0.0
+info:
+  title: CodeMentor AI API
+  description: |
+    Intelligent Programming Learning Platform API
+    
+    CodeMentor AI provides a comprehensive API for building educational applications
+    with AI-powered tutoring, adaptive challenges, and real-time collaboration features.
+    
+    ## Authentication
+    All endpoints require JWT authentication via the Authorization header:
+    ```
+    Authorization: Bearer YOUR_JWT_TOKEN
+    ```
+    
+    ## Rate Limiting
+    - Development: 100 requests per 15 minutes per IP
+    - Production: 1000 requests per hour per authenticated user
+    
+  version: 1.0.0
+  contact:
+    name: CodeMentor AI Support
+    url: https://github.com/codementor-ai/platform
+    email: api-support@codementor-ai.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:3001/api
+    description: Development server
+  - url: https://api.codementor-ai.com/api
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Authentication Endpoints
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register new user
+      description: Create a new user account with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              email: "user@example.com"
+              username: "coder123"
+              password: "SecurePass123!"
+              name: "John Doe"
+              preferences:
+                learningStyle: "visual"
+                preferredLanguages: ["python", "javascript"]
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user and return JWT tokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: "user@example.com"
+              password: "SecurePass123!"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get new access token using refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  description: Valid refresh token
+              required:
+                - refreshToken
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # User Management
+  /users/profile:
+    get:
+      tags:
+        - Users
+      summary: Get user profile
+      description: Retrieve authenticated user's profile information
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    put:
+      tags:
+        - Users
+      summary: Update user profile
+      description: Update authenticated user's profile information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/UserProfile'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /users/preferences:
+    put:
+      tags:
+        - Users
+      summary: Update user preferences
+      description: Update learning preferences and settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferences'
+      responses:
+        '200':
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Challenges
+  /challenges:
+    get:
+      tags:
+        - Challenges
+      summary: List challenges
+      description: Get paginated list of coding challenges with filtering options
+      parameters:
+        - name: difficulty
+          in: query
+          description: Filter by difficulty level
+          schema:
+            type: string
+            enum: [easy, medium, hard, expert]
+        - name: language
+          in: query
+          description: Filter by programming language
+          schema:
+            type: string
+            enum: [python, javascript, java, cpp, rust, go]
+        - name: topic
+          in: query
+          description: Filter by topic/category
+          schema:
+            type: string
+            enum: [algorithms, data-structures, arrays, strings, graphs, trees]
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: Challenges retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          challenges:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Challenge'
+                          pagination:
+                            $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /challenges/{challengeId}:
+    get:
+      tags:
+        - Challenges
+      summary: Get challenge details
+      description: Retrieve detailed information about a specific challenge
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          description: Unique challenge identifier
+          schema:
+            type: string
+            example: "challenge_67890"
+      responses:
+        '200':
+          description: Challenge details retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChallengeDetails'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /challenges/generate:
+    post:
+      tags:
+        - Challenges
+      summary: Generate adaptive challenge
+      description: Create a personalized challenge using AI based on user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                difficulty:
+                  type: string
+                  enum: [easy, medium, hard, expert]
+                  description: Target difficulty level
+                language:
+                  type: string
+                  enum: [python, javascript, java, cpp, rust]
+                  description: Programming language
+                topic:
+                  type: string
+                  enum: [algorithms, data-structures, arrays, strings]
+                  description: Challenge topic
+                learningGoals:
+                  type: array
+                  items:
+                    type: string
+                  description: User's learning objectives
+              required:
+                - difficulty
+                - language
+                - topic
+      responses:
+        '201':
+          description: Challenge generated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChallengeDetails'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # AI Tutor
+  /ai-tutor/chat:
+    post:
+      tags:
+        - AI Tutor
+      summary: Chat with AI tutor
+      description: Send message to AI tutor and receive personalized guidance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: AI tutor response generated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ChatResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /ai-tutor/analyze-code:
+    post:
+      tags:
+        - AI Tutor
+      summary: Analyze code quality
+      description: Get AI-powered analysis of code quality, performance, and suggestions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeAnalysisRequest'
+      responses:
+        '200':
+          description: Code analysis completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CodeAnalysisResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Code Execution
+  /code-execution/run:
+    post:
+      tags:
+        - Code Execution
+      summary: Execute code
+      description: Run code in secure sandbox environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeExecutionRequest'
+      responses:
+        '200':
+          description: Code executed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ExecutionResult'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Submissions
+  /submissions:
+    post:
+      tags:
+        - Submissions
+      summary: Submit solution
+      description: Submit code solution for a challenge and get evaluation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionRequest'
+      responses:
+        '201':
+          description: Solution submitted and evaluated successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SubmissionResult'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    get:
+      tags:
+        - Submissions
+      summary: Get user submissions
+      description: Retrieve paginated list of user's submissions
+      parameters:
+        - name: challengeId
+          in: query
+          description: Filter by specific challenge
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by submission status
+          schema:
+            type: string
+            enum: [accepted, wrong_answer, runtime_error, time_limit_exceeded]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: Submissions retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          submissions:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Submission'
+                          pagination:
+                            $ref: '#/components/schemas/Pagination'
+
+  # Progress Tracking
+  /progress/overview:
+    get:
+      tags:
+        - Progress
+      summary: Get learning progress overview
+      description: Retrieve comprehensive learning progress and statistics
+      responses:
+        '200':
+          description: Progress overview retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProgressOverview'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # Achievements
+  /achievements:
+    get:
+      tags:
+        - Achievements
+      summary: Get user achievements
+      description: Retrieve earned and available achievements for the user
+      responses:
+        '200':
+          description: Achievements retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AchievementsResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    # Base Response Schema
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        message:
+          type: string
+          description: Human-readable message
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the response
+      required:
+        - success
+        - timestamp
+
+    # Authentication Schemas
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          description: Unique username
+        password:
+          type: string
+          minLength: 8
+          description: Strong password with mixed characters
+        name:
+          type: string
+          maxLength: 100
+          description: User's full name
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+      required:
+        - email
+        - username
+        - password
+        - name
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/User'
+                tokens:
+                  $ref: '#/components/schemas/TokenResponse'
+
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token
+        refreshToken:
+          type: string
+          description: JWT refresh token
+        expiresIn:
+          type: integer
+          description: Token expiration time in seconds
+      required:
+        - accessToken
+        - refreshToken
+        - expiresIn
+
+    # User Schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique user identifier
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - username
+        - name
+
+    UserProfile:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          properties:
+            level:
+              type: integer
+              minimum: 1
+              description: Current user level
+            xp:
+              type: integer
+              minimum: 0
+              description: Total experience points
+            streak:
+              type: integer
+              minimum: 0
+              description: Current daily coding streak
+            preferences:
+              $ref: '#/components/schemas/UserPreferences'
+            stats:
+              $ref: '#/components/schemas/UserStats'
+
+    UserPreferences:
+      type: object
+      properties:
+        learningStyle:
+          type: string
+          enum: [visual, auditory, kinesthetic, mixed]
+          description: Preferred learning style
+        tutorPersonality:
+          type: string
+          enum: [encouraging, analytical, creative, practical]
+          description: Preferred AI tutor personality
+        preferredLanguages:
+          type: array
+          items:
+            type: string
+            enum: [python, javascript, java, cpp, rust, go]
+          description: Preferred programming languages
+        notifications:
+          type: object
+          properties:
+            email:
+              type: boolean
+            push:
+              type: boolean
+            achievements:
+              type: boolean
+
+    UserStats:
+      type: object
+      properties:
+        challengesCompleted:
+          type: integer
+          minimum: 0
+        averageScore:
+          type: number
+          minimum: 0
+          maximum: 100
+        totalCodeLines:
+          type: integer
+          minimum: 0
+        collaborationSessions:
+          type: integer
+          minimum: 0
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        preferences:
+          $ref: '#/components/schemas/UserPreferences'
+
+    # Challenge Schemas
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique challenge identifier
+        title:
+          type: string
+          description: Challenge title
+        description:
+          type: string
+          description: Brief challenge description
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, expert]
+        language:
+          type: string
+          enum: [python, javascript, java, cpp, rust, go]
+        topics:
+          type: array
+          items:
+            type: string
+        xpReward:
+          type: integer
+          minimum: 0
+        estimatedTime:
+          type: string
+          description: Estimated completion time
+        successRate:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Success rate among all users
+        starterCode:
+          type: string
+          description: Initial code template
+      required:
+        - id
+        - title
+        - description
+        - difficulty
+        - language
+
+    ChallengeDetails:
+      allOf:
+        - $ref: '#/components/schemas/Challenge'
+        - type: object
+          properties:
+            testCases:
+              type: array
+              items:
+                $ref: '#/components/schemas/TestCase'
+            hints:
+              type: array
+              items:
+                $ref: '#/components/schemas/Hint'
+            constraints:
+              type: array
+              items:
+                type: string
+            examples:
+              type: array
+              items:
+                $ref: '#/components/schemas/Example'
+
+    TestCase:
+      type: object
+      properties:
+        id:
+          type: string
+        input:
+          type: object
+          description: Test case input parameters
+        expectedOutput:
+          description: Expected output (any type)
+        hidden:
+          type: boolean
+          description: Whether this test case is hidden from users
+      required:
+        - id
+        - input
+        - expectedOutput
+        - hidden
+
+    Hint:
+      type: object
+      properties:
+        order:
+          type: integer
+          minimum: 1
+        text:
+          type: string
+        xpCost:
+          type: integer
+          minimum: 0
+          description: XP cost to unlock this hint
+      required:
+        - order
+        - text
+        - xpCost
+
+    Example:
+      type: object
+      properties:
+        input:
+          type: string
+        output:
+          type: string
+        explanation:
+          type: string
+
+    # AI Tutor Schemas
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          maxLength: 1000
+          description: User's message to the AI tutor
+        context:
+          type: object
+          properties:
+            challengeId:
+              type: string
+            currentCode:
+              type: string
+            language:
+              type: string
+        personality:
+          type: string
+          enum: [encouraging, analytical, creative, practical]
+          default: encouraging
+      required:
+        - message
+
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+          description: AI tutor's response message
+        suggestions:
+          type: array
+          items:
+            type: string
+          description: Actionable suggestions
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/LearningResource'
+        codeHints:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodeHint'
+
+    LearningResource:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+          enum: [tutorial, video, interactive, documentation]
+
+    CodeHint:
+      type: object
+      properties:
+        line:
+          type: integer
+          minimum: 1
+        suggestion:
+          type: string
+
+    CodeAnalysisRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code to analyze
+        language:
+          type: string
+          enum: [python, javascript, java, cpp, rust]
+        challengeContext:
+          type: object
+          properties:
+            id:
+              type: string
+            requirements:
+              type: array
+              items:
+                type: string
+      required:
+        - code
+        - language
+
+    CodeAnalysisResponse:
+      type: object
+      properties:
+        analysis:
+          $ref: '#/components/schemas/CodeAnalysis'
+        suggestions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodeSuggestion'
+        optimizedSolution:
+          $ref: '#/components/schemas/OptimizedSolution'
+
+    CodeAnalysis:
+      type: object
+      properties:
+        correctness:
+          type: object
+          properties:
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+            issues:
+              type: array
+              items:
+                type: string
+        performance:
+          type: object
+          properties:
+            timeComplexity:
+              type: string
+            spaceComplexity:
+              type: string
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+            issues:
+              type: array
+              items:
+                type: string
+        codeQuality:
+          type: object
+          properties:
+            score:
+              type: integer
+              minimum: 0
+              maximum: 100
+            issues:
+              type: array
+              items:
+                type: string
+
+    CodeSuggestion:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [optimization, refactoring, best_practice, bug_fix]
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        description:
+          type: string
+        example:
+          type: string
+
+    OptimizedSolution:
+      type: object
+      properties:
+        code:
+          type: string
+        explanation:
+          type: string
+
+    # Code Execution Schemas
+    CodeExecutionRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code to execute
+        language:
+          type: string
+          enum: [python, javascript, java, cpp, rust]
+        input:
+          type: string
+          description: Standard input for the program
+        timeLimit:
+          type: integer
+          minimum: 1
+          maximum: 30
+          default: 5
+          description: Execution time limit in seconds
+        memoryLimit:
+          type: integer
+          minimum: 16
+          maximum: 512
+          default: 128
+          description: Memory limit in MB
+      required:
+        - code
+        - language
+
+    ExecutionResult:
+      type: object
+      properties:
+        output:
+          type: string
+          description: Program output
+        error:
+          type: string
+          nullable: true
+          description: Error message if execution failed
+        executionTime:
+          type: number
+          description: Execution time in seconds
+        memoryUsed:
+          type: number
+          description: Memory used in MB
+        status:
+          type: string
+          enum: [completed, error, timeout, memory_exceeded]
+        exitCode:
+          type: integer
+
+    # Submission Schemas
+    SubmissionRequest:
+      type: object
+      properties:
+        challengeId:
+          type: string
+        code:
+          type: string
+        language:
+          type: string
+          enum: [python, javascript, java, cpp, rust]
+      required:
+        - challengeId
+        - code
+        - language
+
+    SubmissionResult:
+      type: object
+      properties:
+        submissionId:
+          type: string
+        status:
+          type: string
+          enum: [accepted, wrong_answer, runtime_error, time_limit_exceeded, compilation_error]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        xpEarned:
+          type: integer
+          minimum: 0
+        testResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestResult'
+        feedback:
+          $ref: '#/components/schemas/SubmissionFeedback'
+        achievements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Achievement'
+
+    TestResult:
+      type: object
+      properties:
+        testCaseId:
+          type: string
+        passed:
+          type: boolean
+        executionTime:
+          type: number
+        memoryUsed:
+          type: number
+        error:
+          type: string
+          nullable: true
+
+    SubmissionFeedback:
+      type: object
+      properties:
+        strengths:
+          type: array
+          items:
+            type: string
+        improvements:
+          type: array
+          items:
+            type: string
+        nextSteps:
+          type: array
+          items:
+            type: string
+
+    Submission:
+      type: object
+      properties:
+        id:
+          type: string
+        challengeId:
+          type: string
+        challengeTitle:
+          type: string
+        status:
+          type: string
+          enum: [accepted, wrong_answer, runtime_error, time_limit_exceeded]
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        language:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        executionTime:
+          type: number
+
+    # Progress Schemas
+    ProgressOverview:
+      type: object
+      properties:
+        overall:
+          $ref: '#/components/schemas/OverallProgress'
+        languages:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LanguageProgress'
+        topics:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TopicProgress'
+        recentActivity:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityItem'
+
+    OverallProgress:
+      type: object
+      properties:
+        level:
+          type: integer
+        xp:
+          type: integer
+        xpToNextLevel:
+          type: integer
+        streak:
+          type: integer
+        totalChallenges:
+          type: integer
+
+    LanguageProgress:
+      type: object
+      properties:
+        level:
+          type: integer
+        xp:
+          type: integer
+        challenges:
+          type: integer
+        proficiency:
+          type: integer
+          minimum: 0
+          maximum: 100
+
+    TopicProgress:
+      type: object
+      properties:
+        mastery:
+          type: integer
+          minimum: 0
+          maximum: 100
+        challenges:
+          type: integer
+
+    ActivityItem:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        type:
+          type: string
+          enum: [challenge_completed, achievement_earned, level_up, streak_milestone]
+        challengeId:
+          type: string
+          nullable: true
+        xpGained:
+          type: integer
+
+    # Achievement Schemas
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        rarity:
+          type: string
+          enum: [common, rare, epic, legendary]
+        xpReward:
+          type: integer
+        earnedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    AchievementsResponse:
+      type: object
+      properties:
+        earned:
+          type: array
+          items:
+            $ref: '#/components/schemas/Achievement'
+        available:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/Achievement'
+              - type: object
+                properties:
+                  progress:
+                    type: object
+                    properties:
+                      current:
+                        type: integer
+                      required:
+                        type: integer
+        stats:
+          type: object
+          properties:
+            totalEarned:
+              type: integer
+            totalXpFromAchievements:
+              type: integer
+            rarity:
+              type: object
+              properties:
+                common:
+                  type: integer
+                rare:
+                  type: integer
+                epic:
+                  type: integer
+                legendary:
+                  type: integer
+
+    # Utility Schemas
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code for programmatic handling
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error details
+      required:
+        - code
+        - message
+
+  responses:
+    ValidationError:
+      description: Invalid input parameters
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: "VALIDATION_ERROR"
+              message: "Invalid input parameters"
+              details:
+                field: "email"
+                issue: "Invalid email format"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    UnauthorizedError:
+      description: Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: "UNAUTHORIZED"
+              message: "Invalid or expired authentication token"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    ForbiddenError:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: "NOT_FOUND"
+              message: "Challenge not found"
+            timestamp: "2024-01-15T10:30:00Z"
+
+    ConflictError:
+      description: Resource conflict (e.g., duplicate email)
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+
+    RateLimitError:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ApiResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    $ref: '#/components/schemas/Error'

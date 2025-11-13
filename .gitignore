@@ -97,6 +97,7 @@ dist/
 build/
 *.tgz
 *.tar.gz
+tsconfig.tsbuildinfo
 
 # Testing
 .pytest_cache/
