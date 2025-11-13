@@ -6,9 +6,13 @@ export interface User {
   firstName: string
   lastName: string
   profileImage?: string
+  role?: string
+  level?: string
+  preferredLanguages?: string[]
+  learningPath?: string[]
   createdAt: Date
   updatedAt: Date
-  preferences: UserPreferences
+  preferences?: UserPreferences
   progress: LearningProgress
   achievements: Achievement[]
 }
@@ -37,6 +41,7 @@ export interface LearningProgress {
   currentStreak: number
   longestStreak: number
   completedChallenges: number
+  totalChallenges: number
   completedProjects: number
   languageProgress: LanguageProgress[]
   skillProgress: SkillProgress[]
@@ -75,6 +80,7 @@ export interface Challenge {
   solution: string
   testCases: TestCase[]
   hints: Hint[]
+  createdBy?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -97,10 +103,12 @@ export interface Hint {
 // Achievement types
 export interface Achievement {
   id: string
-  title: string
+  name?: string
+  title?: string
   description: string
   icon: string
   category: string
+  points?: number
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
   xpReward: number
   unlockedAt?: Date
@@ -173,6 +181,18 @@ export interface ChatMessage {
   content: string
   timestamp: Date
   type: 'text' | 'code' | 'system'
+}
+
+// Notification types
+export interface Notification {
+  id: string
+  userId: string
+  type: 'achievement' | 'challenge_completed' | 'level_up' | 'message' | 'reminder'
+  title: string
+  message: string
+  data?: any
+  read: boolean
+  createdAt: Date
 }
 
 // API Response types

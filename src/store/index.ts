@@ -114,6 +114,7 @@ export const useUserStore = create<UserState>()(
                 currentStreak: 7,
                 longestStreak: 10,
                 completedChallenges: 23,
+                totalChallenges: 50,
                 completedProjects: 8,
                 languageProgress: [
                   {
@@ -194,6 +195,7 @@ export const useUserStore = create<UserState>()(
                 currentStreak: 0,
                 longestStreak: 0,
                 completedChallenges: 0,
+                totalChallenges: 0,
                 completedProjects: 0,
                 languageProgress: [],
                 skillProgress: []
