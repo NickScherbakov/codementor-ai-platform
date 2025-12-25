@@ -58,29 +58,38 @@ mongoose.connect(MONGODB_URI, {
   process.exit(1)
 })
 
-// Import routes
-const authRoutes = require('./routes/auth')
-const userRoutes = require('./routes/users')
-const challengeRoutes = require('./routes/challenges')
-const submissionRoutes = require('./routes/submissions')
-const learningPathRoutes = require('./routes/learningPaths')
-const aiTutorRoutes = require('./routes/aiTutor')
-const codeExecutionRoutes = require('./routes/codeExecution')
-const progressRoutes = require('./routes/progress')
-const achievementRoutes = require('./routes/achievements')
-const notificationRoutes = require('./routes/notifications')
+// Import routes (safe)
+function safeRequire(modulePath) {
+  try {
+    return require(modulePath)
+  } catch (e) {
+    console.warn(`Route not found, skipping: ${modulePath}`)
+    return null
+  }
+}
+
+const authRoutes = safeRequire('./routes/auth')
+const userRoutes = safeRequire('./routes/users')
+const challengeRoutes = safeRequire('./routes/challenges')
+const submissionRoutes = safeRequire('./routes/submissions')
+const learningPathRoutes = safeRequire('./routes/learningPaths')
+const aiTutorRoutes = safeRequire('./routes/aiTutor')
+const codeExecutionRoutes = safeRequire('./routes/codeExecution')
+const progressRoutes = safeRequire('./routes/progress')
+const achievementRoutes = safeRequire('./routes/achievements')
+const notificationRoutes = safeRequire('./routes/notifications')
 
 // API Routes
-app.use('/api/auth', authRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/challenges', challengeRoutes)
-app.use('/api/submissions', submissionRoutes)
-app.use('/api/learning-paths', learningPathRoutes)
-app.use('/api/ai-tutor', aiTutorRoutes)
-app.use('/api/code-execution', codeExecutionRoutes)
-app.use('/api/progress', progressRoutes)
-app.use('/api/achievements', achievementRoutes)
-app.use('/api/notifications', notificationRoutes)
+if (authRoutes) app.use('/api/auth', authRoutes)
+if (userRoutes) app.use('/api/users', userRoutes)
+if (challengeRoutes) app.use('/api/challenges', challengeRoutes)
+if (submissionRoutes) app.use('/api/submissions', submissionRoutes)
+if (learningPathRoutes) app.use('/api/learning-paths', learningPathRoutes)
+if (aiTutorRoutes) app.use('/api/ai-tutor', aiTutorRoutes)
+if (codeExecutionRoutes) app.use('/api/code-execution', codeExecutionRoutes)
+if (progressRoutes) app.use('/api/progress', progressRoutes)
+if (achievementRoutes) app.use('/api/achievements', achievementRoutes)
+if (notificationRoutes) app.use('/api/notifications', notificationRoutes)
 
 // Health check endpoint
 app.get('/health', (req, res) => {

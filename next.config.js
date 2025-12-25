@@ -5,7 +5,6 @@ const skipRewrites = process.env.SKIP_REWRITES === 'true'
 
 const nextConfig = {
   experimental: {
-    appDir: true,
     serverComponentsExternalPackages: ['monaco-editor'],
   },
   // Enable static export for GitHub Pages demo
