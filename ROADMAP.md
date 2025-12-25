@@ -1,4 +1,4 @@
-# 🗺️ CodeMentor AI Roadmap 2024-2025
+# 🗺️ CodeMentor AI Roadmap 2025-2026
 
 **Vision**: Democratize programming education through AI-powered personalized learning experiences that adapt to every learner's unique journey.
 
@@ -7,19 +7,40 @@
 ## 🎯 Current Status (v1.0 - Foundation)
 
 ### ✅ **Completed Features**
-- 🏗️ **Core Architecture**: Microservices foundation with Next.js, Node.js, Python Flask
-- 🎓 **Basic AI Tutor**: Conversational AI with OpenAI integration
+- 🏗️ **Core Architecture**: Microservices foundation with Next.js, Node.js (Express), Python Flask
+- 🤖 **Custom AI Tutor**: Locally hosted ML models (TinyLlama, CodeT5) — no external APIs
 - 💻 **Code Editor**: Monaco Editor with syntax highlighting and IntelliSense
-- 🧪 **Code Execution**: Secure sandboxed environment with Judge0 API
+- 🧪 **Code Execution**: Secure sandboxed environment via Judge0
 - 👤 **User Management**: Authentication, profiles, and progress tracking
-- 📊 **Basic Analytics**: Learning progress visualization
-- 🐳 **DevOps Setup**: Docker containerization and CI/CD pipeline
+- 📊 **Analytics**: Learning progress visualization
+- 🐳 **DevOps & Orchestration**: Docker Compose, Nginx reverse proxy, CI/CD
+- 📈 **Monitoring & Observability**: Prometheus + Grafana dashboards
 
 ### 🚧 **In Progress**
-- 🎮 **Gamification System**: Achievement badges and XP mechanics
-- 🔍 **Challenge Library**: Curated programming challenges database
-- 📱 **Responsive Design**: Mobile-optimized learning interface
-- 🌐 **Multi-language Support**: Python, JavaScript, Java, C++ support
+- 🎮 **Gamification System**: Achievements, XP mechanics, streaks refinement
+- 🔍 **Challenge Library**: Curated and community-validated challenges
+- 📱 **Mobile & PWA**: Offline mode and responsive polish
+- 🌐 **Multi-language Support**: Python, JavaScript, Java, C++ (expanding)
+- 🔌 **Real-time Collaboration**: Pair programming, session tools, chat
+- 📡 **AI Streaming**: Streaming responses from tutor for faster feedback
+
+---
+
+## 🔭 **2026 Focus Areas (Next 2 Quarters)**
+
+### 🎯 Near-term Initiatives (Q1–Q2 2026)
+- **Mobile & Offline**: Ship robust PWA offline mode and RN prototype
+- **Collaboration GA**: Stabilize pair-programming, add code review circles
+- **Enterprise Dashboards**: Team progress, cohort analytics, SSO integrations
+- **AI Tutor UX**: Persona tuning, streaming, A/B evaluation, hint tiers
+- **Challenge Quality**: Better test coverage, difficulty calibration, tagging
+- **Ops & Perf**: Observability SLOs, cost baselines, autoscaling playbooks
+
+### 📊 Targets
+- **Tutor latency**: P95 ≤ 2.0s (CPU), ≤ 1.0s (GPU)
+- **API responsiveness**: P95 ≤ 180ms
+- **Uptime**: ≥ 99.9% (core services)
+- **Engagement**: +25% DAU, +20% challenge completion
 
 ---
 
@@ -323,5 +344,5 @@ Pioneer the next evolution of programming education through cutting-edge technol
 
 ---
 
-*Last updated: January 2024 | Next review: April 2024*
+*Last updated: December 2025 | Next review: March 2026*
 *This roadmap is a living document that evolves based on community feedback, market needs, and technological advancement.*
