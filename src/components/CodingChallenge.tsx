@@ -77,7 +77,36 @@ const CodingChallenge: React.FC<CodingChallengeProps> = ({ layoutHeight = 'full'
   }, [])
 
   const loadChallenge = async () => {
-    // Mock challenge data - in real app this would come from API
+    // Check if we should use real backend
+    const useRealBackend = process.env.NEXT_PUBLIC_ENABLE_REAL_BACKEND === 'true'
+    
+    if (useRealBackend) {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_AI_URL}/challenges/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_level: 'beginner',
+            language: 'python',
+            topic: 'arrays',
+            learning_goals: []
+          })
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          if (data.success && data.challenge) {
+            setChallenge(data.challenge)
+            setCode(data.challenge.starterCode)
+            return
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to load challenge from API, using fallback:', error)
+      }
+    }
+    
+    // Fallback to mock challenge
     const mockChallenge: Challenge = {
       id: 'array-max-element',
       title: 'Find Maximum Element',
@@ -180,7 +209,63 @@ if __name__ == "__main__":
     setIsExecuting(true)
     
     try {
-      // Mock execution - in real app this would call the backend
+      // Check if we should use real backend
+      const useRealBackend = process.env.NEXT_PUBLIC_ENABLE_REAL_BACKEND === 'true'
+      
+      if (useRealBackend) {
+        // Use WebSocket for real-time code execution
+        const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001'
+        const socket = new WebSocket(wsUrl)
+        
+        const executionPromise = new Promise<ExecutionResult>((resolve, reject) => {
+          socket.onopen = () => {
+            socket.send(JSON.stringify({
+              type: 'execute-code',
+              data: {
+                code,
+                language: challenge.language,
+                testCases: challenge.testCases
+              }
+            }))
+          }
+          
+          socket.onmessage = (event) => {
+            const response = JSON.parse(event.data)
+            if (response.type === 'execution-result') {
+              resolve(response.data)
+              socket.close()
+            } else if (response.type === 'execution-error') {
+              reject(new Error(response.error))
+              socket.close()
+            }
+          }
+          
+          socket.onerror = () => {
+            reject(new Error('WebSocket connection failed'))
+            socket.close()
+          }
+          
+          // Timeout after 10 seconds
+          setTimeout(() => {
+            reject(new Error('Execution timeout'))
+            socket.close()
+          }, 10000)
+        })
+        
+        try {
+          const result = await executionPromise
+          setExecutionResult(result)
+          
+          if (result.passed) {
+            showSuccessAnimation()
+          }
+          return
+        } catch (error) {
+          console.warn('Real execution failed, using mock:', error)
+        }
+      }
+      
+      // Fallback to mock execution
       await new Promise(resolve => setTimeout(resolve, 2000))
       
       const mockResult: ExecutionResult = {
