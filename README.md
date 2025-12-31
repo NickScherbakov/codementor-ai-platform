@@ -177,7 +177,6 @@ redis-server
 - **[📡 Complete API Guide](docs/api/README.md)** - Comprehensive API documentation with examples
 - **[⚡ OpenAPI Specification](docs/api/openapi.yaml)** - Machine-readable API specification
 - **[🧪 API Examples](docs/api/examples/README.md)** - Code examples for all endpoints
-- **[🔗 Interactive API Explorer](docs/api/swagger-ui/index.html)** - Try APIs live in your browser
 
 ### 🚀 **Deployment & Operations**
 - **[🐳 Deployment Guide](docs/deployment/README.md)** - Production deployment instructions
@@ -207,7 +206,7 @@ POST /code/analyze         // Analyze code quality
 POST /learning-path/recommend // Get learning recommendations
 ```
 
-**📋 [View Interactive API Documentation →](docs/api/swagger-ui/index.html)**
+**📋 [View Complete API Documentation →](docs/api/README.md)**
 
 ## 🏗 Project Structure
 
@@ -327,10 +326,9 @@ If you discover a security vulnerability, please email security@codementor-ai.co
 
 ## 🆘 Support
 
-- **Documentation**: [docs.codementor-ai.com](https://docs.codementor-ai.com)
-- **Community Forum**: [community.codementor-ai.com](https://community.codementor-ai.com)
+- **Documentation**: See [docs/README.md](docs/README.md) for comprehensive guides
 - **Issues**: [GitHub Issues](https://github.com/NickScherbakov/codementor-ai-platform/issues)
-- **Email**: support@codementor-ai.com
+- **Contributing**: [Contributing Guide](CONTRIBUTING.md)
 
 ## 🌟 Roadmap
 
