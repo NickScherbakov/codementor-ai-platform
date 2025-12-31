@@ -1,57 +1,69 @@
-# Требования к улучшению документации
+# Documentation Enhancement Requirements
 
-## Введение
+## Introduction
 
-Проект CodeMentor AI уже имеет качественную документацию, но для повышения привлекательности для GitHub сообщества и упрощения внедрения необходимо добавить несколько ключевых компонентов: архитектурные диаграммы, автогенерируемую API документацию, руководство по развертыванию и метрики производительности.
+The CodeMentor AI project already has quality documentation, but to increase attractiveness for the GitHub community and simplify implementation, several key components need to be added: architecture diagrams, auto-generated API documentation, deployment guide, and performance metrics.
 
-## Глоссарий
+## Glossary
 
-- **Система**: CodeMentor AI - платформа для обучения программированию с ИИ
-- **API Reference**: Автоматически генерируемая документация API из кода
-- **Архитектурная диаграмма**: Визуальное представление компонентов системы и их взаимодействий
-- **Deployment Guide**: Руководство по развертыванию в production среде
-- **Performance Benchmarks**: Измеримые метрики производительности системы
-- **Mermaid**: Язык для создания диаграмм в markdown
-- **OpenAPI**: Стандарт для описания REST API
-- **Swagger**: Инструмент для генерации документации из OpenAPI спецификаций
+- **System**: CodeMentor AI - AI-powered programming education platform
+- **API Reference**: Automatically generated API documentation from code
+- **Architecture Diagram**: Visual representation of system components and their interactions
+- **Deployment Guide**: Guide for deploying to production environment
+- **Performance Benchmarks**: Measurable system performance metrics
+- **Mermaid**: Language for creating diagrams in markdown
+- **OpenAPI**: Standard for describing REST APIs
+- **Swagger**: Tool for generating documentation from OpenAPI specifications
 
-## Требования
+## Requirements
 
-### Требование 1
+### Requirement 1
 
-**Пользовательская история:** Как разработчик, изучающий архитектуру проекта, я хочу видеть визуальные диаграммы системы, чтобы быстро понять структуру и взаимодействие компонентов.
+**User Story:** As a developer studying project architecture, I want to see visual system diagrams to quickly understand the structure and component interactions.
 
-#### Критерии приемки
+#### Acceptance Criteria
 
-1. КОГДА разработчик открывает документацию, Система ДОЛЖНА предоставить архитектурную диаграмму высокого уровня
-2. КОГДА разработчик изучает компоненты, Система ДОЛЖНА показать диаграмму взаимодействия сервисов
-3. КОГДА разработчик анализирует поток данных, Система ДОЛЖНА предоставить диаграмму последовательности для ключевых операций
-4. КОГДА разработчик изучает базу данных, Система ДОЛЖНА показать ER-диаграмму основных сущностей
-5. ГДЕ используются диаграммы, Система ДОЛЖНА использовать Mermaid синтаксис для совместимости с GitHub
+1. WHEN a developer opens documentation, System MUST provide high-level architecture diagram
+2. WHEN a developer studies components, System MUST show service interaction diagram
+3. WHEN a developer analyzes data flow, System MUST provide sequence diagrams for key operations
+4. WHEN a developer studies database, System MUST show ER-diagram of main entities
+5. WHERE diagrams are used, System MUST use Mermaid syntax for GitHub compatibility
 
-### Требование 2
+### Requirement 2
 
-**Пользовательская история:** Как разработчик, интегрирующий с API, я хочу иметь автоматически генерируемую документацию API, чтобы всегда получать актуальную информацию о endpoints и схемах данных.
+**User Story:** As a developer integrating with the API, I want to have auto-generated API documentation to always get current information about endpoints and data schemas.
 
-#### Критерии приемки
+#### Acceptance Criteria
 
-1. КОГДА разработчик обращается к API документации, Система ДОЛЖНА предоставить интерактивную Swagger документацию
-2. КОГДА код API изменяется, Система ДОЛЖНА автоматически обновлять документацию
-3. КОГДА разработчик тестирует API, Система ДОЛЖНА позволить выполнение запросов прямо из документации
-4. КОГДА разработчик изучает схемы данных, Система ДОЛЖНА показать подробные модели с примерами
-5. ГДЕ описываются endpoints, Система ДОЛЖНА включать примеры запросов и ответов
+1. WHEN a developer accesses API documentation, System MUST provide interactive Swagger documentation
+2. WHEN API code changes, System MUST automatically update documentation
+3. WHEN a developer tests API, System MUST allow executing requests directly from documentation
+4. WHEN a developer studies data schemas, System MUST show detailed models with examples
+5. WHERE endpoints are described, System MUST include request and response examples
 
-### Требование 3
+### Requirement 3
 
-**Пользовательская история:** Как DevOps инженер, я хочу иметь подробное руководство по развертыванию, чтобы успешно запустить систему в production среде.
+**User Story:** As a DevOps engineer, I want to have detailed deployment guide to successfully run the system in production environment.
 
-#### Критерии приемки
+#### Acceptance Criteria
 
-1. КОГДА инженер развертывает систему, Система ДОЛЖНА предоставить пошаговые инструкции для различных сред
-2. КОГДА настраивается production, Система ДОЛЖНА описать требования к безопасности и производительности
-3. КОГДА происходит масштабирование, Система ДОЛЖНА предоставить рекомендации по горизонтальному и вертикальному масштабированию
-4. КОГДА настраивается мониторинг, Система ДОЛЖНА описать конфигурацию Prometheus и Grafana
-5. ГДЕ используется Docker, Система ДОЛЖНА предоставить production-ready конфигурации
+1. WHEN an engineer deploys system, System MUST provide step-by-step instructions for different environments
+2. WHEN production is configured, System MUST describe security and performance requirements
+3. WHEN scaling happens, System MUST provide recommendations for horizontal and vertical scaling
+4. WHEN monitoring is set up, System MUST describe Prometheus and Grafana configuration
+5. WHERE Docker is used, System MUST provide production-ready configurations
+
+### Requirement 4
+
+**User Story:** As a technical lead, I want to see system performance metrics to make informed decisions about implementation and scaling.
+
+#### Acceptance Criteria
+
+1. WHEN evaluating performance, System MUST provide API response time benchmarks
+2. WHEN analyzing load, System MUST show throughput metrics
+3. WHEN evaluating AI component, System MUST provide response generation time metrics
+4. WHEN planning resources, System MUST show memory and CPU requirements
+5. WHERE metrics are presented, System MUST include measurement methodology and test conditions
 
 ### Требование 4
 

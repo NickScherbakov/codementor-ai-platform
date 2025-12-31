@@ -1,66 +1,66 @@
-# Дизайн улучшения документации CodeMentor AI
+# Documentation Enhancement Design for CodeMentor AI
 
-## Обзор
+## Overview
 
-Данный дизайн описывает архитектуру и подход к созданию четырех ключевых компонентов документации: архитектурных диаграмм, автогенерируемой API документации, руководства по развертыванию и метрик производительности. Решение будет интегрировано в существующую структуру документации без нарушения текущего workflow.
+This design describes the architecture and approach for creating four key documentation components: architecture diagrams, auto-generated API documentation, deployment guide, and performance metrics. The solution will be integrated into the existing documentation structure without disrupting current workflow.
 
-## Архитектура
+## Architecture
 
-### Структура документации
+### Documentation Structure
 
 ```
 docs/
-├── architecture/           # Новая папка для архитектурных диаграмм
-│   ├── README.md          # Обзор архитектуры
-│   ├── system-overview.md # Диаграмма высокого уровня
-│   ├── service-interaction.md # Взаимодействие сервисов
-│   ├── data-flow.md       # Поток данных
-│   └── database-schema.md # ER-диаграммы
-├── api/                   # Новая папка для API документации
-│   ├── README.md          # Обзор API
-│   ├── openapi.yaml       # OpenAPI спецификация
-│   └── swagger-ui/        # Статические файлы Swagger UI
-├── deployment/            # Новая папка для развертывания
-│   ├── README.md          # Обзор развертывания
-│   ├── production.md      # Production развертывание
-│   ├── docker.md          # Docker конфигурации
-│   ├── kubernetes.md      # K8s манифесты
-│   └── monitoring.md      # Настройка мониторинга
-├── performance/           # Новая папка для метрик
-│   ├── README.md          # Обзор производительности
-│   ├── benchmarks.md      # Результаты бенчмарков
-│   ├── load-testing.md    # Нагрузочное тестирование
-│   └── optimization.md    # Рекомендации по оптимизации
-├── EXAMPLES.md            # Существующий файл
-├── TUTORIAL.md            # Существующий файл
+├── architecture/           # New folder for architecture diagrams
+│   ├── README.md          # Architecture overview
+│   ├── system-overview.md # High-level diagram
+│   ├── service-interaction.md # Service interactions
+│   ├── data-flow.md       # Data flow
+│   └── database-schema.md # ER-diagrams
+├── api/                   # New folder for API documentation
+│   ├── README.md          # API overview
+│   ├── openapi.yaml       # OpenAPI specification
+│   └── swagger-ui/        # Swagger UI static files
+├── deployment/            # New folder for deployment
+│   ├── README.md          # Deployment overview
+│   ├── production.md      # Production deployment
+│   ├── docker.md          # Docker configurations
+│   ├── kubernetes.md      # K8s manifests
+│   └── monitoring.md      # Monitoring setup
+├── performance/           # New folder for metrics
+│   ├── README.md          # Performance overview
+│   ├── benchmarks.md      # Benchmark results
+│   ├── load-testing.md    # Load testing
+│   └── optimization.md    # Optimization recommendations
+├── EXAMPLES.md            # Existing file
+├── TUTORIAL.md            # Existing file
 └── existing files...
 ```
 
-### Компоненты и интерфейсы
+### Components and Interfaces
 
-#### 1. Архитектурные диаграммы
+#### 1. Architecture Diagrams
 
-**Технологии:**
-- Mermaid.js для создания диаграмм в markdown
-- GitHub автоматически рендерит Mermaid диаграммы
-- PlantUML как альтернатива для сложных диаграмм
+**Technologies:**
+- Mermaid.js for creating diagrams in markdown
+- GitHub automatically renders Mermaid diagrams
+- PlantUML as alternative for complex diagrams
 
-**Типы диаграмм:**
+**Diagram Types:**
 - System Context Diagram (C4 Level 1)
-- Container Diagram (C4 Level 2) 
+- Container Diagram (C4 Level 2)
 - Component Diagram (C4 Level 3)
-- Sequence Diagrams для ключевых операций
-- ER Diagrams для базы данных
+- Sequence Diagrams for key operations
+- ER Diagrams for database
 
-#### 2. API документация
+#### 2. API Documentation
 
-**Технологии:**
-- OpenAPI 3.0 спецификация
-- Swagger UI для интерактивной документации
-- swagger-jsdoc для генерации из комментариев в коде
-- GitHub Actions для автоматического обновления
+**Technologies:**
+- OpenAPI 3.0 specification
+- Swagger UI for interactive documentation
+- swagger-jsdoc for generation from code comments
+- GitHub Actions for automatic updates
 
-**Структура:**
+**Structure:**
 ```yaml
 openapi: 3.0.0
 info:
@@ -68,25 +68,25 @@ info:
   version: 1.0.0
   description: Intelligent Programming Learning Platform API
 paths:
-  /api/auth/*:     # Аутентификация
-  /api/challenges/*: # Задачи
-  /api/ai-tutor/*:   # ИИ тьютор
-  /api/users/*:      # Пользователи
+  /api/auth/*:     # Authentication
+  /api/challenges/*: # Challenges
+  /api/ai-tutor/*:   # AI tutor
+  /api/users/*:      # Users
 components:
-  schemas:         # Модели данных
-  securitySchemes: # JWT схемы
+  schemas:         # Data models
+  securitySchemes: # JWT schemes
 ```
 
 #### 3. Deployment Guide
 
-**Структура:**
-- Требования к инфраструктуре
-- Пошаговые инструкции для разных сред
-- Конфигурационные файлы
-- Скрипты автоматизации
+**Structure:**
+- Infrastructure requirements
+- Step-by-step instructions for different environments
+- Configuration files
+- Automation scripts
 - Troubleshooting
 
-**Поддерживаемые среды:**
+**Supported Environments:**
 - Docker Compose (development)
 - Docker Swarm (small production)
 - Kubernetes (enterprise)
@@ -94,20 +94,20 @@ components:
 
 #### 4. Performance Benchmarks
 
-**Метрики:**
+**Metrics:**
 - API response times (p50, p95, p99)
 - Throughput (requests per second)
 - AI response generation time
 - Database query performance
 - Memory and CPU usage
 
-**Инструменты:**
-- Apache Bench (ab) для HTTP тестирования
-- Artillery.js для сложных сценариев
-- Custom scripts для AI компонентов
-- Grafana dashboards для визуализации
+**Tools:**
+- Apache Bench (ab) for HTTP testing
+- Artillery.js for complex scenarios
+- Custom scripts for AI components
+- Grafana dashboards for visualization
 
-## Модели данных
+## Data Models
 
 ### API Documentation Schema
 
@@ -163,36 +163,36 @@ interface SystemComponent {
 }
 ```
 
-## Обработка ошибок
+## Error Handling
 
-### Документация API
+### API Documentation
 
-- Валидация OpenAPI спецификации при сборке
-- Автоматическая проверка соответствия кода и документации
-- Fallback на статическую документацию при недоступности Swagger UI
-- Версионирование API документации
+- OpenAPI specification validation during build
+- Automatic code to documentation compliance checking
+- Fallback to static documentation when Swagger UI is unavailable
+- API documentation versioning
 
-### Диаграммы
+### Diagrams
 
-- Валидация Mermaid синтаксиса
-- Fallback на текстовое описание при ошибках рендеринга
-- Автоматическое обновление при изменении архитектуры
-- Проверка актуальности диаграмм
+- Mermaid syntax validation
+- Fallback to text description on rendering errors
+- Automatic updates when architecture changes
+- Diagram currency verification
 
-### Бенчмарки
+### Benchmarks
 
-- Обработка недоступности тестовых сред
-- Валидация результатов тестирования
-- Исторические данные для сравнения
-- Уведомления о деградации производительности
+- Handling test environment unavailability
+- Test result validation
+- Historical data for comparison
+- Performance degradation notifications
 
-## Стратегия тестирования
+## Testing Strategy
 
-### Автоматизированное тестирование
+### Automated Testing
 
 1. **API Documentation Tests**
    ```javascript
-   // Проверка соответствия OpenAPI спецификации и реального API
+   // Check OpenAPI specification compliance with real API
    describe('API Documentation', () => {
      test('should match OpenAPI specification', async () => {
        const spec = await loadOpenAPISpec()
@@ -204,7 +204,7 @@ interface SystemComponent {
 
 2. **Architecture Diagram Validation**
    ```javascript
-   // Проверка валидности Mermaid диаграмм
+   // Verify Mermaid diagram validity
    describe('Architecture Diagrams', () => {
      test('should have valid Mermaid syntax', () => {
        const diagrams = loadMermaidDiagrams()
@@ -217,7 +217,7 @@ interface SystemComponent {
 
 3. **Performance Benchmark Tests**
    ```javascript
-   // Автоматические тесты производительности
+   // Automatic performance tests
    describe('Performance Benchmarks', () => {
      test('API response times should be within acceptable limits', async () => {
        const results = await runPerformanceTests()
@@ -227,19 +227,19 @@ interface SystemComponent {
    })
    ```
 
-### Интеграционное тестирование
+### Integration Testing
 
-- Проверка работы Swagger UI с реальным API
-- Тестирование deployment скриптов в изолированной среде
-- Валидация метрик производительности на тестовых данных
+- Swagger UI functionality with real API
+- Deployment scripts testing in isolated environment
+- Performance metrics validation with test data
 
-### Пользовательское тестирование
+### User Testing
 
-- Обратная связь от разработчиков сообщества
-- A/B тестирование различных форматов документации
-- Анализ использования документации через GitHub Analytics
+- Community developer feedback
+- A/B testing of different documentation formats
+- Documentation usage analytics via GitHub
 
-## Интеграция с существующей системой
+## Integration with Existing System
 
 ### GitHub Actions Workflow
 
@@ -280,41 +280,41 @@ jobs:
         run: npm run update-benchmarks
 ```
 
-### Существующая структура
+### Existing Structure
 
-- Интеграция с текущим README.md через ссылки
-- Дополнение CONTRIBUTING.md инструкциями по документации
-- Обновление package.json с новыми скриптами
-- Добавление в .gitignore генерируемых файлов
+- Integration with current README.md through links
+- Supplements CONTRIBUTING.md with documentation instructions
+- Updates package.json with new scripts
+- Adds generated files to .gitignore
 
-### Обратная совместимость
+### Backward Compatibility
 
-- Сохранение всех существующих файлов документации
-- Добавление ссылок на новые разделы в существующие файлы
-- Постепенная миграция без breaking changes
-- Поддержка старых ссылок через redirects
+- Preserves all existing documentation files
+- Adds links to new sections in existing files
+- Gradual migration without breaking changes
+- Old links support through redirects
 
-## Производительность и масштабируемость
+## Performance and Scalability
 
-### Оптимизация документации
+### Documentation Optimization
 
-- Ленивая загрузка больших диаграмм
-- Кэширование генерируемой документации
-- CDN для статических ресурсов Swagger UI
-- Сжатие изображений и диаграмм
+- Lazy loading of large diagrams
+- Caching of generated documentation
+- CDN for Swagger UI static resources
+- Image and diagram compression
 
-### Автоматизация обновлений
+### Update Automation
 
-- Инкрементальная генерация только измененных частей
-- Параллельная обработка различных типов документации
-- Кэширование результатов бенчмарков
-- Оптимизация CI/CD pipeline для документации
+- Incremental generation of only changed parts
+- Parallel processing of different documentation types
+- Benchmark result caching
+- Optimized CI/CD pipeline for documentation
 
-### Мониторинг использования
+### Usage Monitoring
 
-- Аналитика просмотров различных разделов
-- Отслеживание популярных API endpoints
-- Метрики времени загрузки документации
-- Feedback система для улучшения качества
+- View analytics for different sections
+- Tracking popular API endpoints
+- Documentation load time metrics
+- Feedback system for quality improvement
 
-Этот дизайн обеспечивает комплексное улучшение документации при сохранении совместимости с существующей структурой и workflow проекта.
+This design ensures comprehensive documentation improvement while maintaining compatibility with existing structure and project workflow.
