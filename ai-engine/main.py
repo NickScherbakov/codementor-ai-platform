@@ -12,6 +12,8 @@ from datetime import datetime
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import logging
+os.environ.setdefault("TRANSFORMERS_NO_TF", "1")
+os.environ.setdefault("TRANSFORMERS_NO_TORCHVISION", "1")
 from models import get_custom_tutor, get_custom_analyzer
 
 # Configure logging

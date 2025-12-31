@@ -8,8 +8,7 @@ import logging
 from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
-    AutoModelForSeq2SeqLM,
-    pipeline
+    AutoModelForSeq2SeqLM
 )
 from typing import Dict, List, Optional
 import threading
