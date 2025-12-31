@@ -29,16 +29,17 @@ const nextConfig = {
     return config
   },
   async rewrites() {
-    // Rewrites are not supported in static export. Allow overriding via env.
+    // Rewrites are not supported in static export mode
+    // They are disabled when SKIP_REWRITES=true (GitHub Pages deployment)
     if (skipRewrites) return []
     return [
       {
-        source: '/api/ai/:path*',
-        destination: 'http://localhost:8000/api/:path*', // AI Engine Python service
+        source: '/api/backend/:path*',
+        destination: 'http://localhost:3001/api/:path*', // Backend Node.js API
       },
       {
-        source: '/api/backend/:path*',
-        destination: 'http://localhost:3001/api/:path*', // Backend Node.js service
+        source: '/ai-tutor/:path*',
+        destination: 'http://localhost:5000/:path*', // Python Flask AI Engine
       },
     ]
   },

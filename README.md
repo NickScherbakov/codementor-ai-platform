@@ -6,6 +6,8 @@
 
 A revolutionary full-stack application that combines artificial intelligence with proven educational methods to create the most effective programming learning platform. Built with cutting-edge technologies and designed for scalability.
 
+> **Note**: The GitHub Pages demo shows the UI only. For full functionality (AI tutoring, code execution, real-time features), deploy locally with `docker-compose up`. See [GitHub Pages Configuration](.github/GITHUB_PAGES.md) for details.
+
 ## 🚀 Features
 
 ### 🤖 AI-Powered Learning
