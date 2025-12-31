@@ -75,6 +75,8 @@ A revolutionary full-stack application that combines artificial intelligence wit
 - MongoDB (or use Docker)
 - Redis (or use Docker)
 
+**📋 For complete system requirements, see [SYSTEM_REQUIREMENTS.md](SYSTEM_REQUIREMENTS.md)**
+
 ### 1. Clone and Setup
 ```bash
 git clone https://github.com/NickScherbakov/codementor-ai-platform.git
