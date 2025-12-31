@@ -56,7 +56,13 @@ interface TestResult {
   expectedOutput: string
 }
 
-const CodingChallenge: React.FC = () => {
+type LayoutHeight = 'full' | 'compact'
+
+interface CodingChallengeProps {
+  layoutHeight?: LayoutHeight
+}
+
+const CodingChallenge: React.FC<CodingChallengeProps> = ({ layoutHeight = 'full' }) => {
   const [challenge, setChallenge] = useState<Challenge | null>(null)
   const [code, setCode] = useState('')
   const [isExecuting, setIsExecuting] = useState(false)
@@ -263,8 +269,10 @@ if __name__ == "__main__":
     )
   }
 
+  const containerHeight = layoutHeight === 'compact' ? 'h-[720px]' : 'min-h-screen'
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className={`${containerHeight} flex flex-col bg-gray-50 dark:bg-gray-900`}>
       {/* Header */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
         <div className="flex items-center justify-between">

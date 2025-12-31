@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import { Toaster } from 'react-hot-toast'
+import { SiteHeader } from '@/components/SiteHeader'
+import { SiteFooter } from '@/components/SiteFooter'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,27 +32,29 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           {/* Demo banner for GitHub Pages static build */}
-          <div className="w-full bg-yellow-50 border-b border-yellow-200 px-4 py-2 text-sm text-yellow-900">
+          <div className="w-full border-b border-yellow-200 bg-yellow-50 px-4 py-2 text-sm text-yellow-900">
             <div className="mx-auto flex max-w-7xl flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                You are viewing a static demo deployed to GitHub Pages. Interactive features requiring backend / AI engine are
-                disabled.
-              </p>
+              <p>Demo mode: core flows are mocked; backend + AI required for full experience.</p>
               <div className="flex gap-3">
+                <a
+                  className="underline hover:no-underline"
+                  href="/demo/limitations/"
+                >
+                  What is live
+                </a>
                 <a
                   className="underline hover:no-underline"
                   href="https://github.com/NickScherbakov/codementor-ai-platform"
                   target="_blank" rel="noreferrer"
                 >
-                  View Source
-                </a>
-                <a className="underline hover:no-underline" href="/demo/limitations/">
-                  Demo limitations
+                  Source
                 </a>
               </div>
             </div>
           </div>
+          <SiteHeader />
           {children}
+          <SiteFooter />
           <Toaster
             position="top-right"
             toastOptions={{

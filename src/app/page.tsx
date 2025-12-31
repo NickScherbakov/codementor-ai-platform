@@ -2,7 +2,10 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb } from 'lucide-react'
+
+const CodingChallenge = dynamic(() => import('@/components/CodingChallenge'), { ssr: false })
 
 export default function HomePage() {
   return (
@@ -41,6 +44,36 @@ export default function HomePage() {
               </Link>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Live Sandbox Section */}
+      <section id="challenge" className="bg-slate-50 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-base font-semibold leading-7 text-blue-600">Try it now</p>
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Live coding challenge (mocked run)</h2>
+              <p className="mt-4 text-lg leading-8 text-gray-600">
+                Type in the editor, hit Run, and see how the platform gives instant feedback. Execution is mocked here, but
+                mirrors the real flow with backend + local AI that are running on the server instance.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm text-gray-700">
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Python</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">XP rewards</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Hints with XP cost</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Instant test results</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 shadow-sm">
+              <div className="h-2 w-2 rounded-full bg-green-500" aria-hidden="true" />
+              Full stack (frontend + backend + local AI) is online for demo load (~50 users)
+            </div>
+          </div>
+
+          <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200 shadow-xl">
+            <CodingChallenge layoutHeight="compact" />
+          </div>
         </div>
       </section>
 
