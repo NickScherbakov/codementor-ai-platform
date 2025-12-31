@@ -300,6 +300,7 @@ export const useChallengeStore = create<ChallengeState>()(
               testCases: [],
               hints: [],
               xpReward: 100,
+              timeEstimate: 15,
               createdBy: 'system',
               createdAt: new Date(),
               updatedAt: new Date()
@@ -336,6 +337,7 @@ export const useChallengeStore = create<ChallengeState>()(
             testCases: [],
             hints: [],
             xpReward: 150,
+            timeEstimate: 20,
             createdBy: 'ai-engine',
             createdAt: new Date(),
             updatedAt: new Date()
@@ -419,6 +421,8 @@ export const useProgressStore = create<ProgressState>()(
                 icon: '🎯',
                 category: 'learning',
                 points: 50,
+                rarity: 'common',
+                xpReward: 50,
                 unlockedAt: new Date()
               },
               // More achievements...
@@ -436,7 +440,7 @@ export const useProgressStore = create<ProgressState>()(
             // Mock API call
             await new Promise(resolve => setTimeout(resolve, 300))
             
-            const mockNotifications: Notification[] = [
+            const mockNotifications: NotificationItem[] = [
               {
                 id: '1',
                 userId: '1',
