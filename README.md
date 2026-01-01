@@ -1,6 +1,6 @@
 # CodeMentor AI - Intelligent Programming Learning Platform
 
-[![View Demo - GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](https://nickscherbakov.github.io/codementor-ai-platform/)
+[![View Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](http://http://104.154.27.195//)
 
 ![CodeMentor AI Logo](./public/logo.png)
 
