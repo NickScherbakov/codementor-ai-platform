@@ -169,6 +169,13 @@ redis-server
 - **[💡 Examples & Demos](docs/EXAMPLES.md)** - Interactive examples and real-world use cases
 - **[🤝 Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
 
+### 💼 **Business Strategy & Monetization**
+- **[💰 Business Strategy](docs/BUSINESS_STRATEGY.md)** - Comprehensive monetization plan and revenue models
+- **[💳 Pricing Configuration](docs/PRICING_CONFIG.md)** - Pricing tiers, billing infrastructure, and payment methods
+- **[🔒 Compliance Roadmap](docs/COMPLIANCE_ROADMAP.md)** - SOC2, FERPA, GDPR certification plans
+- **[🌍 Market Expansion](docs/MARKET_EXPANSION.md)** - Geographic expansion strategy (EN/ES/BR)
+- **[🚀 Implementation Priorities](docs/IMPLEMENTATION_PRIORITIES.md)** - 30/60/90-day action plan
+
 ### 🏗️ **Architecture & Design**
 - **[🏛️ System Architecture](docs/architecture/README.md)** - High-level system overview and design principles
 - **[🔄 Service Interactions](docs/architecture/service-interaction.md)** - Microservices communication patterns
