@@ -797,6 +797,8 @@ Understanding the realistic timeline and capital requirements for reaching scale
 **Key Takeaways:**
 - EdTech companies typically require 8–10 years to reach $100M ARR
 - Capital requirements range from $80M–$460M depending on growth strategy
+  - Lower end ($80–100M): Organic growth, lean operations, gradual international expansion
+  - Higher end ($400–500M): Aggressive user acquisition, rapid scaling, early international expansion, M&A
 - Profitability usually achieved between Years 5–7
 - Product-market fit is critical in first 2–3 years
 
@@ -950,7 +952,8 @@ The current $500K seed round is **insufficient** to reach Series A metrics. Base
 - Enterprise features development
 - Compliance certifications
 - Market expansion
-- **Requirements:** $2–3M ARR, 3x YoY growth, clear path to $10M ARR
+- **Requirements:** $2–3M ARR (achievable with stretch goals), 3x YoY growth, clear path to $10M ARR
+- **Note:** If base case ($1.9M Year 1), may need to delay to Month 24-30 or raise smaller round
 
 **Series B (Target: Month 36-48):** $20M
 - International expansion
@@ -1042,10 +1045,10 @@ Year 3: $10.7M ARR
 ```
 
 **Burn Rate Management:**
-- Base OpEx: $2M/year ($167K/month)
-- Conservative OpEx: $1M/year ($83K/month)
+- Base OpEx: $2M/year = $167K/month
+- Conservative OpEx: $1M/year = $83K/month
 - Required runway: 18–24 months minimum
-- Current capital: $500K = 6 months at base rate, 12 months at conservative rate
+- Current capital: $500K = 6 months at base rate ($167K/month), 12 months at conservative rate ($83K/month)
 
 ### Strategy Revision Triggers
 
