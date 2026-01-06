@@ -67,6 +67,21 @@ We recognize security researchers who help keep CodeMentor AI secure:
 
 - *Be the first to help us improve our security!*
 
+## ⚠️ Secret Management
+
+### Never Commit These Files:
+- SSH keys (`id_rsa`, `id_ed25519`, etc.)
+- API keys or tokens
+- `.env` files with real credentials
+- Private certificates (`.pem`, `.key`)
+- Database credentials
+
+### If You Accidentally Commit Secrets:
+1. Immediately revoke/rotate the exposed credentials
+2. Remove the file from git history (use `git filter-branch` or BFG Repo-Cleaner)
+3. Force push to all branches
+4. Notify the security team
+
 ### 🛡️ Security Best Practices for Contributors
 
 When contributing to the project:
