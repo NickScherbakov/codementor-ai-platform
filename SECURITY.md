@@ -78,7 +78,7 @@ We recognize security researchers who help keep CodeMentor AI secure:
 
 ### If You Accidentally Commit Secrets:
 1. Immediately revoke/rotate the exposed credentials
-2. Remove the file from git history (use `git filter-branch` or BFG Repo-Cleaner)
+2. Remove the file from git history (use `git filter-repo` or BFG Repo-Cleaner)
 3. Force push to all branches
 4. Notify the security team
 

@@ -97,8 +97,10 @@ id_ecdsa
 id_ecdsa.pub
 
 # Private keys
-*_private_key*
-*_secret*
+*.private_key
+*_private.key
+secret_*
+*.secret
 
 # Temporary files
 tmp/
