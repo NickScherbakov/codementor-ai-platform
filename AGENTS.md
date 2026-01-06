@@ -396,14 +396,21 @@ const userSchema = z.object({
 const validatedData = userSchema.parse(userData);
 ```
 
-#### SQL Injection Prevention
+#### MongoDB Injection Prevention
 ```javascript
-// ❌ NEVER use string concatenation
-const query = `SELECT * FROM users WHERE email = '${userEmail}'`;
+// ❌ NEVER use direct string interpolation in queries
+const user = await User.findOne({ email: userInput });  // Vulnerable if userInput contains operators
 
-// ✅ Always use parameterized queries
-const query = 'SELECT * FROM users WHERE email = ?';
-const result = await db.query(query, [userEmail]);
+// ✅ Always sanitize inputs and use Mongoose properly
+const mongoose = require('mongoose');
+const sanitizedEmail = userInput.toString();  // Convert to string
+const user = await User.findOne({ email: sanitizedEmail });
+
+// ✅ Even better - use validation
+const { body, validationResult } = require('express-validator');
+// In route: body('email').isEmail().normalizeEmail()
+const errors = validationResult(req);
+if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 ```
 
 ## 🏛️ Architecture Decisions
@@ -417,10 +424,10 @@ const result = await db.query(query, [userEmail]);
 
 #### Implementation Pattern
 ```python
-def get_ai_response(prompt: str, user_tier: str) -> str:
+def get_ai_response(prompt: str, user_tier: str, user_preferences: dict) -> str:
     """Get AI response with appropriate model based on user tier."""
     try:
-        if user_tier == 'premium' and user.has_gemini_enabled:
+        if user_tier == 'premium' and user_preferences.get('gemini_enabled', False):
             return get_gemini_response(prompt)
         else:
             return get_local_model_response(prompt)
@@ -838,7 +845,7 @@ Please review and provide guidance on the best approach.
 
 ## 🎯 Best Practices Summary
 
-### Code Quality Checklist
+### Security Checklist
 - [ ] Code follows style guidelines (ESLint/Prettier/Black)
 - [ ] All functions have proper type annotations
 - [ ] Tests written and passing (meet coverage targets)
@@ -864,7 +871,7 @@ Please review and provide guidance on the best approach.
 - [ ] No secrets in code or commits
 - [ ] Environment variables used for configuration
 - [ ] Input validation implemented
-- [ ] SQL injection prevention (parameterized queries)
+- [ ] NoSQL injection prevention (sanitized MongoDB queries)
 - [ ] XSS prevention (proper escaping)
 - [ ] CSRF protection enabled
 - [ ] Rate limiting implemented for APIs
