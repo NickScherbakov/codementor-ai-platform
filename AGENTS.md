@@ -398,19 +398,30 @@ const validatedData = userSchema.parse(userData);
 
 #### MongoDB Injection Prevention
 ```javascript
-// ❌ NEVER use direct string interpolation in queries
-const user = await User.findOne({ email: userInput });  // Vulnerable if userInput contains operators
+// ❌ NEVER allow user input directly in queries without validation
+const user = await User.findOne({ email: req.body.email });  // Vulnerable if email contains operators
 
-// ✅ Always sanitize inputs and use Mongoose properly
-const mongoose = require('mongoose');
-const sanitizedEmail = userInput.toString();  // Convert to string
-const user = await User.findOne({ email: sanitizedEmail });
-
-// ✅ Even better - use validation
+// ✅ Always validate input types and structure
 const { body, validationResult } = require('express-validator');
-// In route: body('email').isEmail().normalizeEmail()
-const errors = validationResult(req);
-if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+// In route definition:
+router.post('/user', [
+  body('email').isEmail().normalizeEmail(),
+  body('age').optional().isInt({ min: 0, max: 150 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  // Now safe to use
+  const user = await User.findOne({ email: req.body.email });
+});
+
+// ✅ Or use Mongoose schema validation
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  age: { type: Number, min: 0, max: 150 }
+});
 ```
 
 ## 🏛️ Architecture Decisions
@@ -424,7 +435,9 @@ if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 #### Implementation Pattern
 ```python
-def get_ai_response(prompt: str, user_tier: str, user_preferences: dict) -> str:
+from typing import Dict, Any
+
+def get_ai_response(prompt: str, user_tier: str, user_preferences: Dict[str, Any]) -> str:
     """Get AI response with appropriate model based on user tier."""
     try:
         if user_tier == 'premium' and user_preferences.get('gemini_enabled', False):
@@ -845,7 +858,7 @@ Please review and provide guidance on the best approach.
 
 ## 🎯 Best Practices Summary
 
-### Security Checklist
+### Code Quality Checklist
 - [ ] Code follows style guidelines (ESLint/Prettier/Black)
 - [ ] All functions have proper type annotations
 - [ ] Tests written and passing (meet coverage targets)
