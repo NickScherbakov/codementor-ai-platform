@@ -6,6 +6,47 @@ A full-stack application that combines artificial intelligence with proven educa
 
 > **Note**: The GitHub Pages demo shows the UI only. For full functionality (AI tutoring, code execution, real-time features), deploy locally with `docker-compose up`. See [GitHub Pages Configuration](.github/GITHUB_PAGES.md) for details.
 
+## 🧭 MVP Focus: Hard Code Review
+
+The current MVP is a focused, monetizable experience centered on **hard code review**. Everything outside this narrow scope is deferred.
+
+**In scope**
+- `/review` page for submitting code and receiving hard review feedback.
+- `POST /api/review` endpoint with a deterministic reviewer (no external API keys required).
+- Free-tier gate: 3 reviews per user, then HTTP 402 with a “Subscribe to continue” message.
+
+**Out of scope**
+- Courses, gamification, leaderboards, or social features.
+- Multi-step onboarding, learning paths, or analytics dashboards.
+- Billing integrations (Stripe) or payments.
+
+### Design / Positioning Reference
+- [Money Page reference (marketing-only)](docs/concepts/money-page-reference.md)
+
+## ⚡ MVP Quickstart (Hard Code Review)
+
+### Option A: Docker (Recommended)
+```bash
+docker-compose up -d
+```
+
+Open the app at **http://localhost:3000/review**.
+
+### Option B: Local Dev (Frontend + Backend)
+```bash
+# Terminal 1 - Frontend
+npm install
+npm run dev
+
+# Terminal 2 - Backend
+cd backend && npm install && npm run dev
+```
+
+Set the API base for local dev (so the frontend targets the backend directly):
+```bash
+export NEXT_PUBLIC_API_BASE=http://localhost:3001/api
+```
+
 ## 🚀 Features
 
 ### 🤖 AI-Powered Learning
