@@ -78,6 +78,8 @@ const codeExecutionRoutes = safeRequire('./routes/codeExecution')
 const progressRoutes = safeRequire('./routes/progress')
 const achievementRoutes = safeRequire('./routes/achievements')
 const notificationRoutes = safeRequire('./routes/notifications')
+const reviewRoutesModule = safeRequire('./routes/review')
+const reviewRoutes = reviewRoutesModule ? (reviewRoutesModule.router || reviewRoutesModule) : null
 
 // API Routes
 if (authRoutes) app.use('/api/auth', authRoutes)
@@ -90,6 +92,7 @@ if (codeExecutionRoutes) app.use('/api/code-execution', codeExecutionRoutes)
 if (progressRoutes) app.use('/api/progress', progressRoutes)
 if (achievementRoutes) app.use('/api/achievements', achievementRoutes)
 if (notificationRoutes) app.use('/api/notifications', notificationRoutes)
+if (reviewRoutes) app.use('/api/review', reviewRoutes)
 
 // Health check endpoint
 app.get('/health', (req, res) => {
