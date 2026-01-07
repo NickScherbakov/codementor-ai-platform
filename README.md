@@ -20,6 +20,9 @@ The current MVP is a focused, monetizable experience centered on **hard code rev
 - Multi-step onboarding, learning paths, or analytics dashboards.
 - Billing integrations (Stripe) or payments.
 
+### Design / Positioning Reference
+- [Money Page reference (marketing-only)](docs/concepts/money-page-reference.md)
+
 ## ⚡ MVP Quickstart (Hard Code Review)
 
 ### Option A: Docker (Recommended)
