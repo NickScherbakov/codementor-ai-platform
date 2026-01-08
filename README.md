@@ -1,230 +1,317 @@
 # CodeMentor AI Platform
 
-> **Brutal, senior-level code reviews. No sugar-coating. No tutorials. Just honest technical judgment.**
+[![View Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](http://104.154.27.195/)
 
-CodeMentor AI is a hard code review platform that thinks like a senior team lead or technical interviewer—not like a friendly learning platform. Get the code review you'd get in a real interview, with direct feedback focused on career risks and professional judgment.
+A full-stack application that combines artificial intelligence with proven educational methods to create the most effective programming learning platform. Built with cutting-edge technologies and designed for scalability.
 
-## 🎯 Product Vision
-
-This is **not** a learning platform. This is **career insurance**. 
-
-If your code can't handle a harsh review here, it won't survive:
-- A real interview
-- A production incident  
-- A senior engineer's PR review
-
-**We don't teach. We expose.**
+> **Note**: The GitHub Pages demo shows the UI only. For full functionality (AI tutoring, code execution, real-time features), deploy locally with `docker-compose up`. See [GitHub Pages Configuration](.github/GITHUB_PAGES.md) for details.
 
 ---
 
-## ✨ Features
+## 🎯 Two Products in One Repository
 
-### 🔴 Hard Code Review
-- **Brutal, honest feedback** - No participation trophies
-- **Senior-level analysis** - Security, performance, design, bugs
-- **Real-world severity scoring** - Critical, high, medium, low
-- **Side-by-side comparisons** - Your code vs. suggested fixes
-- **Actionable next steps** - Prioritized by impact
+This repository contains **two distinct applications**:
 
-### 📦 Components
-- **10+ production-ready components**
-- **Full responsive design**
-- **Drag-and-drop file upload**
-- **Sample code snippets** (good/bad examples)
-- **Mock AI analysis engine**
-- **Zero TypeScript errors**
+### 1. 📚 CodeMentor AI - Learning Platform (Next.js)
+Intelligent Programming Learning Platform with AI-powered personalized tutoring
+- **Main Platform**: Full-stack Next.js application
+- **Run with**: `npm run dev` (Next.js)
+- **See below** for complete documentation
 
-### 🎨 Design System
-- **Brutalist design philosophy** - Function over beauty
-- **Severity-based color system** - Red = critical, not decoration
-- **Monospace typography** - Technical products for technical people
-- **Dark + light themes** - Professional, minimal contrast
+### 2. 🔴 Hard Code Review - UI System (Vite)
+Brutal, senior-level code review platform - UI components and design system
+- **Standalone UI**: Built with Vite + React + Tailwind v4
+- **Run with**: `npm run dev:vite`
+- **Documentation**: See [Hard Code Review README](README_HARD_CODE_REVIEW.md)
+- **Components**: 10+ production-ready components in `src/app/components/hard-code-review/`
 
 ---
 
-## 🚀 Getting Started
-
-### Installation
+## 🔴 Quick Start: Hard Code Review UI
 
 ```bash
-# Clone the repository
-git clone https://github.com/NickScherbakov/codementor-ai-platform.git
-cd codementor-ai-platform
-
 # Install dependencies
 npm install
 
-# Start development server
-npm run dev
+# Start Vite dev server for Hard Code Review UI
+npm run dev:vite
 ```
 
-### Build for Production
+Open http://localhost:5173 and:
+1. Navigate to **"App"** tab to try the code review
+2. Click **"Try Sample Code Snippets"** to load examples
+3. Submit and see brutal feedback in action
 
-```bash
-npm run build
-npm run preview
-```
+**For complete Hard Code Review documentation**: [README_HARD_CODE_REVIEW.md](README_HARD_CODE_REVIEW.md)
 
 ---
 
-## 📁 Project Structure
+## 📚 CodeMentor AI - Learning Platform
+
+### 🧭 MVP Focus: Hard Code Review
+
+The current MVP is a focused, monetizable experience centered on **hard code review**. Everything outside this narrow scope is deferred.
+
+**In scope**
+- `/review` page for submitting code and receiving hard review feedback.
+- `POST /api/review` endpoint with a deterministic reviewer (no external API keys required).
+- Free-tier gate: 3 reviews per user, then HTTP 402 with a "Subscribe to continue" message.
+
+**Out of scope**
+- Courses, gamification, leaderboards, or social features.
+- Multi-step onboarding, learning paths, or analytics dashboards.
+- Billing integrations (Stripe) or payments.
+
+### Design / Positioning Reference
+- [Money Page reference (marketing-only)](docs/concepts/money-page-reference.md)
+
+## ⚡ MVP Quickstart (Hard Code Review)
+
+### Option A: Docker (Recommended)
+```bash
+docker-compose up -d
+```
+
+Open the app at **http://localhost:3000/review**.
+
+### Option B: Local Dev (Frontend + Backend)
+```bash
+# Terminal 1 - Frontend
+npm install
+npm run dev
+
+# Terminal 2 - Backend
+cd backend && npm install && npm run dev
+```
+
+Set the API base for local dev (so the frontend targets the backend directly):
+```bash
+export NEXT_PUBLIC_API_BASE=http://localhost:3001/api
+```
+
+## 🚀 Features
+
+### 🤖 AI-Powered Learning
+- **Adaptive AI Tutors**: Personalized guidance that adapts to your learning style
+- **Dynamic Challenge Generation**: AI creates unique coding challenges based on your progress
+- **Intelligent Code Analysis**: Real-time feedback on code quality, performance, and best practices
+- **Smart Learning Path Recommendations**: ML-driven curriculum that evolves with you
+
+### 💻 Interactive Development Environment
+- **Advanced Code Editor**: Monaco Editor with IntelliSense and syntax highlighting
+- **Multi-Language Support**: Python, JavaScript, TypeScript, Java, C++, Go, Rust, and more
+- **Real-time Code Execution**: Secure sandbox environment for testing code
+- **Collaborative Coding**: Pair programming with real-time synchronization
+
+### 🎮 Gamified Learning Experience
+- **Achievement System**: Unlock badges and trophies as you progress
+- **XP and Leveling**: Gain experience points and level up your skills
+- **Leaderboards**: Compete with peers and track your ranking
+- **Streak Tracking**: Maintain daily coding streaks for bonus rewards
+
+### 🏗 Enterprise-Grade Architecture
+- **Microservices**: Scalable backend with Node.js and Python services
+- **Real-time Communication**: WebSocket support for live collaboration
+- **Advanced Caching**: Redis for optimal performance
+- **Monitoring & Analytics**: Comprehensive tracking with Prometheus and Grafana
+
+## 🛠 Tech Stack
+
+### Frontend
+- **Framework**: Next.js 14+ (App Router) + Vite (Hard Code Review UI)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v3 & v4
+- **UI Components**: Custom components with Framer Motion
+- **State Management**: Zustand
+- **Code Editor**: Monaco Editor
+
+### Backend
+- **Runtime**: Node.js with Express
+- **Database**: MongoDB with Mongoose
+- **Authentication**: JWT with bcrypt
+- **Real-time**: Socket.io
+- **API Documentation**: Swagger/OpenAPI
+
+### AI Engine
+- **Framework**: Python Flask
+- **AI/ML**: Custom ML Models (TinyLlama, CodeT5), TensorFlow, scikit-learn
+- **Local Models**: No external API dependencies
+- **NLP**: Custom language processing for code analysis
+- **Recommendation Engine**: Collaborative filtering algorithms
+
+### DevOps & Infrastructure
+- **Containerization**: Docker & Docker Compose
+- **Reverse Proxy**: Nginx
+- **Monitoring**: Prometheus + Grafana
+- **Code Execution**: Judge0 sandbox
+- **Caching**: Redis
+- **CI/CD**: GitHub Actions (configured)
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- Python 3.9+
+- Docker & Docker Compose
+- MongoDB (or use Docker)
+- Redis (or use Docker)
+
+**📋 For complete system requirements, see [SYSTEM_REQUIREMENTS.md](SYSTEM_REQUIREMENTS.md)**
+
+### 1. Clone and Setup
+```bash
+git clone https://github.com/NickScherbakov/codementor-ai-platform.git
+cd codementor-ai-platform
+
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies
+cd backend && npm install && cd ..
+
+# Install AI engine dependencies
+cd ai-engine && pip install -r requirements.txt && cd ..
+
+# Download ML models (first time only)
+cd ai-engine && python init_models.py && cd ..
+```
+
+### 2. Environment Configuration
+
+**⚠️ Important**: You need to configure environment variables before running the application.
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+```
+
+**Required Environment Variables:**
+- `MONGODB_URI`: MongoDB connection string (or use Docker)
+- `JWT_SECRET`: Generate a secure random string
+- `REDIS_URL`: Redis connection URL (or use Docker)
+
+**Optional:**
+- `OPENAI_API_KEY`: No longer required! Using custom ML models
+
+**Example .env setup:**
+```bash
+# No OpenAI API key needed anymore!
+
+# Database (use Docker or local MongoDB)
+MONGODB_URI=mongodb://localhost:27017/codementor-ai
+
+# Security
+JWT_SECRET=your-super-secure-jwt-secret-here
+
+# Cache (use Docker or local Redis)
+REDIS_URL=redis://localhost:6379
+
+# Development URLs
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_AI_API_URL=http://localhost:5000
+```
+
+💡 **Tip**: See `.env.example` for all available configuration options.
+
+### 3. Start with Docker (Recommended)
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### 4. Manual Development Setup
+```bash
+# Terminal 1 - Frontend (Next.js)
+npm run dev
+
+# OR - Frontend (Vite - Hard Code Review UI)
+npm run dev:vite
+
+# Terminal 2 - Backend
+npm run backend
+
+# Terminal 3 - AI Engine
+npm run ai-engine
+
+# Terminal 4 - Database (if not using Docker)
+mongod
+redis-server
+```
+
+### 5. Access the Applications
+- **Next.js Frontend**: http://localhost:3000
+- **Vite Frontend (Hard Code Review)**: http://localhost:5173
+- **Backend API**: http://localhost:3001
+- **AI Engine**: http://localhost:5000
+- **Monitoring**: http://localhost:3002 (Grafana)
+
+## 📚 Documentation
+
+### 📖 **Complete Documentation Hub**
+- **[📋 Documentation Index](docs/README.md)** - Complete documentation overview and navigation
+- **[🚀 Quick Start Tutorial](docs/TUTORIAL.md)** - Step-by-step getting started guide
+- **[💡 Examples & Demos](docs/EXAMPLES.md)** - Interactive examples and real-world use cases
+- **[🤝 Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
+- **[🔴 Hard Code Review UI](README_HARD_CODE_REVIEW.md)** - Complete UI system documentation
+
+### 💼 **Business Strategy & Monetization**
+- **[💰 Business Strategy](docs/BUSINESS_STRATEGY.md)** - Comprehensive monetization plan and revenue models
+- **[💳 Pricing Configuration](docs/PRICING_CONFIG.md)** - Pricing tiers, billing infrastructure, and payment methods
+- **[🔒 Compliance Roadmap](docs/COMPLIANCE_ROADMAP.md)** - SOC2, FERPA, GDPR certification plans
+- **[🌍 Market Expansion](docs/MARKET_EXPANSION.md)** - Geographic expansion strategy (EN/ES/BR)
+- **[🚀 Implementation Priorities](docs/IMPLEMENTATION_PRIORITIES.md)** - 30/60/90-day action plan
+
+### 🏗️ **Architecture & Design**
+- **[🏛️ System Architecture](docs/architecture/README.md)** - High-level system overview and design principles
+- **[🔄 Service Interactions](docs/architecture/service-interaction.md)** - Microservices communication patterns
+- **[📊 Data Flow Diagrams](docs/architecture/data-flow.md)** - Request/response flows and data processing
+- **[🗄️ Database Schema](docs/architecture/database-schema.md)** - Data models and relationships
+
+## 🏗 Project Structure
 
 ```
 codementor-ai-platform/
-├── src/
-│   ├── app/
-│   │   ├── App.tsx                    # Main app with page navigation
-│   │   ├── components/
-│   │   │   ├── hard-code-review/         # Core review components
-│   │   │   │   ├── HardCodeReviewApp.tsx    # Main app flow
-│   │   │   │   ├── CodeInputPage.tsx        # Code submission UI
-│   │   │   │   ├── ResultsPage.tsx          # Review results display
-│   │   │   │   ├── HCRButton.tsx            # Custom button component
-│   │   │   │   ├── SeverityBadge.tsx        # Severity indicators
-│   │   │   │   ├── FindingCard.tsx          # Issue display cards
-│   │   │   │   ├── CodeComparison.tsx       # Before/after code view
-│   │   │   │   ├── NextStepsSection.tsx     # Action items
-│   │   │   │   ├── mockData.ts              # AI analysis engine (mock)
-│   │   │   │   ├── sampleSnippets.ts        # Code examples
-│   │   │   │   └── ComponentShowcase.tsx    # Demo page
-│   │   │   ├── MoneyPage.tsx             # Marketing landing page
-│   │   │   ├── ToneReference.tsx         # Voice & tone guide
-│   │   │   ├── DesignTokens.tsx          # Design system docs
-│   │   │   └── ui/                       # Reusable UI components
-│   │   │       ├── button.tsx
-│   │   │       └── utils.ts
-│   └── styles/
-│       ├── index.css                 # Main stylesheet
-│       ├── tailwind.css              # Tailwind v4 config
-│       ├── theme.css                 # Design tokens
-│       └── fonts.css                 # Font imports
-├── package.json
-├── vite.config.ts
-├── postcss.config.mjs
-└── README.md
+├── src/                    # Frontend source code (Next.js + Vite)
+│   ├── app/               # Next.js app directory
+│   │   └── components/
+│   │       └── hard-code-review/  # Hard Code Review UI components (14 files)
+│   ├── components/        # React components
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utility libraries
+│   ├── store/            # State management
+│   ├── styles/           # CSS and Tailwind config
+│   └── types/            # TypeScript definitions
+├── backend/               # Node.js backend
+├── ai-engine/            # Python AI service
+├── docs/                 # 📚 Comprehensive Documentation
+├── index.html            # Vite entry point
+├── vite.config.ts        # Vite configuration
+├── README_HARD_CODE_REVIEW.md  # Hard Code Review docs
+└── docker-compose.yml    # Container orchestration
 ```
-
----
-
-## 🎨 Design Philosophy
-
-### Brutalism over Beauty
-Function first. No gradients, no shadows, no friendly shapes. **Clarity is the only decoration.**
-
-### Severity as Signal
-Color is not aesthetic—it's information:
-- **🔴 Red** = Critical bugs, security issues
-- **🟠 Orange** = Design flaws, bad patterns  
-- **🟡 Yellow** = Performance issues
-- **🔵 Blue** = Style suggestions
-
-### Monospace is Truth
-Code deserves monospace. Labels deserve monospace. This is a **technical product for technical people.**
-
----
-
-## 🔊 Voice & Tone
-
-### Target Tone: "Hard / Senior Team Lead"
-
-Brutally honest, zero patience, assumes competence. Examples:
-
-**❌ Bad (ChatGPT-like):**
-> "Consider adding a null check for the user object. This would help prevent potential runtime errors."
-
-**✅ Good (CodeMentor AI):**
-> "**No null check.** This crashes in production the moment find() returns undefined. Did you actually run this code, or just hope it works?"
-
----
-
-## 🛠️ Tech Stack
-
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Tailwind CSS v4** - Styling
-- **Vite** - Build tool
-- **Lucide React** - Icons
-- **Class Variance Authority** - Component variants
-
----
-
-## 📊 Sample Code Analysis
-
-The platform includes 6 sample code snippets:
-
-1. **Bad JavaScript** - Multiple critical issues (null checks, type coercion)
-2. **Mediocre TypeScript** - Design and performance issues (O(n²) complexity)
-3. **Bad Python** - Poor error handling, missing validations
-4. **Good Code** - Well-written with proper error handling
-5. **Security Issues** - Critical vulnerabilities (SQL injection)
-6. **Performance Issues** - Severe performance problems (nested loops)
-
----
-
-## 📄 Pages
-
-### 1. App (Main)
-Full code review flow:
-- Code input with drag-and-drop
-- AI analysis (mock)
-- Results with severity scoring
-- Before/after comparisons
-- Actionable next steps
-
-### 2. Components Showcase
-Demonstration of all 10+ reusable components in isolation
-
-### 3. Money Page
-Marketing landing page with value proposition
-
-### 4. Tone Reference
-Internal calibration guide showing 3 review tones (polite, neutral, hard)
-
-### 5. Design Tokens
-Complete design system documentation:
-- Color palette (surface, text, severity, accent)
-- Typography scale (display, body, monospace)
-- Spacing system
-- Card styles
-- Design principles
-
----
-
-## 📝 License
-
-MIT License - see LICENSE file for details
-
----
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+**📋 [View Complete Contributing Guide →](CONTRIBUTING.md)**
 
-**Code quality standards:**
-- Zero TypeScript errors
-- Follow existing design patterns
-- Maintain brutal, honest tone in feedback messages
-- Test with sample snippets
+## 📝 License
 
----
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📧 Contact
+## 🆘 Support
 
-- **GitHub**: [@NickScherbakov](https://github.com/NickScherbakov)
-- **Repository**: [codementor-ai-platform](https://github.com/NickScherbakov/codementor-ai-platform)
+- **Documentation**: See [docs/README.md](docs/README.md) for comprehensive guides
+- **Hard Code Review**: See [README_HARD_CODE_REVIEW.md](README_HARD_CODE_REVIEW.md)
+- **Issues**: [GitHub Issues](https://github.com/NickScherbakov/codementor-ai-platform/issues)
+- **Contributing**: [Contributing Guide](CONTRIBUTING.md)
 
 ---
 
-## ✨ Built with Figma Make
+**Built with ❤️ by the CodeMentor AI Team**
 
-This project was created using **Figma Make** - a web application builder powered by AI.
-
----
-
-**Remember:** This is not a learning platform. This is career insurance. We don't teach. We expose.
+*Empowering the next generation of developers through intelligent, adaptive learning.*
