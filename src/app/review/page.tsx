@@ -1,20 +1,34 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import {
+  HCRButton,
+  SeverityBadge,
+  FindingCard,
+  SummaryCard,
+  NextStepsSection,
+  CodeComparison,
+  LoadingSpinner,
+  SkeletonLoader
+} from '@/components/hcr'
+import type { SeverityLevel, NextStep } from '@/components/hcr/types'
 
 type ReviewFinding = {
-  type: 'bug' | 'security' | 'performance' | 'design' | 'style'
+  severity: SeverityLevel
   title: string
-  explain: string
-  fix: string
-  example_patch?: string
+  description: string
+  category?: string
+  lineNumbers?: string
+  impact?: string
+  effort?: string
+  codeSnippet?: string
 }
 
 type ReviewResponse = {
   summary: string
-  severity: 'hard'
+  overallSeverity: SeverityLevel
   findings: ReviewFinding[]
-  next_steps: string[]
+  nextSteps: NextStep[]
 }
 
 const LANGUAGE_OPTIONS = [
@@ -98,62 +112,59 @@ export default function ReviewPage() {
         </header>
 
         <section className="grid gap-8 lg:grid-cols-[2fr_1fr]">
-          <div className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-white">Code Input</h2>
-                <p className="text-sm text-slate-400">Monospace editor with hard review mode locked.</p>
+            <div className="space-y-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Code Input</h2>
+                  <p className="text-sm text-slate-400">Paste your code for hard-level review</p>
+                </div>
               </div>
-              <span className="rounded-full border border-rose-500/40 bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-200">
-                Mode: Hard
-              </span>
-            </div>
 
-            <div className="flex flex-col gap-3">
-              <label className="text-sm font-medium text-slate-300" htmlFor="language">
-                Language
-              </label>
-              <select
-                id="language"
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200"
-                value={language}
-                onChange={(event) => setLanguage(event.target.value)}
+              <div className="flex flex-col gap-3">
+                <label className="text-sm font-medium text-slate-300" htmlFor="language">
+                  Language
+                </label>
+                <select
+                  id="language"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200"
+                  value={language}
+                  onChange={(event) => setLanguage(event.target.value)}
+                >
+                  {LANGUAGE_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <label className="text-sm font-medium text-slate-300" htmlFor="code">
+                  Code
+                </label>
+                <textarea
+                  id="code"
+                  className="min-h-[320px] w-full rounded-lg border border-slate-700 bg-slate-950 p-4 font-mono text-sm text-slate-200 shadow-inner"
+                  value={code}
+                  onChange={(event) => setCode(event.target.value)}
+                />
+              </div>
+
+              <HCRButton
+                size="lg"
+                variant="primary"
+                loading={isLoading}
+                onClick={handleSubmit}
               >
-                {LANGUAGE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                Review (Hard)
+              </HCRButton>
+
+              {error ? (
+                <div className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
+                  {error}
+                </div>
+              ) : null}
             </div>
-
-            <div className="flex flex-col gap-3">
-              <label className="text-sm font-medium text-slate-300" htmlFor="code">
-                Code
-              </label>
-              <textarea
-                id="code"
-                className="min-h-[320px] w-full rounded-lg border border-slate-700 bg-slate-950 p-4 font-mono text-sm text-slate-200 shadow-inner"
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={isLoading}
-              className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:bg-emerald-700"
-            >
-              {isLoading ? 'Reviewing…' : 'Review (Hard)'}
-            </button>
-
-            {error ? (
-              <div className="rounded-lg border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-200">
-                {error}
-              </div>
-            ) : null}
-          </div>
 
           <aside className="flex flex-col gap-6 rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
             <div>
@@ -179,45 +190,39 @@ export default function ReviewPage() {
 
         {result ? (
           <section className="space-y-6">
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-              <h2 className="text-xl font-semibold text-white">Summary</h2>
-              <p className="mt-2 text-sm text-slate-300">{result.summary}</p>
-            </div>
+            <SummaryCard
+              label="Overall Assessment"
+              value={result.overallSeverity.toUpperCase()}
+              severity={result.overallSeverity}
+              description={result.summary}
+            />
 
             <div className="grid gap-4 lg:grid-cols-2">
               {findingsByType.map((finding, index) => (
-                <div
+                <FindingCard
                   key={`${finding.title}-${index}`}
-                  className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-white">{finding.title}</h3>
-                    <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs text-slate-300">
-                      {finding.type}
-                    </span>
-                  </div>
-                  <p className="mt-3 text-sm text-slate-300">{finding.explain}</p>
-                  <p className="mt-3 text-sm text-emerald-200">Fix: {finding.fix}</p>
-                  {finding.example_patch ? (
-                    <pre className="mt-3 whitespace-pre-wrap rounded-lg bg-slate-950 p-3 text-xs text-slate-300">
-                      {finding.example_patch}
-                    </pre>
-                  ) : null}
-                </div>
+                  severity={finding.severity}
+                  title={finding.title}
+                  description={finding.description}
+                  category={finding.category}
+                  lineNumbers={finding.lineNumbers}
+                  impact={finding.impact}
+                  effort={finding.effort}
+                  codeSnippet={finding.codeSnippet}
+                />
               ))}
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
-              <h2 className="text-xl font-semibold text-white">Suggested Fixes / Next Steps</h2>
-              <ul className="mt-3 space-y-2 text-sm text-slate-300">
-                {result.next_steps.map((step) => (
-                  <li key={step} className="flex gap-2">
-                    <span className="text-emerald-400">→</span>
-                    {step}
-                  </li>
-                ))}
-              </ul>
+            <NextStepsSection steps={result.nextSteps} />
+          </section>
+        ) : isLoading ? (
+          <section className="space-y-6">
+            <SkeletonLoader count={1} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <SkeletonLoader count={2} />
+              <SkeletonLoader count={2} />
             </div>
+            <SkeletonLoader count={1} />
           </section>
         ) : null}
       </div>
