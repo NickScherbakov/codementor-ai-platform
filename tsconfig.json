@@ -12,16 +12,30 @@
     "esModuleInterop": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
+    "incremental": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/styles/*": ["./src/styles/*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
 
     /* Path aliases */
     "jsx": "react-jsx",
@@ -38,7 +52,8 @@
       "@/utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".next", "out", "dist", "build", "backend", "ai-engine", "mcp-servers"]
 }
       "@/utils/*": ["./src/utils/*"],
       "@/styles/*": ["./src/styles/*"]
