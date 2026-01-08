@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb } from 'lucide-react'
+import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb, AlertTriangle } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -26,12 +26,19 @@ export default function HomePage() {
               Master coding through personalized AI tutoring, adaptive learning paths, and real-time feedback. 
               Your journey to programming excellence starts here.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex items-center justify-center gap-x-6 flex-wrap">
               <Link
                 href="/dashboard"
                 className="rounded-md bg-blue-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-200"
               >
                 Start Learning
+              </Link>
+              <Link
+                href="/review"
+                className="rounded-md bg-red-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-all duration-200 flex items-center gap-2"
+              >
+                <AlertTriangle className="w-5 h-5" />
+                Hard Code Review
               </Link>
               <Link
                 href="/playground"
@@ -41,6 +48,62 @@ export default function HomePage() {
               </Link>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Two Products Section */}
+      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Choose Your Path
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Learning Platform */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Brain className="w-10 h-10 text-blue-600" />
+                <h3 className="text-2xl font-bold text-gray-900">Learning Platform</h3>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Gentle, adaptive AI tutoring. Gamified learning paths, achievements, and progress tracking. 
+                Perfect for beginners and those building skills.
+              </p>
+              <Link
+                href="/dashboard"
+                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-colors"
+              >
+                Start Learning →
+              </Link>
+            </motion.div>
+
+            {/* Hard Code Review */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="w-10 h-10 text-red-600" />
+                <h3 className="text-2xl font-bold text-gray-900">Hard Code Review</h3>
+              </div>
+              <p className="text-gray-600 mb-6">
+                <strong>Brutal, senior-level feedback.</strong> No sugar-coating. No tutorials. 
+                Interview-style judgment on your code. Get ready for the truth.
+              </p>
+              <Link
+                href="/review"
+                className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-500 transition-colors"
+              >
+                Get Reviewed →
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </section>
 

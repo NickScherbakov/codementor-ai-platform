@@ -12,6 +12,9 @@ node_modules/
 
 # Misc
 .DS_Store
+
+# Environment Variables
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -35,3 +38,101 @@ pnpm-debug.log*
 
 # OS
 Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Next.js
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# AI/ML models and data
+*.model
+*.pkl
+*.h5
+data/
+datasets/
+models/weights/
+model_cache/
+/tmp/model_cache
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets and API Keys
+secrets/
+credentials/
+*.pem
+*.key
+*.crt
+
+# SSH Keys - NEVER commit these
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id_ecdsa
+id_ecdsa.pub
+
+# Private keys
+*.private_key
+*_private.key
+secret_*
+*.secret
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Build artifacts
+dist/
+build/
+*.tgz
+*.tar.gz
+tsconfig.tsbuildinfo
+
+# Testing
+.pytest_cache/
+test-results/
+coverage/
+
+# Monitoring and analytics
+monitoring/logs/
+analytics/data/
