@@ -1,125 +1,37 @@
 # Dependencies
 node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+/.pnp
+.pnp.js
 
-# Environment Variables
-.env
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+
+# Misc
+.DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Next.js
-.next/
-out/
-build/
-*.tsbuildinfo
-
 # Logs
-logs
-*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Coverage directory used by tools like istanbul
-coverage/
-*.lcov
-
-# nyc test coverage
-.nyc_output
-
-# IDE and Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
+# OS
 Thumbs.db
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-
-# AI/ML models and data
-*.model
-*.pkl
-*.h5
-data/
-datasets/
-models/weights/
-model_cache/
-/tmp/model_cache
-
-# Docker
-.dockerignore
-docker-compose.override.yml
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Secrets and API Keys
-secrets/
-credentials/
-*.pem
-*.key
-*.crt
-
-# SSH Keys - NEVER commit these
-id_rsa
-id_rsa.pub
-id_ed25519
-id_ed25519.pub
-id_ecdsa
-id_ecdsa.pub
-
-# Private keys
-*.private_key
-*_private.key
-secret_*
-*.secret
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.temp
-
-# Build artifacts
-dist/
-build/
-*.tgz
-*.tar.gz
-tsconfig.tsbuildinfo
-
-# Testing
-.pytest_cache/
-test-results/
-coverage/
-
-# Monitoring and analytics
-monitoring/logs/
-analytics/data/
