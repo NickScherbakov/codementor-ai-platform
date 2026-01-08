@@ -1,1 +1,0 @@
-self.__BUILD_MANIFEST = {"__rewrites":{"afterFiles":[{"source":"/api/backend/:path*","destination":"http://backend:3001/api/:path*"},{"source":"/ai-tutor/:path*","destination":"http://ai-engine:5000/:path*"}],"beforeFiles":[],"fallback":[]},"sortedPages":[]};self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()
