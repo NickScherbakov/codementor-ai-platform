@@ -10,13 +10,8 @@ export const metadata: Metadata = {
   description: 'Master programming with AI-powered personalized tutoring, adaptive learning paths, and real-time code mentoring.',
   keywords: ['programming', 'learning', 'AI', 'coding', 'education', 'mentoring', 'typescript', 'javascript', 'python'],
   authors: [{ name: 'CodeMentor AI Team' }],
-  viewport: 'width=device-width, initial-scale=1',
   themeColor: '#3b82f6',
   manifest: '/manifest.json',
-  icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
-  },
 }
 
 export default function RootLayout({
