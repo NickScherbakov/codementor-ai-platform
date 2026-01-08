@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Upload, Code2 } from "lucide-react";
 import { HCRButton } from "./HCRButton";
-import { sampleSnippets, snippetDescriptions } from "./sampleSnippets";
+import { sampleSnippets } from "./sampleSnippets";
 
 interface CodeInputPageProps {
   onSubmit: (code: string, language: string) => void;

@@ -34,6 +34,19 @@
         "name": "next"
       }
     ]
+
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/app/*": ["./src/app/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["src", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", ".next", "out", "dist", "build", "backend", "ai-engine", "mcp-servers"]

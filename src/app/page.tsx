@@ -2,10 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb } from 'lucide-react'
-
-const CodingChallenge = dynamic(() => import('@/components/CodingChallenge'), { ssr: false })
 
 export default function HomePage() {
   return (
@@ -71,8 +68,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200 shadow-xl">
-            <CodingChallenge layoutHeight="compact" />
+          <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-12 text-center shadow-xl">
+            <p className="text-lg font-semibold text-gray-900">Interactive Code Editor</p>
+            <p className="mt-2 text-gray-600">Coming soon - practice coding in our advanced online editor</p>
           </div>
         </div>
       </section>

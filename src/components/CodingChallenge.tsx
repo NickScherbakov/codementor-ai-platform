@@ -3,12 +3,10 @@ import Editor from '@monaco-editor/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Play, 
-  Square, 
   CheckCircle, 
   XCircle, 
   Clock, 
   Lightbulb,
-  Brain,
   Trophy,
   Code,
   Zap
