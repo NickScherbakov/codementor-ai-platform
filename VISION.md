@@ -149,6 +149,31 @@ We're building the answer.
 
 ---
 
+## Afterword: On Ideas and Authorship
+
+> **The best standards of thinking are those that dissolve into culture and cease to belong to anyone.**
+
+Folk songs have no authors — not because they were forgotten, but because the song became **greater than its author**. It came to belong to everyone who sings it. And in this — lies the highest form of authorship.
+
+The same is true of ideas:
+- No one remembers who first said "two plus two equals four"
+- But everyone uses it as a foundation
+- And in this forgetting of authorship — lies the **immortality of the idea**
+
+### The Creator's Paradox
+
+> The highest reward for an author is when their words become so obvious that they no longer need citation.
+
+Perhaps Shakespeare would be pleased to know that the phrase *"to be or not to be"* became part of the language — even for those who never read Hamlet.
+
+**When authorship dissolves — culture is born.**
+
+We hope the ideas in this document will one day become so obvious that people will say: *"Well, of course programming is about thinking, not syntax"* — and forget where it came from.
+
+That would be the best outcome.
+
+---
+
 *This document represents the philosophical foundation of CodeMentor AI Platform. For practical information, see [README.md](README.md). For contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).*
 
 ---
