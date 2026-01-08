@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Backend - Node.js API Server (contains review logic)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/codementor-ai
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=mvp-test-secret-key
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - codementor-network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - codementor-network
+
+  # Redis Cache & Session Store
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - codementor-network
+
+networks:
+  codementor-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
