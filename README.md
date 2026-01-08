@@ -1,19 +1,61 @@
-# CodeMentor AI - Intelligent Programming Learning Platform
+# CodeMentor AI Platform
 
-[![View Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](http:/104.154.27.195/)
+[![View Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-blue?logo=github)](http://104.154.27.195/)
 
 A full-stack application that combines artificial intelligence with proven educational methods to create the most effective programming learning platform. Built with cutting-edge technologies and designed for scalability.
 
 > **Note**: The GitHub Pages demo shows the UI only. For full functionality (AI tutoring, code execution, real-time features), deploy locally with `docker-compose up`. See [GitHub Pages Configuration](.github/GITHUB_PAGES.md) for details.
 
-## 🧭 MVP Focus: Hard Code Review
+---
+
+## 🎯 Two Products in One Repository
+
+This repository contains **two distinct applications**:
+
+### 1. 📚 CodeMentor AI - Learning Platform (Next.js)
+Intelligent Programming Learning Platform with AI-powered personalized tutoring
+- **Main Platform**: Full-stack Next.js application
+- **Run with**: `npm run dev` (Next.js)
+- **See below** for complete documentation
+
+### 2. 🔴 Hard Code Review - UI System (Vite)
+Brutal, senior-level code review platform - UI components and design system
+- **Standalone UI**: Built with Vite + React + Tailwind v4
+- **Run with**: `npm run dev:vite`
+- **Documentation**: See [Hard Code Review README](README_HARD_CODE_REVIEW.md)
+- **Components**: 10+ production-ready components in `src/app/components/hard-code-review/`
+
+---
+
+## 🔴 Quick Start: Hard Code Review UI
+
+```bash
+# Install dependencies
+npm install
+
+# Start Vite dev server for Hard Code Review UI
+npm run dev:vite
+```
+
+Open http://localhost:5173 and:
+1. Navigate to **"App"** tab to try the code review
+2. Click **"Try Sample Code Snippets"** to load examples
+3. Submit and see brutal feedback in action
+
+**For complete Hard Code Review documentation**: [README_HARD_CODE_REVIEW.md](README_HARD_CODE_REVIEW.md)
+
+---
+
+## 📚 CodeMentor AI - Learning Platform
+
+### 🧭 MVP Focus: Hard Code Review
 
 The current MVP is a focused, monetizable experience centered on **hard code review**. Everything outside this narrow scope is deferred.
 
 **In scope**
 - `/review` page for submitting code and receiving hard review feedback.
 - `POST /api/review` endpoint with a deterministic reviewer (no external API keys required).
-- Free-tier gate: 3 reviews per user, then HTTP 402 with a “Subscribe to continue” message.
+- Free-tier gate: 3 reviews per user, then HTTP 402 with a "Subscribe to continue" message.
 
 **Out of scope**
 - Courses, gamification, leaderboards, or social features.
@@ -76,9 +118,9 @@ export NEXT_PUBLIC_API_BASE=http://localhost:3001/api
 ## 🛠 Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 14+ (App Router)
+- **Framework**: Next.js 14+ (App Router) + Vite (Hard Code Review UI)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v3 & v4
 - **UI Components**: Custom components with Framer Motion
 - **State Management**: Zustand
 - **Code Editor**: Monaco Editor
@@ -182,8 +224,11 @@ docker-compose logs -f
 
 ### 4. Manual Development Setup
 ```bash
-# Terminal 1 - Frontend
+# Terminal 1 - Frontend (Next.js)
 npm run dev
+
+# OR - Frontend (Vite - Hard Code Review UI)
+npm run dev:vite
 
 # Terminal 2 - Backend
 npm run backend
@@ -196,8 +241,9 @@ mongod
 redis-server
 ```
 
-### 5. Access the Application
-- **Frontend**: http://localhost:3000
+### 5. Access the Applications
+- **Next.js Frontend**: http://localhost:3000
+- **Vite Frontend (Hard Code Review)**: http://localhost:5173
 - **Backend API**: http://localhost:3001
 - **AI Engine**: http://localhost:5000
 - **Monitoring**: http://localhost:3002 (Grafana)
@@ -209,6 +255,7 @@ redis-server
 - **[🚀 Quick Start Tutorial](docs/TUTORIAL.md)** - Step-by-step getting started guide
 - **[💡 Examples & Demos](docs/EXAMPLES.md)** - Interactive examples and real-world use cases
 - **[🤝 Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
+- **[🔴 Hard Code Review UI](README_HARD_CODE_REVIEW.md)** - Complete UI system documentation
 
 ### 💼 **Business Strategy & Monetization**
 - **[💰 Business Strategy](docs/BUSINESS_STRATEGY.md)** - Comprehensive monetization plan and revenue models
@@ -223,133 +270,32 @@ redis-server
 - **[📊 Data Flow Diagrams](docs/architecture/data-flow.md)** - Request/response flows and data processing
 - **[🗄️ Database Schema](docs/architecture/database-schema.md)** - Data models and relationships
 
-### 🔌 **API Reference**
-- **[📡 Complete API Guide](docs/api/README.md)** - Comprehensive API documentation with examples
-- **[⚡ OpenAPI Specification](docs/api/openapi.yaml)** - Machine-readable API specification
-- **[🧪 API Examples](docs/api/examples/README.md)** - Code examples for all endpoints
-
-### 🚀 **Deployment & Operations**
-- **[🐳 Deployment Guide](docs/deployment/README.md)** - Production deployment instructions
-- **[☸️ Kubernetes Setup](docs/deployment/kubernetes.md)** - Enterprise Kubernetes deployment
-- **[🔧 Troubleshooting](docs/deployment/troubleshooting.md)** - Common issues and solutions
-- **[📊 Performance Metrics](docs/performance/README.md)** - Benchmarks and optimization guides
-
-### 🚀 Quick API Reference
-```typescript
-POST /api/auth/register     // User registration
-POST /api/auth/login        // User login
-POST /api/auth/refresh      // Refresh JWT token
-POST /api/auth/logout       // User logout
-```
-
-```typescript
-GET  /api/challenges        // Get coding challenges
-POST /api/challenges/generate // Generate adaptive challenge
-POST /api/submissions       // Submit solution
-GET  /api/progress         // Get learning progress
-GET  /api/achievements     // Get user achievements
-```
-
-```typescript
-POST /ai-tutor/chat        // Chat with AI tutor
-POST /code/analyze         // Analyze code quality
-POST /learning-path/recommend // Get learning recommendations
-```
-
-**📋 [View Complete API Documentation →](docs/api/README.md)**
-
 ## 🏗 Project Structure
 
 ```
-codementor-ai/
-├── src/                    # Frontend source code
+codementor-ai-platform/
+├── src/                    # Frontend source code (Next.js + Vite)
 │   ├── app/               # Next.js app directory
+│   │   └── components/
+│   │       └── hard-code-review/  # Hard Code Review UI components (14 files)
 │   ├── components/        # React components
 │   ├── hooks/            # Custom React hooks
 │   ├── lib/              # Utility libraries
 │   ├── store/            # State management
+│   ├── styles/           # CSS and Tailwind config
 │   └── types/            # TypeScript definitions
 ├── backend/               # Node.js backend
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Express middleware
-│   ├── models/           # MongoDB models
-│   ├── routes/           # API routes
-│   └── utils/            # Utility functions
 ├── ai-engine/            # Python AI service
-│   ├── models/           # ML models
-│   ├── services/         # AI services
-│   └── utils/            # Helper functions
 ├── docs/                 # 📚 Comprehensive Documentation
-│   ├── api/              # API documentation & Swagger UI
-│   ├── architecture/     # System architecture diagrams
-│   ├── deployment/       # Production deployment guides
-│   ├── performance/      # Benchmarks & optimization
-│   ├── EXAMPLES.md       # Code examples & demos
-│   └── TUTORIAL.md       # Getting started guide
-├── public/               # Static assets
-├── tests/                # Test suites
+├── index.html            # Vite entry point
+├── vite.config.ts        # Vite configuration
+├── README_HARD_CODE_REVIEW.md  # Hard Code Review docs
 └── docker-compose.yml    # Container orchestration
 ```
-
-**🔍 [Explore Architecture Diagrams →](docs/architecture/README.md)**
-
-## 🧪 Testing
-
-```bash
-# Frontend tests
-npm test
-npm run test:e2e
-
-# Backend tests
-cd backend && npm test
-
-# AI engine tests
-cd ai-engine && pytest
-```
-
-## 📈 Performance & Monitoring
-
-The platform includes enterprise-grade monitoring and performance optimization:
-
-- **📊 [Performance Benchmarks](docs/performance/benchmarks.md)**: Detailed performance metrics and load testing results
-- **🎯 Response Time Targets**: < 200ms API responses, < 2s AI responses
-- **📈 Throughput**: 1000+ RPS frontend, 500+ RPS backend, 50+ RPS AI engine
-- **🔍 Real-time Monitoring**: Prometheus + Grafana dashboards
-- **⚡ Auto-scaling**: Kubernetes HPA for dynamic scaling
-
-**Performance Highlights:**
-- API P95 Response Time: 156ms
-- AI Tutor P95 Response Time: 3.2s  
-- Database Query P95: 78ms
-- 99.94% Uptime SLA
-
-Access Grafana at `http://localhost:3002` (admin/admin123)
-
-**📋 [View Complete Performance Documentation →](docs/performance/README.md)**
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### 📚 Documentation Contributions
-- **API Documentation**: Update OpenAPI specs and examples
-- **Architecture Diagrams**: Improve system visualization with Mermaid
-- **Performance Benchmarks**: Add new test scenarios and metrics
-- **Deployment Guides**: Enhance production setup instructions
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests and update documentation
-5. Submit a pull request
-
-### Code Standards
-- **Frontend**: ESLint + Prettier
-- **Backend**: ESLint + Prettier  
-- **Python**: Black + Flake8
-- **Commits**: Conventional Commits
-- **Documentation**: Markdown with Mermaid diagrams
 
 **📋 [View Complete Contributing Guide →](CONTRIBUTING.md)**
 
@@ -357,48 +303,12 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🔒 Security
-
-### Environment Variables
-- **Never commit** `.env` files to version control
-- **Use strong secrets** for JWT_SECRET and other sensitive values
-- **Rotate API keys** regularly in production
-- **Use environment-specific** configurations for different deployments
-
-### Development Security
-- All API keys are loaded from environment variables
-- No hardcoded secrets in the codebase
-- Rate limiting enabled on API endpoints
-- Input validation on all user inputs
-
-### Reporting Security Issues
-If you discover a security vulnerability, please email security@codementor-ai.com instead of using the public issue tracker.
-
 ## 🆘 Support
 
 - **Documentation**: See [docs/README.md](docs/README.md) for comprehensive guides
+- **Hard Code Review**: See [README_HARD_CODE_REVIEW.md](README_HARD_CODE_REVIEW.md)
 - **Issues**: [GitHub Issues](https://github.com/NickScherbakov/codementor-ai-platform/issues)
 - **Contributing**: [Contributing Guide](CONTRIBUTING.md)
-
-## 🌟 Roadmap
-
-### Phase 1 (Current)
-- [x] Core learning platform
-- [x] AI-powered tutoring
-- [x] Code execution sandbox
-- [x] Basic gamification
-
-### Phase 2 (Next)
-- [ ] Mobile applications (React Native)
-- [ ] Advanced ML recommendations
-- [ ] Corporate training modules
-- [ ] Integration with popular IDEs
-
-### Phase 3 (Future)
-- [ ] VR/AR coding environments
-- [ ] Blockchain-based certificates
-- [ ] Advanced collaboration tools
-- [ ] Multi-tenant enterprise features
 
 ---
 

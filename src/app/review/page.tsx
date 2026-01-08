@@ -3,18 +3,14 @@
 import { useMemo, useState } from 'react'
 import {
   HCRButton,
-  SeverityBadge,
   FindingCard,
   SummaryCard,
   NextStepsSection,
-  CodeComparison,
-  LoadingSpinner,
   SkeletonLoader
-} from '@/components/hcr'
-import type { SeverityLevel, NextStep } from '@/components/hcr/types'
+} from '@/app/components/hard-code-review'
 
 type ReviewFinding = {
-  severity: SeverityLevel
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info'
   title: string
   description: string
   category?: string
@@ -26,9 +22,9 @@ type ReviewFinding = {
 
 type ReviewResponse = {
   summary: string
-  overallSeverity: SeverityLevel
+  overallSeverity: 'critical' | 'high' | 'medium' | 'low' | 'info'
   findings: ReviewFinding[]
-  nextSteps: NextStep[]
+  nextSteps: Array<{ title: string; description: string; priority: 'critical' | 'high' | 'medium' | 'low'; estimatedTime?: string }>
 }
 
 const LANGUAGE_OPTIONS = [
