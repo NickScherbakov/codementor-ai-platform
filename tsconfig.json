@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,15 +20,33 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/types/*": ["./src/types/*"],
-      "@/store/*": ["./src/store/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/styles/*": ["./src/styles/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/app/*": [
+        "./src/app/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ]
     },
     "plugins": [
       {
@@ -32,6 +54,21 @@
       }
     ]
   },
-  "include": ["src", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".next", "out", "dist", "build", "backend", "ai-engine", "mcp-servers"]
+  "include": [
+    "src",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "build",
+    "backend",
+    "ai-engine",
+    "mcp-servers"
+  ]
 }
