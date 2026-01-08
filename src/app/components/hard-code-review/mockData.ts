@@ -1,7 +1,7 @@
 import { ReviewResult } from "./ResultsPage";
 
 // Mock AI analysis function
-export function analyzeCode(code: string, language: string): Promise<ReviewResult> {
+export function analyzeCode(code: string, _language: string): Promise<ReviewResult> {
   return new Promise((resolve) => {
     setTimeout(() => {
       // Generate mock results based on code content

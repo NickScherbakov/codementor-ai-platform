@@ -280,7 +280,7 @@ export const useChallengeStore = create<ChallengeState>()(
       isLoadingChallenges: false,
       submissions: [],
 
-      fetchChallenges: async (filters = {}) => {
+      fetchChallenges: async (_filters = {}) => {
         set({ isLoadingChallenges: true })
         try {
           // Mock API call
