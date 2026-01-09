@@ -2,7 +2,7 @@ steps:
   # 1. Frontend: Install & Lint
   - name: 'node:20'
     entrypoint: 'npm'
-    args: ['install', '--prefix', 'frontend']
+    args: ['install', '--legacy-peer-deps', '--prefix', 'frontend']
     id: 'frontend-install'
   - name: 'node:20'
     entrypoint: 'npm'
@@ -22,38 +22,38 @@ steps:
 
   # 3. Build Docker Images (Parallel)
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$COMMIT_SHA', './frontend']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$BUILD_ID', './frontend']
     id: 'build-frontend'
     waitFor: ['frontend-lint']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$COMMIT_SHA', './backend']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$BUILD_ID', './backend']
     id: 'build-backend'
     waitFor: ['-']
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$COMMIT_SHA', './ai-engine']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$BUILD_ID', './ai-engine']
     id: 'build-ai'
     waitFor: ['ai-test']
 
   # 4. Push Images
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: ['-c', 'docker push us-central1-docker.pkg.dev/$PROJECT_ID/app/*:$COMMIT_SHA']
+    args: ['-c', 'docker push us-central1-docker.pkg.dev/$PROJECT_ID/app/*:$BUILD_ID']
     waitFor: ['build-frontend', 'build-backend', 'build-ai']
 
 # 5. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
-    args: ['run', 'deploy', 'codementor-frontend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'codementor-frontend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$BUILD_ID', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
     id: 'deploy-frontend'
     
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
-    args: ['run', 'deploy', 'codementor-backend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'codementor-backend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$BUILD_ID', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
     id: 'deploy-backend'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
-    args: ['run', 'deploy', 'codementor-ai-engine', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--no-allow-unauthenticated'] # AI сервис лучше держать приватным
+    args: ['run', 'deploy', 'codementor-ai-engine', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$BUILD_ID', '--region', 'us-central1', '--platform', 'managed', '--no-allow-unauthenticated'] # AI сервис лучше держать приватным
     id: 'deploy-ai'
 timeout: '1200s'
 options:
