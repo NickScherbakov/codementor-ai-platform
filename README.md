@@ -10,7 +10,7 @@ A "Community-Gated" programming learning platform built with a 3-service archite
 
 ## Deployment
 
-Deployment is managed by **Google Cloud Build** via the `/gcbrun` comment trigger on Pull Requests.
+Deployment is managed by **Google Cloud Build** via the `/******` comment trigger on Pull Requests.
 
 The pipeline (`cloudbuild.yaml`) performs:
 1.  Frontend Install & Lint
