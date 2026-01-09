@@ -40,14 +40,21 @@ steps:
     args: ['-c', 'docker push us-central1-docker.pkg.dev/$PROJECT_ID/app/*:$COMMIT_SHA']
     waitFor: ['build-frontend', 'build-backend', 'build-ai']
 
-  # 5. Preview Deploy (Conditional)
+# 5. Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
-    args:
-    - '-c'
-    - |
-      echo "Deploying Preview to Cloud Run..."
-      # Add deploy logic here if needed or keep purely CI for now
+    entrypoint: 'gcloud'
+    args: ['run', 'deploy', 'codementor-frontend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+    id: 'deploy-frontend'
+    
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['run', 'deploy', 'codementor-backend', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+    id: 'deploy-backend'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['run', 'deploy', 'codementor-ai-engine', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--no-allow-unauthenticated'] # AI сервис лучше держать приватным
+    id: 'deploy-ai'
 timeout: '1200s'
 options:
   logging: CLOUD_LOGGING_ONLY
