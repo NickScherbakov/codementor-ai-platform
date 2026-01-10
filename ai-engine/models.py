@@ -80,7 +80,7 @@ class ModelLoader:
             self.chat_model = AutoModelForCausalLM.from_pretrained(
                 ModelConfig.CHAT_MODEL,
                 cache_dir=ModelConfig.CACHE_DIR,
-                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+                dtype=torch.float16 if self.device == "cuda" else torch.float32,
                 device_map="auto" if self.device == "cuda" else None,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True
@@ -113,7 +113,7 @@ class ModelLoader:
             self.code_model = AutoModelForSeq2SeqLM.from_pretrained(
                 ModelConfig.CODE_MODEL,
                 cache_dir=ModelConfig.CACHE_DIR,
-                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+                dtype=torch.float16 if self.device == "cuda" else torch.float32,
                 device_map="auto" if self.device == "cuda" else None,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True
@@ -136,10 +136,38 @@ class CustomAITutor:
     def __init__(self):
         self.model_loader = ModelLoader()
         self.personality_prompts = {
-            'encouraging': "You are an encouraging and supportive programming tutor. Always stay positive and help students build confidence.",
-            'analytical': "You are a precise and analytical programming tutor. Focus on logical problem-solving and detailed explanations.",
-            'creative': "You are a creative and innovative programming tutor. Encourage out-of-the-box thinking and creative solutions.",
-            'practical': "You are a practical and results-oriented programming tutor. Focus on real-world applications and industry best practices."
+            'encouraging': """You are an encouraging and supportive programming tutor. 
+INSTRUCTIONS:
+- Be positive and help students build confidence
+- Provide clear, correct code examples
+- Check code for syntax errors before suggesting
+- Use correct variable names and indentation
+- Keep responses concise but complete
+- Always provide working examples""",
+            'analytical': """You are a precise and analytical programming tutor.
+INSTRUCTIONS:
+- Focus on logical problem-solving and detailed explanations
+- Explain the 'why' behind solutions, not just the 'how'
+- Discuss time complexity and efficiency
+- Provide clear code with proper naming
+- Include edge cases and potential issues
+- Be thorough but organized""",
+            'creative': """You are a creative and innovative programming tutor.
+INSTRUCTIONS:
+- Encourage out-of-the-box thinking and creative solutions
+- Show multiple approaches to solve problems
+- Inspire experimentation and learning
+- Provide working, correct code examples
+- Suggest interesting variations and extensions
+- Make learning fun and engaging""",
+            'practical': """You are a practical and results-oriented programming tutor.
+INSTRUCTIONS:
+- Focus on real-world applications and industry best practices
+- Provide production-ready code patterns
+- Discuss performance, maintainability, and scalability
+- Show how concepts are used in real projects
+- Give actionable, immediately useful advice
+- Ensure all code examples work correctly"""
         }
     
     def generate_response(self, user_message: str, context: Dict, personality: str = 'encouraging') -> Dict:
@@ -155,9 +183,24 @@ class CustomAITutor:
             
             # Format the conversation for TinyLlama
             # TinyLlama uses a chat format
+            skill_level = context.get('skill_level', 'beginner')
+            topic = context.get('current_topic', 'general programming')
+            
             conversation = f"""<|system|>
 {system_prompt}
-You are helping a student learn programming. Context: {context.get('current_topic', 'general programming')}
+
+CONTEXT:
+- Student level: {skill_level}
+- Topic: {topic}
+
+REQUIREMENTS FOR YOUR RESPONSE:
+1. Provide CORRECT, working code with no syntax errors
+2. Use proper variable naming (lowercase with underscores)
+3. Include complete, executable examples
+4. Check your code before responding
+5. Be clear and concise
+6. Verify any code snippets are valid
+
 </s>
 <|user|>
 {user_message}</s>
@@ -172,15 +215,17 @@ You are helping a student learn programming. Context: {context.get('current_topi
                 max_length=ModelConfig.MAX_LENGTH
             ).to(model.device)
             
-            # Generate response
+            # Generate response with optimized parameters for quality
             with torch.no_grad():
                 outputs = model.generate(
                     **inputs,
                     max_new_tokens=256,
-                    temperature=ModelConfig.TEMPERATURE,
-                    top_p=ModelConfig.TOP_P,
+                    temperature=0.5,  # Lower temperature for more consistent responses
+                    top_p=0.85,  # Slightly lower for better quality
+                    top_k=40,  # Filter out low probability tokens
                     do_sample=True,
-                    pad_token_id=tokenizer.eos_token_id
+                    pad_token_id=tokenizer.eos_token_id,
+                    repetition_penalty=1.2  # Avoid repetition
                 )
             
             # Decode response
@@ -189,6 +234,9 @@ You are helping a student learn programming. Context: {context.get('current_topi
             # Extract only the assistant's response
             if "<|assistant|>" in response_text:
                 response_text = response_text.split("<|assistant|>")[-1].strip()
+            
+            # Clean up response - remove common generation artifacts
+            response_text = self._clean_response(response_text)
             
             # Extract suggestions from response
             suggestions = self._extract_suggestions(response_text)
@@ -228,6 +276,39 @@ You are helping a student learn programming. Context: {context.get('current_topi
             suggestions.append("Use debugging tools to trace the issue")
             
         return suggestions[:3]
+    
+    def _clean_response(self, response_text: str) -> str:
+        """Clean and fix common issues in AI generated responses"""
+        # Remove duplicate sentences
+        sentences = response_text.split('. ')
+        unique_sentences = []
+        for sent in sentences:
+            if sent.strip() and sent.strip() not in unique_sentences:
+                unique_sentences.append(sent.strip())
+        response_text = '. '.join(unique_sentences)
+        
+        # Fix common variable naming issues in code
+        lines = response_text.split('\n')
+        for i, line in enumerate(lines):
+            # If line looks like Python code with uppercase variable
+            if 'for I in ' in line and ('range' in line or 'enumerate' in line):
+                line = line.replace('for I in', 'for i in')
+                lines[i] = line
+        
+        response_text = '\n'.join(lines)
+        
+        # Fix variable usage mismatch (for I... but print(i))
+        if 'for I in ' in response_text and 'print(i)' in response_text:
+            response_text = response_text.replace('for I in', 'for i in')
+        
+        # Remove excessive newlines
+        while '\n\n\n' in response_text:
+            response_text = response_text.replace('\n\n\n', '\n\n')
+        
+        # Strip extra whitespace
+        response_text = response_text.strip()
+        
+        return response_text
     
     def _recommend_resources(self, user_message: str, context: Dict) -> List[Dict]:
         """Recommend learning resources based on context"""
