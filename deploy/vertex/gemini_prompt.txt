@@ -1,0 +1,89 @@
+Goal: Build a reproducible deployment for the `ai-engine` service, push a Docker image to Artifact Registry, create a GCS bucket for model cache, and deploy the container as a Vertex AI custom container model and endpoint. Document every step, capture errors and logs, and create a PR with the artifacts (configs, scripts, deploy instructions). Do NOT reference GPU in any step.
+
+Variables (replace with real values):
+- PROJECT_ID=<your-project-id>
+- REGION=<region, e.g. us-central1 or europe-west1>
+- REPO_NAME=ai-engine-repo
+- IMAGE_TAG=ai-engine:latest
+- BUCKET_NAME=${PROJECT_ID}-model-cache
+- IMAGE_URI=${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${IMAGE_TAG}
+- MODEL_DISK_SIZE_GB=100
+
+High-level steps (perform, document, and open a PR):
+
+1) Verify environment & project setup
+   - Ensure gcloud is authenticated and the correct project is selected:
+     - gcloud auth list
+     - gcloud config set project ${PROJECT_ID}
+     - gcloud config set compute/region ${REGION}
+   - Enable required APIs if not already enabled: Vertex AI, Artifact Registry, Cloud Build, Cloud Storage, Compute Engine, Cloud IAM
+
+2) Prepare a GCS bucket for model cache
+   - If it does not exist, create:
+     - gsutil mb -l ${REGION} gs://${BUCKET_NAME}
+   - Grant appropriate permissions to the service account that will access the bucket
+
+3) Artifact Registry & build
+   - Create Docker repository (if not exists):
+     - gcloud artifacts repositories create ${REPO_NAME} --repository-format=docker --location=${REGION} || true
+   - Build and push the Docker image:
+     - gcloud builds submit --tag ${IMAGE_URI} ai-engine/
+   - Verify image exists:
+     - gcloud artifacts docker images list ${IMAGE_URI%/*}
+
+4) Container preparations
+   - Ensure the container exposes a health endpoint at `/health` and the API at `/ai-tutor/chat` (already present in `ai-engine/main.py`).
+   - Ensure environment variables inside container include:
+     - MODEL_CACHE_DIR=/models
+     - TRANSFORMERS_CACHE=/models
+     - PORT=8080
+   - Add a lightweight startup check script that logs missing Python dependencies (e.g., torch) but allows the container to start for debugging.
+
+5) Upload model container to Vertex AI and create an endpoint
+   - Upload the container as a vertex model:
+     - MODEL_ID=$(gcloud ai models upload --region=${REGION} --display-name="ai-engine-model" \
+         --container-image-uri=${IMAGE_URI} \
+         --container-predict-route=/ai-tutor/chat \
+         --container-health-route=/health \
+         --container-env-vars=MODEL_CACHE_DIR=/models,TRANSFORMERS_CACHE=/models \
+         --format="value(name)")
+
+   - Create an endpoint:
+     - ENDPOINT_ID=$(gcloud ai endpoints create --region=${REGION} --display-name="ai-engine-endpoint" --format="value(name)")
+
+   - Deploy the model to the endpoint using a machine type with sufficient memory and CPU (e.g., n1-standard-8 or n1-highmem-8):
+     - gcloud ai endpoints deploy-model ${ENDPOINT_ID} --region=${REGION} --model=${MODEL_ID} \
+         --display-name="ai-engine-deployment" \
+         --machine-type=n1-standard-8 \
+         --min-replica-count=0 --max-replica-count=1 \
+         --disk-size-gb=${MODEL_DISK_SIZE_GB}
+
+   - If quota or other limits prevent the chosen machine type, choose a suitable CPU/memory machine and document the change.
+
+6) IAM and service account
+   - Create/use a service account for deployment and grant roles: roles/aiplatform.admin, roles/storage.objectAdmin, roles/artifactregistry.writer
+   - Ensure the service account key or workload identity is used securely by CI
+
+7) CI/CD (Cloud Build)
+   - Add `deploy/cloudbuild.yaml` to run tests, build the image, push to Artifact Registry, and optionally trigger a deploy step.
+   - Add a GitHub/Cloud Build trigger for pushes to `main` branch
+
+8) Smoke tests and validation
+   - Check the health endpoint:
+     - curl -v https://<endpoint-url>/health
+   - Run a sample predict request to the endpoint (use `gcloud ai endpoints predict` with a sample JSON that posts to `/ai-tutor/chat`)
+   - Capture logs for the first cold-start (model download time) and any errors (module import errors, memory errors, etc.)
+
+9) Artifacts and PR
+   - Create `deploy/vertex/` with:
+     - `cloudbuild.yaml` (build + optional deploy steps)
+     - `gcloud-deploy.sh` (parameterized script for deploy)
+     - `README.md` with step-by-step deploy and rollback instructions
+     - Optional: Terraform manifests for the same resources
+   - Open a PR with changes, include test results and any manual verification steps
+
+10) Notes and troubleshooting
+   - If `torch` or heavy libraries fail to install or initialize in the container, include clear logs and recommend either building a custom base image that preloads wheels or using Vertex AI to stage models separately (download to `${BUCKET_NAME}` and mount/stream into the container at start time).
+   - Document disk space, memory usage, and recommended machine types for further tuning.
+
+Deliverable: a PR that contains the deploy scripts/configs, README instructions, and a short runbook for operators to reproduce the deployment and run smoke tests. Document all errors and follow-up actions in the PR description.
