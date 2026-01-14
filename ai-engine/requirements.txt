@@ -25,5 +25,5 @@ google-cloud-aiplatform==1.38.1
 vertexai==1.38.1
 # For local Ollama integration (post-credits)
 chromadb==0.4.18
-langchain==0.1.0
-langchain-community==0.0.10
+langchain==0.3.27  # Updated for compatibility with langchain-community
+langchain-community==0.3.27  # Updated to fix XXE, SSRF, and pickle deserialization vulnerabilities
