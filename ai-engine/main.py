@@ -15,6 +15,9 @@ import logging
 os.environ.setdefault("TRANSFORMERS_NO_TF", "1")
 os.environ.setdefault("TRANSFORMERS_NO_TORCHVISION", "1")
 from models import get_custom_tutor, get_custom_analyzer
+from self_evolve import SelfEvolutionEngine, migrate_to_local
+from assessment import AssessmentEngine
+from gcp_integration import GCPIntegrationManager
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -392,6 +395,11 @@ ai_tutor = AITutor()
 challenge_generator = ChallengeGenerator()
 code_analyzer = CodeAnalyzer()
 
+# Initialize new components for self-evolution and assessment
+self_evolution_engine = SelfEvolutionEngine()
+assessment_engine = AssessmentEngine()
+gcp_manager = GCPIntegrationManager()
+
 # API Routes
 
 @app.route('/health', methods=['GET'])
@@ -519,6 +527,204 @@ def recommend_learning_path():
     except Exception as e:
         logger.error(f"Learning path recommendation error: {e}")
         return jsonify({'error': 'Failed to generate recommendations'}), 500
+
+# Self-Evolution Endpoints
+
+@app.route('/evolution/status', methods=['GET'])
+def evolution_status():
+    """Get self-evolution status"""
+    try:
+        status = self_evolution_engine.get_evolution_status()
+        return jsonify({
+            'success': True,
+            'status': status
+        })
+    except Exception as e:
+        logger.error(f"Evolution status error: {e}")
+        return jsonify({'error': 'Failed to get evolution status'}), 500
+
+@app.route('/evolution/evolve', methods=['POST'])
+def trigger_evolution():
+    """Trigger evolution cycle"""
+    try:
+        data = request.get_json()
+        analytics_data = data.get('analytics', {})
+        
+        result = self_evolution_engine.evolve(analytics_data)
+        
+        return jsonify({
+            'success': True,
+            'evolution': result
+        })
+    except Exception as e:
+        logger.error(f"Evolution trigger error: {e}")
+        return jsonify({'error': 'Failed to trigger evolution'}), 500
+
+@app.route('/evolution/migrate', methods=['POST'])
+def migrate_to_ollama():
+    """Migrate from GCP to local Ollama"""
+    try:
+        result = migrate_to_local()
+        return jsonify(result)
+    except Exception as e:
+        logger.error(f"Migration error: {e}")
+        return jsonify({'error': 'Migration failed', 'details': str(e)}), 500
+
+# Assessment Endpoints
+
+@app.route('/assess/code-test/start', methods=['POST'])
+def start_code_test():
+    """Start a timed coding test"""
+    try:
+        data = request.get_json()
+        
+        user_id = data.get('user_id')
+        level = data.get('level', 'junior')
+        topic = data.get('topic', 'arrays')
+        
+        if not user_id:
+            return jsonify({'error': 'user_id is required'}), 400
+        
+        result = assessment_engine.start_code_test(user_id, level, topic)
+        
+        return jsonify({
+            'success': True,
+            'test_session': result
+        })
+    except Exception as e:
+        logger.error(f"Start code test error: {e}")
+        return jsonify({'error': 'Failed to start code test'}), 500
+
+@app.route('/assess/code-test/submit', methods=['POST'])
+def submit_code_test():
+    """Submit code for testing"""
+    try:
+        data = request.get_json()
+        
+        session_id = data.get('session_id')
+        code = data.get('code')
+        language = data.get('language', 'python')
+        
+        if not session_id or not code:
+            return jsonify({'error': 'session_id and code are required'}), 400
+        
+        result = assessment_engine.submit_code_test(session_id, code, language)
+        
+        return jsonify({
+            'success': True,
+            'result': result
+        })
+    except Exception as e:
+        logger.error(f"Submit code test error: {e}")
+        return jsonify({'error': 'Failed to submit code test'}), 500
+
+@app.route('/assess/interview/start', methods=['POST'])
+def start_interview():
+    """Start mock interview"""
+    try:
+        data = request.get_json()
+        
+        user_id = data.get('user_id')
+        level = data.get('level', 'junior')
+        
+        if not user_id:
+            return jsonify({'error': 'user_id is required'}), 400
+        
+        result = assessment_engine.start_interview(user_id, level)
+        
+        return jsonify({
+            'success': True,
+            'interview_session': result
+        })
+    except Exception as e:
+        logger.error(f"Start interview error: {e}")
+        return jsonify({'error': 'Failed to start interview'}), 500
+
+@app.route('/assess/interview/answer', methods=['POST'])
+def submit_interview_answer():
+    """Submit interview answer"""
+    try:
+        data = request.get_json()
+        
+        session_id = data.get('session_id')
+        question_id = data.get('question_id')
+        answer = data.get('answer')
+        
+        if not all([session_id, question_id, answer]):
+            return jsonify({'error': 'session_id, question_id, and answer are required'}), 400
+        
+        result = assessment_engine.submit_interview_answer(session_id, question_id, answer)
+        
+        return jsonify({
+            'success': True,
+            'score': result
+        })
+    except Exception as e:
+        logger.error(f"Submit interview answer error: {e}")
+        return jsonify({'error': 'Failed to submit answer'}), 500
+
+@app.route('/assess/interview/complete', methods=['POST'])
+def complete_interview():
+    """Complete interview and get report"""
+    try:
+        data = request.get_json()
+        
+        session_id = data.get('session_id')
+        
+        if not session_id:
+            return jsonify({'error': 'session_id is required'}), 400
+        
+        result = assessment_engine.complete_interview(session_id)
+        
+        return jsonify({
+            'success': True,
+            'report': result
+        })
+    except Exception as e:
+        logger.error(f"Complete interview error: {e}")
+        return jsonify({'error': 'Failed to complete interview'}), 500
+
+@app.route('/assess/report/<user_id>', methods=['GET'])
+def get_assessment_report(user_id):
+    """Get comprehensive assessment report for user"""
+    try:
+        result = assessment_engine.get_user_report(user_id)
+        
+        return jsonify({
+            'success': True,
+            'report': result
+        })
+    except Exception as e:
+        logger.error(f"Get assessment report error: {e}")
+        return jsonify({'error': 'Failed to get report'}), 500
+
+# GCP Integration Endpoints
+
+@app.route('/gcp/status', methods=['GET'])
+def gcp_status():
+    """Get GCP integration status and credits"""
+    try:
+        status = gcp_manager.get_status()
+        return jsonify({
+            'success': True,
+            'status': status
+        })
+    except Exception as e:
+        logger.error(f"GCP status error: {e}")
+        return jsonify({'error': 'Failed to get GCP status'}), 500
+
+@app.route('/gcp/check-migration', methods=['GET'])
+def check_migration():
+    """Check if migration to local is recommended"""
+    try:
+        result = gcp_manager.check_migration_status()
+        return jsonify({
+            'success': True,
+            'migration': result
+        })
+    except Exception as e:
+        logger.error(f"Check migration error: {e}")
+        return jsonify({'error': 'Failed to check migration'}), 500
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
