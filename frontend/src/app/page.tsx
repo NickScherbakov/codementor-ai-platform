@@ -168,16 +168,16 @@ export default function HomePage() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-base font-semibold leading-7 text-blue-600">Try it now</p>
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Live coding challenge (mocked run)</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Live Code Editor & AI Analysis</h2>
               <p className="mt-4 text-lg leading-8 text-gray-600">
-                Type in the editor, hit Run, and see how the platform gives instant feedback. Execution is mocked here, but
-                mirrors the real flow with backend + local AI that are running on the server instance.
+                Write code and hit Run to get instant AI feedback. Our backend analyzes your code and opens it in the AI Console 
+                with your choice of LLM: Google Gemini, local models, or any provider via OpenRouter.
               </p>
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-gray-700">
-                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Python</span>
-                <span className="rounded-full bg-white px-3 py-1 shadow-sm">XP rewards</span>
-                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Hints with XP cost</span>
-                <span className="rounded-full bg-white px-3 py-1 shadow-sm">Instant test results</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">🚀 Real AI Analysis</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">🧠 Multiple LLM Providers</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">💬 Interactive Console</span>
+                <span className="rounded-full bg-white px-3 py-1 shadow-sm">🎯 Instant Feedback</span>
               </div>
             </div>
             <div className="flex items-center gap-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 shadow-sm">

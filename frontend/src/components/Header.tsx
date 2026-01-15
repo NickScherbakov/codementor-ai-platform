@@ -1,9 +1,9 @@
 'use client'
 
+import { motion } from 'framer-motion'
+import { Brain, Code, Menu, X, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { motion } from 'framer-motion'
-import { Brain, Code, Zap, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 
 export default function Header() {

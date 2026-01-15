@@ -18,7 +18,7 @@ export default function DemoPage() {
             <ul className="mt-3 space-y-2 text-sm text-gray-700">
               <li>• Play with the live coding challenge on the home page</li>
               <li>• Toggle hints and see XP deductions (mocked)</li>
-              <li>• View execution results flow (mocked run)</li>
+              <li>• View execution results flow (real-time AI feedback)</li>
               <li>• Navigate Dashboard/Playground/Signup guided previews</li>
             </ul>
           </div>
