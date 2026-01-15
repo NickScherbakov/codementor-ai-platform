@@ -1,0 +1,138 @@
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║  🚀 CodeMentor AI Platform - Docker Compose                               ║
+# ║  Локальная разработка и тестирование                                      ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+version: '3.8'
+
+services:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🎨 FRONTEND (Next.js)
+  # ═══════════════════════════════════════════════════════════════════════════
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: codementor-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - BACKEND_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - codementor-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # ⚙️ BACKEND (Express)
+  # ═══════════════════════════════════════════════════════════════════════════
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: codementor-backend
+    ports:
+      - "3001:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - AI_ENGINE_URL=http://ai-engine:8080
+    depends_on:
+      - ai-engine
+    networks:
+      - codementor-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🤖 AI ENGINE (Python/Flask)
+  # ═══════════════════════════════════════════════════════════════════════════
+  ai-engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: codementor-ai-engine
+    ports:
+      - "5000:8080"
+    environment:
+      - PORT=8080
+      - USE_VERTEX_AI=${USE_VERTEX_AI:-false}
+      - GCP_PROJECT_ID=${GCP_PROJECT_ID:-}
+      - GCP_LOCATION=${GCP_LOCATION:-us-central1}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
+    volumes:
+      - ai-data:/app/data
+      - ./ai-engine:/app:ro
+    networks:
+      - codementor-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🦙 OLLAMA (Local LLM - Optional)
+  # ═══════════════════════════════════════════════════════════════════════════
+  ollama:
+    image: ollama/ollama:latest
+    container_name: codementor-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - codementor-network
+    restart: unless-stopped
+    profiles:
+      - local-ai
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🗄️ CHROMADB (Vector Store - Optional)
+  # ═══════════════════════════════════════════════════════════════════════════
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: codementor-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      - ANONYMIZED_TELEMETRY=false
+    networks:
+      - codementor-network
+    restart: unless-stopped
+    profiles:
+      - local-ai
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 🌐 NETWORKS
+# ═══════════════════════════════════════════════════════════════════════════
+networks:
+  codementor-network:
+    driver: bridge
+    name: codementor-network
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 💾 VOLUMES
+# ═══════════════════════════════════════════════════════════════════════════
+volumes:
+  ai-data:
+    name: codementor-ai-data
+  ollama-data:
+    name: codementor-ollama-data
+  chroma-data:
+    name: codementor-chroma-data

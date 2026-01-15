@@ -1,0 +1,119 @@
+{
+  "name": "🚀 CodeMentor AI Platform - GCP Development",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "googlecloudtools.cloudcode",
+        "ms-azuretools.vscode-docker",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "bradlc.vscode-tailwindcss",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "eamodio.gitlens",
+        "usernamehw.errorlens",
+        "PKief.material-icon-theme",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "mikestead.dotenv",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.formatting.provider": "black",
+        "cloudcode.enableTelemetry": false,
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.python"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "files.associations": {
+          "*.yaml": "yaml",
+          "*.yml": "yaml"
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [
+    3000,
+    3001,
+    5000,
+    8080,
+    9229
+  ],
+  
+  "portsAttributes": {
+    "3000": {
+      "label": "🎨 Frontend (Next.js)",
+      "onAutoForward": "notify"
+    },
+    "3001": {
+      "label": "⚙️ Backend (Express)",
+      "onAutoForward": "notify"
+    },
+    "5000": {
+      "label": "🤖 AI Engine (Flask)",
+      "onAutoForward": "notify"
+    },
+    "8080": {
+      "label": "☁️ Cloud Run Local",
+      "onAutoForward": "notify"
+    },
+    "9229": {
+      "label": "🐛 Node.js Debugger",
+      "onAutoForward": "silent"
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash .devcontainer/start.sh",
+  
+  "remoteUser": "vscode",
+  
+  "containerEnv": {
+    "CODESPACES": "true",
+    "GCP_REGION": "us-central1",
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+
+  "mounts": [
+    "source=${localWorkspaceFolder}/.gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached"
+  ],
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}

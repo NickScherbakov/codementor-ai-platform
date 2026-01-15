@@ -1,0 +1,268 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🎨 FRONTEND TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "🎨 Frontend: Dev Server",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Starting.*$",
+          "endsPattern": "^.*Ready.*$"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "services"
+      }
+    },
+    {
+      "label": "🎨 Frontend: Build",
+      "type": "shell",
+      "command": "npm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "group": "build",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "🎨 Frontend: Lint",
+      "type": "shell",
+      "command": "npm run lint",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ⚙️ BACKEND TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "⚙️ Backend: Dev Server",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/backend",
+        "env": {
+          "NODE_ENV": "development",
+          "PORT": "3001"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "message": 2
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Starting.*$",
+          "endsPattern": "^.*listening.*$"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "services"
+      }
+    },
+    {
+      "label": "⚙️ Backend: Test",
+      "type": "shell",
+      "command": "npm test",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "group": "test"
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🤖 AI ENGINE TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "🤖 AI Engine: Dev Server",
+      "type": "shell",
+      "command": "python main.py",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-engine",
+        "env": {
+          "FLASK_ENV": "development",
+          "PORT": "5000"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)$",
+          "file": 1,
+          "message": 2
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Starting.*$",
+          "endsPattern": "^.*Running on.*$"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "services"
+      }
+    },
+    {
+      "label": "🤖 AI Engine: Test",
+      "type": "shell",
+      "command": "pytest -v",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-engine"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "🤖 AI Engine: Debug Server",
+      "type": "shell",
+      "command": "python -m debugpy --listen 0.0.0.0:5678 --wait-for-client main.py",
+      "options": {
+        "cwd": "${workspaceFolder}/ai-engine"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🚀 FULL STACK TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "🚀 Start All Services",
+      "dependsOn": [
+        "🎨 Frontend: Dev Server",
+        "⚙️ Backend: Dev Server",
+        "🤖 AI Engine: Dev Server"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🐳 DOCKER TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "🐳 Docker: Build All",
+      "type": "shell",
+      "command": "docker compose build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build"
+    },
+    {
+      "label": "🐳 Docker: Up",
+      "type": "shell",
+      "command": "docker compose up -d",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "🐳 Docker: Down",
+      "type": "shell",
+      "command": "docker compose down",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ☁️ GCP TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "☁️ GCP: Auth Setup",
+      "type": "shell",
+      "command": "bash .devcontainer/gcp-auth.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "☁️ GCP: Cloud Build Submit",
+      "type": "shell",
+      "command": "gcloud builds submit --config cloudbuild.yaml .",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "☁️ GCP: Deploy Frontend",
+      "type": "shell",
+      "command": "gcloud run deploy codementor-frontend --source ./frontend --region us-central1 --allow-unauthenticated",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "☁️ GCP: Deploy Backend",
+      "type": "shell",
+      "command": "gcloud run deploy codementor-backend --source ./backend --region us-central1 --allow-unauthenticated",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "☁️ GCP: Deploy AI Engine",
+      "type": "shell",
+      "command": "gcloud run deploy codementor-ai-engine --source ./ai-engine --region us-central1 --no-allow-unauthenticated --memory 4Gi --cpu 2",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "☁️ GCP: View Logs",
+      "type": "shell",
+      "command": "gcloud run services logs read codementor-frontend --region us-central1 --limit 50",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 📦 INSTALL TASKS
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "label": "📦 Install: All Dependencies",
+      "type": "shell",
+      "command": "cd frontend && npm ci --legacy-peer-deps && cd ../backend && npm ci && cd ../ai-engine && pip install -r requirements.txt",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}
