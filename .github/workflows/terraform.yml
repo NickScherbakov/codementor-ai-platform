@@ -1,0 +1,210 @@
+name: 🏗️ Terraform Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/terraform/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'infrastructure/terraform/**'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TF_VERSION: '1.6.0'
+  TF_WORKING_DIR: 'infrastructure/terraform'
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🔍 TERRAFORM PLAN
+  # ═══════════════════════════════════════════════════════════════════════════
+  plan:
+    name: 📋 Terraform Plan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: 🔧 Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 📝 Create tfvars
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          cat > terraform.tfvars << EOF
+          project_id       = "${{ env.PROJECT_ID }}"
+          region           = "us-central1"
+          environment      = "prod"
+          enable_vertex_ai = true
+          EOF
+
+      - name: 🔧 Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: ✅ Terraform Validate
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform validate
+
+      - name: 📋 Terraform Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan -out=tfplan -no-color
+        continue-on-error: true
+
+      - name: 💬 Comment Plan on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('${{ env.TF_WORKING_DIR }}/tfplan', 'utf8');
+            
+            const output = `#### Terraform Plan 📋
+            
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`terraform
+            ${plan}
+            \`\`\`
+            
+            </details>
+            
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });
+
+      - name: 📤 Upload Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}/tfplan
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 🚀 TERRAFORM APPLY
+  # ═══════════════════════════════════════════════════════════════════════════
+  apply:
+    name: 🚀 Terraform Apply
+    runs-on: ubuntu-latest
+    needs: plan
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply')
+    environment: production
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: 🔧 Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 📝 Create tfvars
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          cat > terraform.tfvars << EOF
+          project_id       = "${{ env.PROJECT_ID }}"
+          region           = "us-central1"
+          environment      = "prod"
+          enable_vertex_ai = true
+          EOF
+
+      - name: 🔧 Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: 📥 Download Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: ${{ env.TF_WORKING_DIR }}
+
+      - name: 🚀 Terraform Apply
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
+
+      - name: 📊 Output Summary
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          echo "## 🏗️ Infrastructure Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Resource | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend URL | $(terraform output -raw frontend_url) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend URL | $(terraform output -raw backend_url) |" >> $GITHUB_STEP_SUMMARY
+          echo "| AI Engine URL | $(terraform output -raw ai_engine_url) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Registry | $(terraform output -raw artifact_registry_url) |" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 💥 TERRAFORM DESTROY (Manual only)
+  # ═══════════════════════════════════════════════════════════════════════════
+  destroy:
+    name: 💥 Terraform Destroy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+    environment: production
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔐 Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: 🔧 Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 📝 Create tfvars
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          cat > terraform.tfvars << EOF
+          project_id       = "${{ env.PROJECT_ID }}"
+          region           = "us-central1"
+          environment      = "prod"
+          enable_vertex_ai = true
+          EOF
+
+      - name: 🔧 Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: 💥 Terraform Destroy
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -auto-approve
