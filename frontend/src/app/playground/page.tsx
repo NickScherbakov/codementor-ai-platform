@@ -1,6 +1,6 @@
 'use client'
 
-import { CodingChallenge } from '@/components/CodingChallenge'
+import CodingChallenge from '@/components/CodingChallenge'
 
 export default function PlaygroundPage() {
   return (
