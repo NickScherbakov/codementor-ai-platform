@@ -16,6 +16,9 @@ export default function PlaygroundPage() {
   const [inputValue, setInputValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [personality, setPersonality] = useState('encouraging')
+  const [llmProvider, setLlmProvider] = useState('gemini')
+  const [openrouterModel, setOpenrouterModel] = useState('openai/gpt-4-turbo')
+  const [openrouterKey, setOpenrouterKey] = useState('')
   const [showSettings, setShowSettings] = useState(false)
   const [copied, setCopied] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -50,7 +53,12 @@ export default function PlaygroundPage() {
         },
         body: JSON.stringify({
           message: inputValue,
-          personality: personality
+          personality: personality,
+          llmProvider: llmProvider,
+          ...(llmProvider === 'openrouter' && {
+            openrouterModel: openrouterModel,
+            openrouterKey: openrouterKey
+          })
         })
       })
 
@@ -113,25 +121,98 @@ export default function PlaygroundPage() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-4 bg-blue-700 rounded-lg"
+              className="mt-4 p-4 bg-blue-700 rounded-lg space-y-4"
             >
-              <label className="text-white text-sm font-semibold mb-2 block">
-                Tutor Personality
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {['encouraging', 'analytical', 'creative', 'practical'].map(p => (
+              {/* Tutor Personality */}
+              <div>
+                <label className="text-white text-sm font-semibold mb-2 block">
+                  Tutor Personality
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {['encouraging', 'analytical', 'creative', 'practical'].map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setPersonality(p)}
+                      className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                        personality === p
+                          ? 'bg-white text-blue-600'
+                          : 'bg-blue-600 text-white hover:bg-blue-500'
+                      }`}
+                    >
+                      {p.charAt(0).toUpperCase() + p.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* LLM Provider Selection */}
+              <div className="border-t border-blue-600 pt-4">
+                <label className="text-white text-sm font-semibold mb-2 block">
+                  🧠 AI Model Provider
+                </label>
+                <div className="grid grid-cols-3 gap-2">
                   <button
-                    key={p}
-                    onClick={() => setPersonality(p)}
+                    onClick={() => setLlmProvider('gemini')}
                     className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                      personality === p
+                      llmProvider === 'gemini'
                         ? 'bg-white text-blue-600'
                         : 'bg-blue-600 text-white hover:bg-blue-500'
                     }`}
                   >
-                    {p.charAt(0).toUpperCase() + p.slice(1)}
+                    Google Gemini
                   </button>
-                ))}
+                  <button
+                    onClick={() => setLlmProvider('local')}
+                    className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                      llmProvider === 'local'
+                        ? 'bg-white text-blue-600'
+                        : 'bg-blue-600 text-white hover:bg-blue-500'
+                    }`}
+                  >
+                    Local Models
+                  </button>
+                  <button
+                    onClick={() => setLlmProvider('openrouter')}
+                    className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                      llmProvider === 'openrouter'
+                        ? 'bg-white text-blue-600'
+                        : 'bg-blue-600 text-white hover:bg-blue-500'
+                    }`}
+                  >
+                    OpenRouter
+                  </button>
+                </div>
+
+                {/* OpenRouter specific settings */}
+                {llmProvider === 'openrouter' && (
+                  <div className="mt-3 space-y-2">
+                    <input
+                      type="password"
+                      value={openrouterKey}
+                      onChange={(e) => setOpenrouterKey(e.target.value)}
+                      placeholder="Enter OpenRouter API Key"
+                      className="w-full px-3 py-2 bg-blue-600 text-white rounded text-sm placeholder-blue-200 focus:outline-none"
+                    />
+                    <select
+                      value={openrouterModel}
+                      onChange={(e) => setOpenrouterModel(e.target.value)}
+                      className="w-full px-3 py-2 bg-blue-600 text-white rounded text-sm focus:outline-none"
+                    >
+                      <option value="openai/gpt-4-turbo">GPT-4 Turbo (OpenAI)</option>
+                      <option value="openai/gpt-4">GPT-4 (OpenAI)</option>
+                      <option value="anthropic/claude-3-opus">Claude 3 Opus (Anthropic)</option>
+                      <option value="anthropic/claude-3-sonnet">Claude 3 Sonnet (Anthropic)</option>
+                      <option value="meta-llama/llama-2-70b-chat">Llama 2 70B (Meta)</option>
+                      <option value="mistralai/mistral-large">Mistral Large</option>
+                    </select>
+                  </div>
+                )}
+
+                <p className="text-blue-100 text-xs mt-2">
+                  {llmProvider === 'gemini' && '☁️ Cloud-based • Powerful • Free tier available'}
+                  {llmProvider === 'local' && '🏠 Local • Private • Runs in cloud'}
+                  {llmProvider === 'openrouter' && '🔗 Multi-provider • Choose your model'}
+                </p>
               </div>
             </motion.div>
           )}
