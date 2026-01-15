@@ -48,6 +48,13 @@ export default function HomePage() {
                     <Brain className="w-4 h-4" />
                     Start Mentorship
                   </Link>
+                  <Link
+                    href="/playground"
+                    className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:from-purple-500 hover:to-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Zap className="w-4 h-4" />
+                    Try AI Console
+                  </Link>
                 </div>
                 <div className="mt-8 flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex -space-x-2">

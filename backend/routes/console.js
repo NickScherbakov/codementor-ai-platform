@@ -25,15 +25,13 @@ class GeminiProvider {
           "You are an encouraging programming tutor. Be supportive and positive.",
         analytical:
           "You are an analytical tutor. Focus on precision and logical reasoning.",
-        creative:
-          "You are a creative tutor. Encourage innovative solutions.",
+        creative: "You are a creative tutor. Encourage innovative solutions.",
         practical:
           "You are a practical tutor. Focus on real-world applications.",
       };
 
       const systemPrompt =
-        personalityPrompt[personality] ||
-        personalityPrompt.encouraging;
+        personalityPrompt[personality] || personalityPrompt.encouraging;
 
       const request = {
         contents: [
@@ -73,34 +71,38 @@ class OpenRouterProvider {
           "You are an encouraging programming tutor. Be supportive and positive.",
         analytical:
           "You are an analytical tutor. Focus on precision and logical reasoning.",
-        creative:
-          "You are a creative tutor. Encourage innovative solutions.",
+        creative: "You are a creative tutor. Encourage innovative solutions.",
         practical:
           "You are a practical tutor. Focus on real-world applications.",
       };
 
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "HTTP-Referer": "https://codementor-ai-platform.vercel.app",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: model || "openai/gpt-4-turbo",
-          messages: [
-            {
-              role: "system",
-              content: personalitySystem[personality] || personalitySystem.encouraging,
-            },
-            {
-              role: "user",
-              content: message,
-            },
-          ],
-          temperature: 0.7,
-        }),
-      });
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "HTTP-Referer": "https://codementor-ai-platform.vercel.app",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: model || "openai/gpt-4-turbo",
+            messages: [
+              {
+                role: "system",
+                content:
+                  personalitySystem[personality] ||
+                  personalitySystem.encouraging,
+              },
+              {
+                role: "user",
+                content: message,
+              },
+            ],
+            temperature: 0.7,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -125,15 +127,15 @@ class LocalModelsProvider {
   async chat(message, personality, context) {
     try {
       // Call local Python AI Engine
-      const pythonBackendUrl = process.env.PYTHON_AI_ENGINE_URL || "http://localhost:5000";
+      const pythonBackendUrl =
+        process.env.PYTHON_AI_ENGINE_URL || "http://localhost:5000";
 
       const personalityPrompts = {
         encouraging:
           "You are an encouraging programming tutor. Be supportive and positive.",
         analytical:
           "You are an analytical tutor. Focus on precision and logical reasoning.",
-        creative:
-          "You are a creative tutor. Encourage innovative solutions.",
+        creative: "You are a creative tutor. Encourage innovative solutions.",
         practical:
           "You are a practical tutor. Focus on real-world applications.",
       };
