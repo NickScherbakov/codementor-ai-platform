@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import Editor from '@monaco-editor/react'
 import { motion } from 'framer-motion'
-import { Play, Copy, Check } from 'lucide-react'
+import { Check, Copy, Play } from 'lucide-react'
+import { useState } from 'react'
 
 export default function CodeEditor() {
   const [code, setCode] = useState(`def fibonacci(n):

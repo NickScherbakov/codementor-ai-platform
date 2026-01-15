@@ -1,7 +1,7 @@
 'use client'
 
-import HeroCodeDemo from '@/components/HeroCodeDemo'
 import CodeEditor from '@/components/CodeEditor'
+import HeroCodeDemo from '@/components/HeroCodeDemo'
 import { motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, BookOpen, Brain, CheckCircle2, Code, Lightbulb, Target, Trophy, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
