@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Copy, Check, Settings } from 'lucide-react'
+import { Check, Copy, Send, Settings } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Message {
   id: string
