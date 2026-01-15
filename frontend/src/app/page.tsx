@@ -1,6 +1,7 @@
 'use client'
 
 import HeroCodeDemo from '@/components/HeroCodeDemo'
+import CodeEditor from '@/components/CodeEditor'
 import { motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, BookOpen, Brain, CheckCircle2, Code, Lightbulb, Target, Trophy, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
@@ -178,9 +179,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-12 text-center shadow-xl">
-            <p className="text-lg font-semibold text-gray-900">Interactive Code Editor</p>
-            <p className="mt-2 text-gray-600">Coming soon - practice coding in our advanced online editor</p>
+          <div className="mt-10">
+            <CodeEditor />
           </div>
         </div>
       </section>
