@@ -35,7 +35,7 @@ jobs:
   plan:
     name: 📋 Terraform Plan
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -80,19 +80,19 @@ jobs:
           script: |
             const fs = require('fs');
             const plan = fs.readFileSync('${{ env.TF_WORKING_DIR }}/tfplan', 'utf8');
-            
+
             const output = `#### Terraform Plan 📋
-            
+
             <details><summary>Show Plan</summary>
-            
+
             \`\`\`terraform
             ${plan}
             \`\`\`
-            
+
             </details>
-            
+
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -117,7 +117,7 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply')
     environment: production
-    
+
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -176,7 +176,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
     environment: production
-    
+
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
