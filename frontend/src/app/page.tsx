@@ -2,102 +2,160 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb, AlertTriangle } from 'lucide-react'
+import { BookOpen, Brain, Code, Users, Zap, Trophy, Target, Lightbulb, AlertTriangle, ArrowRight, CheckCircle2 } from 'lucide-react'
+import HeroCodeDemo from '@/components/HeroCodeDemo'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              <span className="block">Learn Programming with</span>
-              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                AI-Powered Mentoring
-              </span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600 sm:text-xl">
-              Master coding through personalized AI tutoring, adaptive learning paths, and real-time feedback. 
-              Your journey to programming excellence starts here.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6 flex-wrap">
-              <Link
-                href="/dashboard"
-                className="rounded-md bg-blue-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all duration-200"
+      <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)] opacity-20" />
+        <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:mr-28 lg:mr-0 xl:mr-16 lg:origin-center" />
+
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:items-center">
+            <div className="lg:col-span-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
               >
-                Start Learning
-              </Link>
-              <Link
-                href="/review"
-                className="rounded-md bg-red-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 transition-all duration-200 flex items-center gap-2"
-              >
-                <AlertTriangle className="w-5 h-5" />
-                Hard Code Review
-              </Link>
-              <Link
-                href="/playground"
-                className="rounded-md border border-gray-300 px-6 py-3 text-lg font-semibold text-gray-900 hover:bg-gray-50 transition-all duration-200"
-              >
-                Try Playground
-              </Link>
+                <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium text-indigo-600 ring-1 ring-inset ring-indigo-200 bg-indigo-50 mb-6">
+                  <span className="flex h-2 w-2 rounded-full bg-indigo-600 mr-2 animate-pulse"></span>
+                  AI-Powered Code Evolution
+                </div>
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl mb-6">
+                  Stop Writing <span className="text-indigo-600">Legacy Code</span>
+                </h1>
+                <p className="text-lg leading-8 text-gray-600 mb-8">
+                  Most coding platforms just check syntax. We check your <strong>engineering</strong>.
+                  Get brutal, senior-level feedback or gentle, adaptive mentoring. You choose the mode.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/review"
+                    className="rounded-lg bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-all flex items-center justify-center gap-2"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-red-400" />
+                    Roast My Code
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="rounded-lg bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Brain className="w-4 h-4" />
+                    Start Mentorship
+                  </Link>
+                </div>
+                <div className="mt-8 flex items-center gap-4 text-sm text-gray-500">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-bold">
+                        {String.fromCharCode(64 + i)}
+                      </div>
+                    ))}
+                  </div>
+                  <p>Joined by 500+ developers this week</p>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
+            <div className="mt-16 lg:mt-0 lg:col-span-6 lg:row-start-1 lg:col-start-7">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                <div className="absolute -top-4 -right-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+                <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+                <HeroCodeDemo />
+              </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Two Products Section */}
-      <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Choose Your Path
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Learning Platform */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <Brain className="w-10 h-10 text-blue-600" />
-                <h3 className="text-2xl font-bold text-gray-900">Learning Platform</h3>
-              </div>
-              <p className="text-gray-600 mb-6">
-                Gentle, adaptive AI tutoring. Gamified learning paths, achievements, and progress tracking. 
-                Perfect for beginners and those building skills.
-              </p>
-              <Link
-                href="/dashboard"
-                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 transition-colors"
-              >
-                Start Learning →
-              </Link>
-            </motion.div>
+      {/* Feature Split Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Two Ways to Grow</h2>
+            <p className="mt-4 text-lg text-gray-600">Whether you need a hug or a kick in the pants, we've got you.</p>
+          </div>
 
-            {/* Hard Code Review */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="w-10 h-10 text-red-600" />
-                <h3 className="text-2xl font-bold text-gray-900">Hard Code Review</h3>
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Mentorship Mode */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative bg-white ring-1 ring-gray-200 rounded-2xl p-8 h-full flex flex-col">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                  <Brain className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">AI Mentorship</h3>
+                <p className="text-gray-600 mb-8 flex-grow">
+                  A patient, adaptive tutor that guides you through concepts.
+                  Perfect for learning new languages or frameworks from scratch.
+                  It adapts to your pace and learning style.
+                </p>
+                <ul className="space-y-3 mb-8 text-gray-600">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                    <span>Personalized Learning Paths</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                    <span>Interactive Quizzes</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-blue-500" />
+                    <span>Progress Tracking</span>
+                  </li>
+                </ul>
+                <Link href="/dashboard" className="mt-auto text-blue-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                  Start Learning <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
-              <p className="text-gray-600 mb-6">
-                <strong>Brutal, senior-level feedback.</strong> No sugar-coating. No tutorials. 
-                Interview-style judgment on your code. Get ready for the truth.
-              </p>
-              <Link
-                href="/review"
+            </div>
+
+            {/* Hard Review Mode */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative bg-white ring-1 ring-gray-200 rounded-2xl p-8 h-full flex flex-col">
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-6">
+                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Hard Code Review</h3>
+                <p className="text-gray-600 mb-8 flex-grow">
+                  Simulates a strict Senior Engineer code review.
+                  It won't be nice. It will find security holes, performance issues,
+                  and bad patterns you didn't know you had.
+                </p>
+                <ul className="space-y-3 mb-8 text-gray-600">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-red-500" />
+                    <span>Security Vulnerability Scan</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-red-500" />
+                    <span>Performance Bottlenecks</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-red-500" />
+                    <span>Idiomatic Refactoring</span>
+                  </li>
+                </ul>
+                <Link href="/review" className="mt-auto text-red-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                  Get Roasted <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
                 className="inline-block bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-500 transition-colors"
               >
                 Get Reviewed →
