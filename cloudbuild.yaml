@@ -40,9 +40,17 @@ steps:
 
   # 4. Push Images
   - name: 'gcr.io/cloud-builders/docker'
-    entrypoint: 'bash'
-    args: ['-c', 'docker push us-central1-docker.pkg.dev/$PROJECT_ID/app/*:$BUILD_ID']
-    waitFor: ['build-frontend', 'build-backend', 'build-ai']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$BUILD_ID']
+    id: 'push-frontend'
+    waitFor: ['build-frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$BUILD_ID']
+    id: 'push-backend'
+    waitFor: ['build-backend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/app/ai-engine:$BUILD_ID']
+    id: 'push-ai'
+    waitFor: ['build-ai']
 
   # 5. Deploy to Cloud Run (Using Free Trial credits)
   # These deployments consume GCP Free Trial budget (~$280)
@@ -59,6 +67,7 @@ steps:
       - '--allow-unauthenticated'
       - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1'
     id: 'deploy-frontend'
+    waitFor: ['push-frontend']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
@@ -72,6 +81,7 @@ steps:
       - '--allow-unauthenticated'
       - '--set-env-vars=AI_ENGINE_URL=https://codementor-ai-engine-PROJECT_ID.run.app'
     id: 'deploy-backend'
+    waitFor: ['push-backend']
 
   # AI Engine with Vertex AI integration (Gemini Code Assist + GenAI App Builder)
   # This service uses:
@@ -92,6 +102,7 @@ steps:
       - '--cpu=2'
       - '--timeout=300'
     id: 'deploy-ai'
+    waitFor: ['push-ai']
 
   # Optional: Initialize Vertex AI Search for RAG (GenAI App Builder)
   # This step indexes challenges and documentation for assessment system
