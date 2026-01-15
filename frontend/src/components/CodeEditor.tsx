@@ -30,9 +30,27 @@ print(f"Result: {result}")
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleRun = () => {
-    // In a real implementation, this would send code to your backend/AI engine
-    alert('In production, this would send your code to our AI engine for analysis!')
+  const handleRun = async () => {
+    try {
+      const response = await fetch('/api/ai-console/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          code: code,
+          language: language
+        })
+      })
+
+      const data = await response.json()
+      if (data.success) {
+        // Open playground with analysis results
+        window.open('/playground?code=' + encodeURIComponent(code), '_blank')
+      }
+    } catch (error) {
+      console.error('Error analyzing code:', error)
+    }
   }
 
   return (
