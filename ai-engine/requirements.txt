@@ -21,8 +21,8 @@ accelerate>=0.25.0
 sentencepiece==0.1.99
 protobuf==4.25.1
 # GCP Integration (optional - for bootstrap phase)
-google-cloud-aiplatform==1.38.1
-vertexai==1.38.1
+google-cloud-aiplatform>=1.43.0
+vertexai>=1.43.0
 # For local Ollama integration (post-credits)
 chromadb==0.4.18
 langchain==0.3.27  # Updated for compatibility with langchain-community
