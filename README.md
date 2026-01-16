@@ -99,6 +99,26 @@ The pipeline (`cloudbuild.yaml`) performs:
 - [TRANSFORMATION_GUIDE.md](TRANSFORMATION_GUIDE.md): Transformation process
 - [SECURITY_SUMMARY.md](SECURITY_SUMMARY.md): Security details
 
+## Codex Automation (GitHub Actions)
+
+This repository includes a manual GitHub Actions workflow that can apply changes from OpenAI Codex.
+
+### Setup
+
+1. Add repository secret `OPENAI_API_KEY` with an OpenAI API key.
+2. (Optional) Update the default model in `.github/workflows/codex-bot.yml`.
+
+### Run
+
+1. Open **Actions** → **🤖 Codex Apply**.
+2. Click **Run workflow**.
+3. Provide plain-text instructions (for example: "Fix the AI Console API proxying to backend").
+
+The workflow will:
+- generate a patch via OpenAI,
+- apply it to the repo,
+- commit and push the result to the current branch.
+
 ## Local Development
 
 Each service contains its own setup instructions (check `package.json` or usage files if available).

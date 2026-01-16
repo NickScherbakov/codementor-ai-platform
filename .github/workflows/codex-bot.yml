@@ -1,0 +1,49 @@
+name: 🤖 Codex Apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      instructions:
+        description: "Instructions for Codex to implement (plain text)"
+        required: true
+        type: string
+      model:
+        description: "OpenAI model name"
+        required: false
+        default: "gpt-4.1-mini"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  codex-apply:
+    name: 🤖 Apply Codex Patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🧰 Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: 🔧 Configure Git
+        run: |
+          git config user.name "codex-bot"
+          git config user.email "codex-bot@users.noreply.github.com"
+
+      - name: 🤖 Generate & Apply Patch
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          INSTRUCTIONS: ${{ inputs.instructions }}
+          CODEX_MODEL: ${{ inputs.model }}
+        run: |
+          chmod +x scripts/codex-apply.sh
+          scripts/codex-apply.sh
+
+      - name: ✅ Commit & Push
+        if: ${{ success() }}
+        run: |
+          git add -A
+          git commit -m "chore: apply codex changes"
+          git push
