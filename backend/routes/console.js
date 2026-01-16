@@ -101,7 +101,7 @@ class OpenRouterProvider {
             ],
             temperature: 0.7,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -244,7 +244,7 @@ router.post("/api/ai-console/chat", async (req, res) => {
           personality,
           context,
           openrouterKey,
-          openrouterModel
+          openrouterModel,
         );
         break;
 
@@ -334,6 +334,15 @@ router.get("/api/ai-console/context", (req, res) => {
     success: true,
     context: aiEngine.getContext(),
     personality: aiEngine.personality,
+  });
+});
+
+// Health check endpoint
+router.get("/api/ai-console/health", (req, res) => {
+  res.json({
+    success: true,
+    status: "online",
+    timestamp: new Date().toISOString(),
   });
 });
 
