@@ -104,16 +104,6 @@ if (reviewRoutes) app.use("/api/review", reviewRoutes);
 if (assessmentRoutes) app.use("/api/assessment", assessmentRoutes);
 if (consoleRoutes) app.use("/", consoleRoutes);
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV || "development",
-  });
-});
-
 // WebSocket handling for real-time features
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
@@ -249,6 +239,16 @@ async function markNotificationAsRead(notificationId) {
   // This would update the notification in the database
   console.log(`Marking notification ${notificationId} as read`);
 }
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
