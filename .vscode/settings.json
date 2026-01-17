@@ -133,5 +133,8 @@
     "**/dist": true,
     "**/.next": true,
     "**/coverage": true
-  }
+  },
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "main"
+  ]
 }
