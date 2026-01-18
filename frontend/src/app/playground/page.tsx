@@ -25,6 +25,9 @@ interface Message {
   timestamp: Date;
 }
 
+// API base URL for AI console endpoints - configurable for Cloud Run deployment
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
 export default function PlaygroundPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -45,7 +48,7 @@ export default function PlaygroundPage() {
   // Check backend connection
   const checkConnection = useCallback(async () => {
     try {
-      const response = await fetch("/api/ai-console/health", {
+      const response = await fetch(`${API_BASE_URL}/api/ai-console/health`, {
         method: "GET",
       });
       setConnectionStatus(response.ok ? "online" : "offline");
@@ -99,7 +102,7 @@ export default function PlaygroundPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/ai-console/chat", {
+      const response = await fetch(`${API_BASE_URL}/api/ai-console/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
