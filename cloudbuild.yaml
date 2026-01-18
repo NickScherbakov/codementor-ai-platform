@@ -65,7 +65,7 @@ steps:
       - '--region=us-central1'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1'
+      - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,NEXT_PUBLIC_API_URL=https://codementor-backend-31499486874.us-central1.run.app'
     id: 'deploy-frontend'
     waitFor: ['push-frontend']
 
@@ -79,7 +79,7 @@ steps:
       - '--region=us-central1'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars=AI_ENGINE_URL=https://codementor-ai-engine-PROJECT_ID.run.app'
+      - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,VERTEX_MODEL=gemini-pro,AI_ENGINE_URL=https://codementor-ai-engine-31499486874.us-central1.run.app,PYTHON_AI_ENGINE_URL=https://codementor-ai-engine-31499486874.us-central1.run.app'
     id: 'deploy-backend'
     waitFor: ['push-backend']
 
