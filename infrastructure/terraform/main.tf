@@ -73,6 +73,24 @@ variable "enable_vertex_ai" {
   default     = true
 }
 
+variable "min_instances" {
+  description = "Minimum number of Cloud Run instances (0 for cost optimization)"
+  type        = number
+  default     = 0
+}
+
+variable "max_instances" {
+  description = "Maximum number of Cloud Run instances"
+  type        = number
+  default     = 10
+}
+
+variable "enable_cdn" {
+  description = "Enable Cloud CDN for frontend (recommended for production)"
+  type        = bool
+  default     = false
+}
+
 # ═══════════════════════════════════════════════════════════════════════════
 # 🏗️ PROVIDERS
 # ═══════════════════════════════════════════════════════════════════════════
@@ -303,8 +321,8 @@ resource "google_cloud_run_v2_service" "frontend" {
     }
 
     scaling {
-      min_instance_count = 0
-      max_instance_count = 10
+      min_instance_count = var.min_instances
+      max_instance_count = var.max_instances
     }
   }
 
@@ -313,7 +331,10 @@ resource "google_cloud_run_v2_service" "frontend" {
     percent = 100
   }
 
-  labels = local.labels
+  labels = merge(local.labels, {
+    tier = "frontend"
+    cost_center = "platform"
+  })
 
   depends_on = [
     google_project_service.apis["run.googleapis.com"],
@@ -347,6 +368,7 @@ resource "google_cloud_run_v2_service" "backend" {
           cpu    = "1"
           memory = "512Mi"
         }
+        startup_cpu_boost = true  # Cost optimization: faster cold starts
       }
 
       env {
@@ -360,8 +382,8 @@ resource "google_cloud_run_v2_service" "backend" {
     }
 
     scaling {
-      min_instance_count = 0
-      max_instance_count = 10
+      min_instance_count = var.min_instances
+      max_instance_count = var.max_instances
     }
   }
 
@@ -370,7 +392,10 @@ resource "google_cloud_run_v2_service" "backend" {
     percent = 100
   }
 
-  labels = local.labels
+  labels = merge(local.labels, {
+    tier = "backend"
+    cost_center = "platform"
+  })
 
   depends_on = [
     google_project_service.apis["run.googleapis.com"],
@@ -404,6 +429,7 @@ resource "google_cloud_run_v2_service" "ai_engine" {
           cpu    = "2"
           memory = "4Gi"
         }
+        startup_cpu_boost = true  # Cost optimization: faster cold starts
       }
 
       env {
@@ -422,14 +448,21 @@ resource "google_cloud_run_v2_service" "ai_engine" {
         name  = "VERTEX_MODEL"
         value = "gemini-pro"
       }
+      env {
+        name  = "FLASK_ENV"
+        value = var.environment == "prod" ? "production" : "development"
+      }
     }
 
     scaling {
-      min_instance_count = 0
-      max_instance_count = 5
+      min_instance_count = var.min_instances
+      max_instance_count = 5  # Lower max for cost control
     }
 
     timeout = "300s"
+
+    # Cost optimization: execution environment
+    execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
   }
 
   traffic {
@@ -481,3 +514,43 @@ resource "google_cloud_run_v2_service_iam_member" "ai_engine_backend" {
   role     = "roles/run.invoker"
   member   = "serviceAccount:${google_service_account.cloud_run.email}"
 }
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 📊 OUTPUTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+output "frontend_url" {
+  description = "Frontend service URL"
+  value       = google_cloud_run_v2_service.frontend.uri
+}
+
+output "backend_url" {
+  description = "Backend service URL"
+  value       = google_cloud_run_v2_service.backend.uri
+}
+
+output "ai_engine_url" {
+  description = "AI Engine service URL"
+  value       = google_cloud_run_v2_service.ai_engine.uri
+}
+
+output "artifact_registry_repository" {
+  description = "Artifact Registry repository URL"
+  value       = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.app.repository_id}"
+}
+
+output "deployer_service_account" {
+  description = "Deployer service account email"
+  value       = google_service_account.deployer.email
+}
+
+output "project_id" {
+  description = "GCP Project ID"
+  value       = var.project_id
+}
+
+output "region" {
+  description = "GCP Region"
+  value       = var.region
+}
+

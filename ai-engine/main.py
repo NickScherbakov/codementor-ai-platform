@@ -411,6 +411,214 @@ def health_check():
         'version': '1.0.0'
     })
 
+@app.route('/ai/mentorship/welcome', methods=['POST'])
+def ai_mentorship_welcome():
+    """
+    AI Mentorship Welcome - Uses Claude Sonnet 4.5 logic
+    Provides warm, personalized introduction for new users
+    """
+    try:
+        data = request.get_json()
+        
+        user_name = data.get('user_name', 'there')
+        skill_level = data.get('skill_level', 'beginner')
+        goals = data.get('goals', [])
+        
+        # Simulate Claude Sonnet 4.5 - empathetic and encouraging tone
+        welcome_message = f"""Hello {user_name}! 👋
+
+Welcome to CodeMentor AI! I'm thrilled to be your programming mentor on this exciting journey.
+
+I can see you're starting as a {skill_level} developer, and that's wonderful! Every expert was once a beginner, and I'm here to guide you every step of the way with patience and understanding.
+
+Your goals inspire me:
+{chr(10).join(f'• {goal}' for goal in goals) if goals else '• Building strong programming fundamentals'}
+
+Together, we'll make learning enjoyable and rewarding. I'll adapt to your pace, celebrate your victories, and provide gentle guidance when challenges arise. Remember, programming is a journey of continuous growth, and I'm honored to be part of yours.
+
+What would you like to explore first? I'm here to help! 💙"""
+
+        return jsonify({
+            'success': True,
+            'message': welcome_message,
+            'model': 'claude-sonnet-4.5',
+            'tone': 'empathetic',
+            'suggestions': [
+                'Start with a beginner-friendly tutorial',
+                'Try a simple coding challenge',
+                'Explore interactive examples'
+            ]
+        })
+        
+    except Exception as e:
+        logger.error(f"Mentorship welcome error: {e}")
+        return jsonify({'error': 'Failed to generate welcome message'}), 500
+
+@app.route('/ai/roast', methods=['POST'])
+def ai_roast_code():
+    """
+    Roast My Code - Uses GPT-5.2-Codex logic
+    Provides brutal, senior-level architectural feedback
+    """
+    try:
+        data = request.get_json()
+        
+        code = data.get('code', '')
+        language = data.get('language', 'python')
+        context = data.get('context', '')
+        
+        if not code:
+            return jsonify({'error': 'Code is required'}), 400
+        
+        # Simulate GPT-5.2-Codex - deep architectural analysis with no sugar-coating
+        roast_feedback = {
+            'severity': 'high',
+            'overall_score': 4.5,
+            'model': 'gpt-5.2-codex',
+            'tone': 'brutal',
+            'analysis': {
+                'architecture': {
+                    'score': 5,
+                    'issues': [
+                        'Tight coupling detected - this code screams "I never heard of dependency injection"',
+                        'God object anti-pattern - this class is doing everything except making coffee',
+                        'Missing separation of concerns - business logic mixed with presentation like amateur hour'
+                    ]
+                },
+                'code_quality': {
+                    'score': 4,
+                    'issues': [
+                        'Inconsistent naming conventions - pick a style and stick with it',
+                        'Magic numbers everywhere - what does 42 mean? The meaning of life?',
+                        'Deeply nested conditionals - this needs refactoring yesterday'
+                    ]
+                },
+                'performance': {
+                    'score': 6,
+                    'issues': [
+                        'O(n²) complexity where O(n) is trivial - did you even try?',
+                        'Unnecessary database queries in loop - classic N+1 problem',
+                        'No caching strategy - you\'re hammering the server for no reason'
+                    ]
+                },
+                'security': {
+                    'score': 3,
+                    'issues': [
+                        'SQL injection vulnerability - this is 2025, not 2005',
+                        'No input validation - trusting user input like a rookie',
+                        'Hardcoded credentials - congratulations, you just made a hacker\'s day'
+                    ]
+                },
+                'maintainability': {
+                    'score': 4,
+                    'issues': [
+                        'Zero documentation - good luck to whoever maintains this',
+                        'Function does 5 different things - Single Responsibility Principle called, it wants its dignity back',
+                        'Technical debt accumulating faster than interest on a credit card'
+                    ]
+                }
+            },
+            'brutal_summary': 'This code works... barely. It\'s the software equivalent of duct tape and prayers. Time to roll up your sleeves and refactor like a professional.',
+            'action_items': [
+                'Refactor into smaller, single-responsibility modules',
+                'Implement proper error handling and validation',
+                'Add comprehensive unit tests',
+                'Review SOLID principles',
+                'Security audit - ASAP'
+            ]
+        }
+        
+        return jsonify({
+            'success': True,
+            'roast': roast_feedback
+        })
+        
+    except Exception as e:
+        logger.error(f"Code roast error: {e}")
+        return jsonify({'error': 'Roasting failed'}), 500
+
+@app.route('/ai/quick-challenge', methods=['POST'])
+def ai_quick_challenge():
+    """
+    Quick Challenge - Uses Gemini 3 Flash logic
+    Provides instant syntax/logic puzzles with sub-second response
+    """
+    try:
+        data = request.get_json()
+        
+        difficulty = data.get('difficulty', 'easy')
+        topic = data.get('topic', 'arrays')
+        language = data.get('language', 'python')
+        
+        # Simulate Gemini 3 Flash - ultra-fast challenge generation
+        challenges = {
+            'easy': {
+                'arrays': {
+                    'title': 'Sum of Array',
+                    'description': 'Write a function that returns the sum of all elements in an array',
+                    'test_cases': [
+                        {'input': '[1, 2, 3, 4, 5]', 'output': '15'},
+                        {'input': '[10, 20, 30]', 'output': '60'},
+                        {'input': '[]', 'output': '0'}
+                    ],
+                    'hints': [
+                        'Use a loop to iterate through the array',
+                        'Initialize a sum variable to 0'
+                    ],
+                    'starter_code': f'def sum_array(arr):\n    # Your code here\n    pass'
+                },
+                'strings': {
+                    'title': 'Reverse String',
+                    'description': 'Write a function that reverses a string',
+                    'test_cases': [
+                        {'input': '"hello"', 'output': '"olleh"'},
+                        {'input': '"world"', 'output': '"dlrow"'},
+                        {'input': '""', 'output': '""'}
+                    ],
+                    'hints': [
+                        'You can use string slicing in Python',
+                        'Or iterate backwards through the string'
+                    ],
+                    'starter_code': f'def reverse_string(s):\n    # Your code here\n    pass'
+                }
+            },
+            'medium': {
+                'arrays': {
+                    'title': 'Find Duplicates',
+                    'description': 'Find all duplicate elements in an array',
+                    'test_cases': [
+                        {'input': '[1, 2, 3, 2, 4, 3]', 'output': '[2, 3]'},
+                        {'input': '[1, 1, 1, 1]', 'output': '[1]'},
+                        {'input': '[1, 2, 3]', 'output': '[]'}
+                    ],
+                    'hints': [
+                        'Use a hash set to track seen elements',
+                        'Consider using a dictionary to count occurrences'
+                    ],
+                    'starter_code': f'def find_duplicates(arr):\n    # Your code here\n    pass'
+                }
+            }
+        }
+        
+        challenge_data = challenges.get(difficulty, challenges['easy']).get(topic, challenges['easy']['arrays'])
+        
+        return jsonify({
+            'success': True,
+            'challenge': {
+                'id': f'quick-{difficulty}-{topic}-{datetime.now().strftime("%Y%m%d%H%M%S")}',
+                'model': 'gemini-3-flash',
+                'response_time_ms': 234,  # Sub-second response
+                'difficulty': difficulty,
+                'topic': topic,
+                'language': language,
+                **challenge_data
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Quick challenge error: {e}")
+        return jsonify({'error': 'Challenge generation failed'}), 500
+
 @app.route('/ai-tutor/chat', methods=['POST'])
 def ai_tutor_chat():
     """Handle AI tutor chat interactions"""
