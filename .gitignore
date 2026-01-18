@@ -29,6 +29,9 @@ pnpm-debug.log*
 # Editor
 .vscode/*
 !.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
 .idea
 *.suo
 *.ntvs*
@@ -136,3 +139,10 @@ coverage/
 # Monitoring and analytics
 monitoring/logs/
 analytics/data/
+
+# GCP Credentials - NEVER commit these
+.gcloud/
+gcp-key.json
+*-credentials.json
+service-account*.json
+GOOGLE_APPLICATION_CREDENTIALS

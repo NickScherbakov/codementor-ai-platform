@@ -1,0 +1,140 @@
+{
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🎨 EDITOR SETTINGS
+  // ═══════════════════════════════════════════════════════════════════════════
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [100],
+  "editor.wordWrap": "on",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 📁 FILES
+  // ═══════════════════════════════════════════════════════════════════════════
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/*.pyc": true,
+    "**/.next": true,
+    "**/dist": true
+  },
+  "files.associations": {
+    "*.yaml": "yaml",
+    "*.yml": "yaml",
+    "Dockerfile*": "dockerfile"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🟢 JAVASCRIPT / TYPESCRIPT
+  // ═══════════════════════════════════════════════════════════════════════════
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🐍 PYTHON
+  // ═══════════════════════════════════════════════════════════════════════════
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["ai-engine"],
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🔍 ESLINT
+  // ═══════════════════════════════════════════════════════════════════════════
+  "eslint.workingDirectories": [
+    { "directory": "frontend", "changeProcessCWD": true },
+    { "directory": "backend", "changeProcessCWD": true }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🎨 TAILWIND CSS
+  // ═══════════════════════════════════════════════════════════════════════════
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ☁️ CLOUD CODE
+  // ═══════════════════════════════════════════════════════════════════════════
+  "cloudcode.enableTelemetry": false,
+  "cloudcode.cloudRun.defaultRegion": "us-central1",
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🐳 DOCKER
+  // ═══════════════════════════════════════════════════════════════════════════
+  "docker.showStartPage": false,
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🔧 TERMINAL
+  // ═══════════════════════════════════════════════════════════════════════════
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.env.linux": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 📊 GIT
+  // ═══════════════════════════════════════════════════════════════════════════
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "gitlens.hovers.currentLine.over": "line",
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🔍 SEARCH
+  // ═══════════════════════════════════════════════════════════════════════════
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/dist": true,
+    "**/.next": true,
+    "**/coverage": true
+  },
+  "githubPullRequests.ignoredPullRequestBranches": [
+    "main"
+  ]
+}

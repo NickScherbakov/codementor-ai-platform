@@ -1,0 +1,38 @@
+{
+  "recommendations": [
+    // 🔧 Core Development
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+    "ms-python.debugpy",
+
+    // ☁️ Google Cloud
+    "googlecloudtools.cloudcode",
+
+    // 🐳 Docker & Containers
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+
+    // 🎨 Frontend
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+
+    // 🤖 AI & Productivity
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+
+    // 📊 Git & Version Control
+    "eamodio.gitlens",
+    "GitHub.vscode-pull-request-github",
+
+    // 🛠️ Utilities
+    "usernamehw.errorlens",
+    "PKief.material-icon-theme",
+    "mikestead.dotenv",
+    "redhat.vscode-yaml"
+  ],
+  "unwantedRecommendations": []
+}

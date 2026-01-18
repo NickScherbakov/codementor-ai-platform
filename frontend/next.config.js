@@ -1,24 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: ['monaco-editor'],
-  },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        crypto: false,
-      }
-    }
-    config.experiments = {
-      ...config.experiments,
-      asyncWebAssembly: true,
-    }
-    return config
-  },
+  serverExternalPackages: ['monaco-editor'],
+  turbopack: {},
   async rewrites() {
     return [
       {
@@ -33,7 +17,16 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['localhost', 'res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,

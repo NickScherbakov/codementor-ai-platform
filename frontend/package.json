@@ -13,6 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "ai-engine": "cd ai-engine && python main.py",
+    "console": "cd ai-engine && python ai_console.py",
     "backend": "cd backend && npm run dev",
     "dev:all": "concurrently \"npm run dev\" \"npm run backend\" \"npm run ai-engine\"",
     "docker:build": "docker-compose build",

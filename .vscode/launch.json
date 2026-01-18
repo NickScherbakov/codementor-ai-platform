@@ -1,0 +1,190 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🎨 FRONTEND (Next.js)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "name": "🎨 Frontend: Debug",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (https?://.+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      },
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      }
+    },
+    {
+      "name": "🎨 Frontend: Attach",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/frontend",
+      "remoteRoot": "/app"
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ⚙️ BACKEND (Express)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "name": "⚙️ Backend: Debug",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "program": "${workspaceFolder}/backend/server.js",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": "3001"
+      }
+    },
+    {
+      "name": "⚙️ Backend: Attach",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/backend",
+      "remoteRoot": "/app"
+    },
+    {
+      "name": "⚙️ Backend: Debug with Nodemon",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["--inspect=0.0.0.0:9229"],
+      "program": "${workspaceFolder}/backend/server.js",
+      "restart": true,
+      "console": "integratedTerminal"
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // 🤖 AI ENGINE (Python/Flask)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "name": "🤖 AI Engine: Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ai-engine/main.py",
+      "cwd": "${workspaceFolder}/ai-engine",
+      "console": "integratedTerminal",
+      "env": {
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1",
+        "PORT": "5000"
+      },
+      "justMyCode": false
+    },
+    {
+      "name": "🤖 AI Engine: Remote Attach",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/ai-engine",
+          "remoteRoot": "/app"
+        }
+      ]
+    },
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // ☁️ CLOUD RUN (Remote Debug)
+    // ═══════════════════════════════════════════════════════════════════════
+    {
+      "name": "☁️ Cloud Run: Frontend",
+      "type": "cloudcode.cloudrun",
+      "request": "launch",
+      "service": {
+        "name": "codementor-frontend",
+        "containerPort": 3000,
+        "resources": {
+          "limits": {
+            "memory": "512Mi",
+            "cpu": "1"
+          }
+        }
+      },
+      "target": {
+        "image": "codementor-frontend",
+        "context": "${workspaceFolder}/frontend",
+        "dockerfile": "${workspaceFolder}/frontend/Dockerfile"
+      },
+      "watch": true,
+      "debug": {
+        "port": 9229
+      }
+    },
+    {
+      "name": "☁️ Cloud Run: Backend",
+      "type": "cloudcode.cloudrun",
+      "request": "launch",
+      "service": {
+        "name": "codementor-backend",
+        "containerPort": 8080,
+        "resources": {
+          "limits": {
+            "memory": "512Mi",
+            "cpu": "1"
+          }
+        }
+      },
+      "target": {
+        "image": "codementor-backend",
+        "context": "${workspaceFolder}/backend",
+        "dockerfile": "${workspaceFolder}/backend/Dockerfile"
+      },
+      "watch": true,
+      "debug": {
+        "port": 9229
+      }
+    },
+    {
+      "name": "☁️ Cloud Run: AI Engine",
+      "type": "cloudcode.cloudrun",
+      "request": "launch",
+      "service": {
+        "name": "codementor-ai-engine",
+        "containerPort": 8080,
+        "resources": {
+          "limits": {
+            "memory": "4Gi",
+            "cpu": "2"
+          }
+        }
+      },
+      "target": {
+        "image": "codementor-ai-engine",
+        "context": "${workspaceFolder}/ai-engine",
+        "dockerfile": "${workspaceFolder}/ai-engine/Dockerfile"
+      },
+      "watch": true,
+      "debug": {
+        "port": 5678
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "🚀 Full Stack: All Services",
+      "configurations": [
+        "🎨 Frontend: Debug",
+        "⚙️ Backend: Debug",
+        "🤖 AI Engine: Debug"
+      ],
+      "stopAll": true
+    }
+  ]
+}

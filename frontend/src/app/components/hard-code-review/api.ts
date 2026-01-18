@@ -97,7 +97,10 @@ function transformBackendResponse(
   return {
     severity: 'hard', // Backend always returns 'hard'
     summary: backend.summary,
-    findings: backend.findings,
+    findings: backend.findings.map(f => ({
+      ...f,
+      example_patch: f.example_patch || ''
+    })),
     next_steps: backend.next_steps,
     // Backend doesn't provide code comparison yet
     // Could add this in the future
