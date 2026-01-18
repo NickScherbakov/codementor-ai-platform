@@ -2,13 +2,37 @@
 
 import CodeEditor from '@/components/CodeEditor'
 import HeroCodeDemo from '@/components/HeroCodeDemo'
+import OnboardingTour from '@/components/OnboardingTour'
+import QuickStartPlayground from '@/components/QuickStartPlayground'
 import { motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, BookOpen, Brain, CheckCircle2, Code, Lightbulb, Target, Trophy, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 export default function HomePage() {
+  const [showOnboarding, setShowOnboarding] = useState(false)
+
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = localStorage.getItem('onboarding_completed')
+    if (!hasCompletedOnboarding) {
+      // Show onboarding after a short delay
+      const timer = setTimeout(() => {
+        setShowOnboarding(true)
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-white">
+      {/* Onboarding Tour */}
+      {showOnboarding && (
+        <OnboardingTour
+          onComplete={() => setShowOnboarding(false)}
+          onDismiss={() => setShowOnboarding(false)}
+        />
+      )}
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)] opacity-20" />
@@ -227,6 +251,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Quick Start Playground Section */}
+      <QuickStartPlayground />
 
       {/* Stats Section */}
       <section className="bg-blue-600 py-24 sm:py-32">
