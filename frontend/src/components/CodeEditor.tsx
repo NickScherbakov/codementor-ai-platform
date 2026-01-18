@@ -32,7 +32,13 @@ print(f"Result: {result}")
 
   const handleRun = async () => {
     try {
-      const response = await fetch('/api/ai-console/analyze', {
+      // Use environment variable or fallback to relative path for local dev
+      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = `${apiBaseUrl}/api/ai-console/analyze`;
+      
+      console.log('Analyzing code at:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -43,13 +49,24 @@ print(f"Result: {result}")
         })
       })
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API error:', response.status, errorText);
+        alert(`Failed to analyze code: ${response.status} ${response.statusText}`);
+        return;
+      }
+
       const data = await response.json()
       if (data.success) {
         // Open playground with analysis results
         window.open('/playground?code=' + encodeURIComponent(code), '_blank')
+      } else {
+        console.error('Analysis failed:', data.error);
+        alert('Analysis failed: ' + (data.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error analyzing code:', error)
+      alert('Error connecting to backend: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 
