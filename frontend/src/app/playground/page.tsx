@@ -26,7 +26,8 @@ interface Message {
 }
 
 // API base URL for AI console endpoints - configurable for Cloud Run deployment
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+// Remove trailing slash if present to avoid double slashes in URLs
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").replace(/\/$/, "");
 
 export default function PlaygroundPage() {
   const [messages, setMessages] = useState<Message[]>([]);
