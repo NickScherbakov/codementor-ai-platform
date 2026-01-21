@@ -107,6 +107,18 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
+      - name: ✅ Validate GCP Credentials
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -z "${{ secrets.GCP_CREDENTIALS }}" ]; then
+            echo "::error::GCP_CREDENTIALS secret is not set or is empty!"
+            echo "::error::Please configure the GCP_CREDENTIALS secret at:"
+            echo "::error::https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "::error::The secret should contain a JSON service account key from Google Cloud Platform."
+            exit 1
+          fi
+          echo "✅ GCP_CREDENTIALS secret is configured"
+
       - name: 🔐 Authenticate to GCP
         if: github.event_name != 'pull_request'
         uses: google-github-actions/auth@v2
@@ -185,6 +197,18 @@ jobs:
         working-directory: backend
         run: npm test --if-present
         continue-on-error: true
+
+      - name: ✅ Validate GCP Credentials
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -z "${{ secrets.GCP_CREDENTIALS }}" ]; then
+            echo "::error::GCP_CREDENTIALS secret is not set or is empty!"
+            echo "::error::Please configure the GCP_CREDENTIALS secret at:"
+            echo "::error::https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "::error::The secret should contain a JSON service account key from Google Cloud Platform."
+            exit 1
+          fi
+          echo "✅ GCP_CREDENTIALS secret is configured"
 
       - name: 🔐 Authenticate to GCP
         if: github.event_name != 'pull_request'
@@ -269,6 +293,18 @@ jobs:
           pytest --cov=. --cov-report=xml || echo "Tests completed"
         continue-on-error: true
 
+      - name: ✅ Validate GCP Credentials
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -z "${{ secrets.GCP_CREDENTIALS }}" ]; then
+            echo "::error::GCP_CREDENTIALS secret is not set or is empty!"
+            echo "::error::Please configure the GCP_CREDENTIALS secret at:"
+            echo "::error::https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "::error::The secret should contain a JSON service account key from Google Cloud Platform."
+            exit 1
+          fi
+          echo "✅ GCP_CREDENTIALS secret is configured"
+
       - name: 🔐 Authenticate to GCP
         if: github.event_name != 'pull_request'
         uses: google-github-actions/auth@v2
@@ -326,6 +362,17 @@ jobs:
     needs: [frontend, backend, ai-engine]
     if: always() && github.event_name != 'pull_request'
     steps:
+      - name: ✅ Validate GCP Credentials
+        run: |
+          if [ -z "${{ secrets.GCP_CREDENTIALS }}" ]; then
+            echo "::error::GCP_CREDENTIALS secret is not set or is empty!"
+            echo "::error::Please configure the GCP_CREDENTIALS secret at:"
+            echo "::error::https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "::error::The secret should contain a JSON service account key from Google Cloud Platform."
+            exit 1
+          fi
+          echo "✅ GCP_CREDENTIALS secret is configured"
+
       - name: 🔐 Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
