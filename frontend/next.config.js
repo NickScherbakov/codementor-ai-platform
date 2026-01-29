@@ -7,11 +7,15 @@ const nextConfig = {
     return [
       {
         source: '/api/backend/:path*',
-        destination: 'http://backend:3001/api/:path*',
+        destination: 'http://backend:8080/api/:path*',
+      },
+      {
+        source: '/api/ai-console/:path*',
+        destination: 'http://backend:8080/api/ai-console/:path*',
       },
       {
         source: '/ai-tutor/:path*',
-        destination: 'http://ai-engine:5000/:path*',
+        destination: 'http://ai-engine:8080/:path*',
       },
     ]
   },

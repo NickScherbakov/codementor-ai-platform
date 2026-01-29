@@ -127,8 +127,9 @@ class LocalModelsProvider {
   async chat(message, personality, context) {
     try {
       // Call local Python AI Engine
+      // In Docker: http://ai-engine:8080, in local dev: http://localhost:5000
       const pythonBackendUrl =
-        process.env.PYTHON_AI_ENGINE_URL || "http://localhost:5000";
+        process.env.PYTHON_AI_ENGINE_URL || "http://ai-engine:8080";
 
       const personalityPrompts = {
         encouraging:
@@ -140,7 +141,7 @@ class LocalModelsProvider {
           "You are a practical tutor. Focus on real-world applications.",
       };
 
-      const response = await fetch(`${pythonBackendUrl}/api/tutor`, {
+      const response = await fetch(`${pythonBackendUrl}/ai-tutor/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
