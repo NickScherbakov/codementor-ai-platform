@@ -127,20 +127,13 @@ class LocalModelsProvider {
   async chat(message, personality, context) {
     try {
       // Call local Python AI Engine
+      // Use PYTHON_AI_ENGINE_URL env var to override default
+      // Docker: http://ai-engine:8080 (default)
+      // Local dev: Set PYTHON_AI_ENGINE_URL=http://localhost:5000
       const pythonBackendUrl =
-        process.env.PYTHON_AI_ENGINE_URL || "http://localhost:5000";
+        process.env.PYTHON_AI_ENGINE_URL || "http://ai-engine:8080";
 
-      const personalityPrompts = {
-        encouraging:
-          "You are an encouraging programming tutor. Be supportive and positive.",
-        analytical:
-          "You are an analytical tutor. Focus on precision and logical reasoning.",
-        creative: "You are a creative tutor. Encourage innovative solutions.",
-        practical:
-          "You are a practical tutor. Focus on real-world applications.",
-      };
-
-      const response = await fetch(`${pythonBackendUrl}/api/tutor`, {
+      const response = await fetch(`${pythonBackendUrl}/ai-tutor/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +141,6 @@ class LocalModelsProvider {
         body: JSON.stringify({
           message: message,
           personality: personality,
-          system_prompt: personalityPrompts[personality],
           context: context,
         }),
       });
