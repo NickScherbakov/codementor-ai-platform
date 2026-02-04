@@ -88,6 +88,7 @@ const reviewRoutes = reviewRoutesModule
   : null;
 const assessmentRoutes = safeRequire("./routes/assessment");
 const consoleRoutes = safeRequire("./routes/console");
+const aiHintsRoutes = safeRequire("./routes/ai-hints");
 
 // API Routes
 if (authRoutes) app.use("/api/auth", authRoutes);
@@ -103,6 +104,7 @@ if (notificationRoutes) app.use("/api/notifications", notificationRoutes);
 if (reviewRoutes) app.use("/api/review", reviewRoutes);
 if (assessmentRoutes) app.use("/api/assessment", assessmentRoutes);
 if (consoleRoutes) app.use("/", consoleRoutes);
+if (aiHintsRoutes) app.use("/api/ai-hints", aiHintsRoutes);
 
 // WebSocket handling for real-time features
 io.on("connection", (socket) => {

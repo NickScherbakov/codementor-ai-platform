@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "migrate": "migrate-mongo up",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "seed:challenges": "node scripts/seed-challenges.js"
   },
   "dependencies": {
     "express": "^4.18.2",
