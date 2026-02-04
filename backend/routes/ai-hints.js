@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const rateLimit = require('express-rate-limit');
 const { authenticate } = require('../middleware/auth');
 const Challenge = require('../models/Challenge');
 const Submission = require('../models/Submission');
@@ -8,11 +9,36 @@ const Submission = require('../models/Submission');
 // AI Engine URL from environment
 const AI_ENGINE_URL = process.env.AI_ENGINE_URL || 'http://localhost:5000';
 
+// Rate limiting for AI endpoints to prevent abuse
+const aiHintsLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each user to 50 requests per windowMs
+  message: 'Too many hint requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const codeExplanationLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // limit each user to 30 requests per windowMs
+  message: 'Too many explanation requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const skillGapLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 20, // limit each user to 20 requests per hour
+  message: 'Too many analytics requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 /**
  * Generate contextual hints based on user's code attempt
  * POST /api/ai-hints/generate
  */
-router.post('/generate', authenticate, async (req, res) => {
+router.post('/generate', authenticate, aiHintsLimiter, async (req, res) => {
   try {
     const { challengeId, code, language, errorMessage } = req.body;
 
@@ -111,7 +137,7 @@ router.post('/generate', authenticate, async (req, res) => {
  * Explain code in simple terms (ELI5 mode)
  * POST /api/ai-hints/explain
  */
-router.post('/explain', authenticate, async (req, res) => {
+router.post('/explain', authenticate, codeExplanationLimiter, async (req, res) => {
   try {
     const { code, language, mode } = req.body;
 
@@ -157,7 +183,7 @@ router.post('/explain', authenticate, async (req, res) => {
  * Get learning path suggestions based on skill gaps
  * GET /api/ai-hints/skill-gaps
  */
-router.get('/skill-gaps', authenticate, async (req, res) => {
+router.get('/skill-gaps', authenticate, skillGapLimiter, async (req, res) => {
   try {
     const Progress = require('../models/Progress');
     
