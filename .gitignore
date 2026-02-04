@@ -88,6 +88,11 @@ models/weights/
 model_cache/
 /tmp/model_cache
 
+# Exception: Allow challenge library data
+!backend/data/
+!backend/data/challenge-library.json
+
+
 # Docker
 .dockerignore
 docker-compose.override.yml
