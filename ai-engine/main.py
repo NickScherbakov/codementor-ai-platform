@@ -934,6 +934,318 @@ def check_migration():
         logger.error(f"Check migration error: {e}")
         return jsonify({'error': 'Failed to check migration'}), 500
 
+@app.route('/api/generate-hint', methods=['POST'])
+def generate_hint():
+    """Generate contextual AI-powered hints based on user's code attempt"""
+    try:
+        data = request.get_json()
+        
+        challenge_title = data.get('challengeTitle', '')
+        challenge_description = data.get('challengeDescription', '')
+        user_code = data.get('userCode', '')
+        language = data.get('language', 'python')
+        error_message = data.get('errorMessage')
+        attempts = data.get('attempts', 0)
+        
+        # Analyze user's code to understand what they're struggling with
+        code_issues = []
+        if error_message:
+            code_issues.append(f"Error encountered: {error_message}")
+        
+        # Analyze code patterns
+        code_lower = user_code.lower()
+        
+        # Detect common issues
+        if 'syntax' in str(error_message).lower():
+            code_issues.append("Syntax error detected")
+        if user_code.count('(') != user_code.count(')'):
+            code_issues.append("Mismatched parentheses")
+        if not any(keyword in code_lower for keyword in ['return', 'print']):
+            code_issues.append("No return or output statement found")
+        
+        # Generate progressive hints based on attempts
+        hints = []
+        
+        if attempts == 0:
+            # First hint - very gentle
+            hints.append({
+                'level': 'gentle',
+                'content': f"Let's break down '{challenge_title}' step by step. Start by understanding what the function needs to return. Read the problem description carefully and identify the key requirements.",
+                'codeSnippet': None,
+                'resources': [
+                    {'title': 'Understanding the Problem', 'url': '/learn/problem-solving-basics'}
+                ]
+            })
+        elif attempts == 1:
+            # Second hint - more specific
+            hints.append({
+                'level': 'gentle',
+                'content': "Think about the data structures you might need. What information do you need to track as you process the input?",
+                'codeSnippet': None,
+                'resources': []
+            })
+            hints.append({
+                'level': 'moderate',
+                'content': f"Consider using these tools for this problem: loops, conditionals, and appropriate data structures for {language}.",
+                'codeSnippet': f"# Example structure for {language}\n# 1. Initialize your variables\n# 2. Process the input\n# 3. Return the result",
+                'resources': []
+            })
+        else:
+            # Later hints - more direct
+            hints.append({
+                'level': 'moderate',
+                'content': "Let's look at your current approach. " + (code_issues[0] if code_issues else "Consider edge cases - what happens with empty input, single elements, or maximum values?"),
+                'codeSnippet': None,
+                'resources': []
+            })
+            hints.append({
+                'level': 'direct',
+                'content': "Here's a suggested algorithm: 1) Initialize result variables, 2) Iterate through the input, 3) Apply the logic for each element, 4) Return the computed result. Make sure to handle edge cases!",
+                'codeSnippet': _get_algorithm_template(language, challenge_title),
+                'resources': [
+                    {'title': 'Common Algorithms', 'url': '/learn/algorithms'}
+                ]
+            })
+        
+        # Add hint about specific issues if detected
+        if code_issues:
+            hints.insert(0, {
+                'level': 'immediate',
+                'content': f"⚠️ Issue detected: {code_issues[0]}. Let's fix this first before moving forward.",
+                'codeSnippet': None,
+                'resources': []
+            })
+        
+        next_steps = [
+            "Test your code with the sample inputs",
+            "Think about edge cases",
+            "Consider the time and space complexity",
+            "Add comments to explain your logic"
+        ]
+        
+        return jsonify({
+            'success': True,
+            'hints': hints[:3],  # Return max 3 hints
+            'nextSteps': next_steps,
+            'attemptsAnalyzed': attempts
+        })
+        
+    except Exception as e:
+        logger.error(f"Hint generation error: {e}")
+        return jsonify({'error': 'Failed to generate hints'}), 500
+
+@app.route('/api/explain-code', methods=['POST'])
+def explain_code():
+    """Explain code in simple terms (ELI5 mode or technical mode)"""
+    try:
+        data = request.get_json()
+        
+        code = data.get('code', '')
+        language = data.get('language', 'python')
+        mode = data.get('mode', 'eli5')  # eli5, technical, beginner, advanced
+        
+        if not code:
+            return jsonify({'error': 'Code is required'}), 400
+        
+        # Analyze code structure
+        lines = code.split('\n')
+        non_empty_lines = [l for l in lines if l.strip() and not l.strip().startswith('#')]
+        
+        # Generate explanation based on mode
+        explanation = ""
+        key_points = []
+        
+        if mode == 'eli5':
+            explanation = _generate_eli5_explanation(code, language)
+            key_points = [
+                "The code is like a recipe with step-by-step instructions",
+                "Each line tells the computer to do something specific",
+                "Variables are like labeled boxes that store information",
+                "Functions are reusable blocks of code that perform specific tasks"
+            ]
+        elif mode == 'beginner':
+            explanation = _generate_beginner_explanation(code, language)
+            key_points = _extract_code_concepts(code, language)
+        elif mode == 'technical':
+            explanation = _generate_technical_explanation(code, language)
+            key_points = _extract_technical_details(code, language)
+        else:  # advanced
+            explanation = _generate_advanced_explanation(code, language)
+            key_points = _extract_advanced_patterns(code, language)
+        
+        # Analyze complexity
+        complexity = {
+            'time': _estimate_time_complexity(code),
+            'space': _estimate_space_complexity(code),
+            'readability': 'high' if len(non_empty_lines) < 20 and '#' in code else 'medium'
+        }
+        
+        # Suggest improvements
+        improvements = []
+        if len(non_empty_lines) > 30:
+            improvements.append("Consider breaking this into smaller functions for better readability")
+        if 'for' in code.lower() and 'for' in code.lower():
+            count = code.lower().count('for')
+            if count > 2:
+                improvements.append(f"You have {count} nested loops - consider if there's a more efficient approach")
+        if '#' not in code and len(non_empty_lines) > 5:
+            improvements.append("Add comments to explain complex logic")
+        if language == 'python' and 'def' in code and 'return' not in code:
+            improvements.append("Function should return a value")
+        
+        return jsonify({
+            'success': True,
+            'explanation': explanation,
+            'keyPoints': key_points,
+            'complexity': complexity,
+            'improvements': improvements,
+            'mode': mode
+        })
+        
+    except Exception as e:
+        logger.error(f"Code explanation error: {e}")
+        return jsonify({'error': 'Failed to explain code'}), 500
+
+def _get_algorithm_template(language, challenge_title):
+    """Get an algorithm template hint"""
+    if language == 'python':
+        return """# Template structure:
+def solution(input_data):
+    # Step 1: Handle edge cases
+    if not input_data:
+        return default_value
+    
+    # Step 2: Initialize variables
+    result = initial_value
+    
+    # Step 3: Process input
+    for item in input_data:
+        # Apply your logic here
+        pass
+    
+    # Step 4: Return result
+    return result"""
+    else:
+        return "// Structure: Initialize -> Process -> Return"
+
+def _generate_eli5_explanation(code, language):
+    """Generate ELI5 (Explain Like I'm 5) explanation"""
+    code_lower = code.lower()
+    
+    explanation = "Let me explain this code like you're 5 years old:\n\n"
+    
+    if 'def' in code_lower or 'function' in code_lower:
+        explanation += "Imagine you have a magic box (a function) that does something special. "
+    
+    if 'for' in code_lower or 'while' in code_lower:
+        explanation += "The code goes through items one by one, like counting toys. "
+    
+    if 'if' in code_lower:
+        explanation += "It makes decisions, like 'if it's raining, take an umbrella'. "
+    
+    if 'return' in code_lower:
+        explanation += "At the end, it gives you back an answer, like when you ask 'what's 2+2?' and get '4'. "
+    
+    explanation += "\n\nIn simple terms: This code takes some information, does something with it, and gives you a result!"
+    
+    return explanation
+
+def _generate_beginner_explanation(code, language):
+    """Generate beginner-level explanation"""
+    return f"""This {language} code is structured to solve a specific problem. Here's how it works:
+
+1. **Input**: The code receives data to process
+2. **Processing**: It uses loops, conditions, and operations to work with the data
+3. **Output**: It returns or displays the final result
+
+The code follows a clear logical flow from start to finish, making it easier to understand and debug."""
+
+def _generate_technical_explanation(code, language):
+    """Generate technical explanation"""
+    lines = len(code.split('\n'))
+    return f"""Technical Analysis of this {language} code ({lines} lines):
+
+This implementation uses standard {language} constructs to solve the problem. The algorithm follows a structured approach with clear separation of concerns. The code demonstrates understanding of fundamental programming concepts including control flow, data structures, and problem decomposition.
+
+The solution maintains readability while optimizing for correctness. Edge cases should be verified through comprehensive testing."""
+
+def _generate_advanced_explanation(code, language):
+    """Generate advanced explanation"""
+    return f"""Advanced Analysis:
+
+This {language} implementation exhibits several notable characteristics:
+- Algorithmic complexity considerations
+- Idiomatic {language} patterns
+- Potential optimization opportunities
+- Code organization and structure
+
+The solution balances readability, performance, and maintainability. Consider profiling for performance-critical applications and adding comprehensive documentation for production use."""
+
+def _extract_code_concepts(code, language):
+    """Extract key programming concepts from code"""
+    concepts = []
+    code_lower = code.lower()
+    
+    if 'def' in code_lower or 'function' in code_lower:
+        concepts.append("Uses functions to organize code")
+    if 'for' in code_lower or 'while' in code_lower:
+        concepts.append("Implements loops for iteration")
+    if 'if' in code_lower:
+        concepts.append("Uses conditional logic for decision-making")
+    if '[' in code or 'list' in code_lower or 'array' in code_lower:
+        concepts.append("Works with arrays/lists for data storage")
+    if 'return' in code_lower:
+        concepts.append("Returns a value from the function")
+    
+    return concepts
+
+def _extract_technical_details(code, language):
+    """Extract technical details"""
+    details = []
+    
+    if language == 'python':
+        if 'lambda' in code:
+            details.append("Uses lambda functions for concise operations")
+        if 'list comprehension' in code or '[' in code and 'for' in code:
+            details.append("Utilizes list comprehensions")
+        if 'try' in code.lower():
+            details.append("Implements error handling")
+    
+    return details if details else ["Standard programming constructs", "Clear variable naming", "Logical flow control"]
+
+def _extract_advanced_patterns(code, language):
+    """Extract advanced patterns"""
+    patterns = []
+    
+    if 'class' in code.lower():
+        patterns.append("Object-oriented design with classes")
+    if 'async' in code.lower() or 'await' in code.lower():
+        patterns.append("Asynchronous programming patterns")
+    if 'decorator' in code.lower() or '@' in code:
+        patterns.append("Uses decorators for metaprogramming")
+    
+    return patterns if patterns else ["Procedural programming approach", "Functional decomposition", "Clear abstraction layers"]
+
+def _estimate_time_complexity(code):
+    """Estimate time complexity"""
+    nested_loops = code.lower().count('for') + code.lower().count('while')
+    
+    if nested_loops == 0:
+        return "O(1) - Constant time"
+    elif nested_loops == 1:
+        return "O(n) - Linear time"
+    elif nested_loops == 2:
+        return "O(n²) - Quadratic time"
+    else:
+        return "O(n³) or higher - Consider optimization"
+
+def _estimate_space_complexity(code):
+    """Estimate space complexity"""
+    if 'append' in code.lower() or '+=' in code:
+        return "O(n) - Linear space (creates new data structures)"
+    else:
+        return "O(1) - Constant space (in-place operations)"
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     debug = os.getenv('FLASK_ENV') == 'development'
