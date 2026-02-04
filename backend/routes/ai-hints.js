@@ -209,8 +209,7 @@ router.get('/skill-gaps', authenticate, async (req, res) => {
         successRate: stats.total > 0 ? (stats.passed / stats.total) * 100 : 0,
         attempts: stats.total
       }))
-      .filter(item => item.attempts >= 3)
-      .filter(item => item.successRate < 60)
+      .filter(item => item.attempts >= 3 && item.successRate < 60)
       .sort((a, b) => a.successRate - b.successRate);
 
     // Find recommended challenges for weak areas

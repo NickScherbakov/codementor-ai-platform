@@ -1084,10 +1084,14 @@ def explain_code():
         improvements = []
         if len(non_empty_lines) > 30:
             improvements.append("Consider breaking this into smaller functions for better readability")
-        if 'for' in code.lower() and 'for' in code.lower():
-            count = code.lower().count('for')
-            if count > 2:
-                improvements.append(f"You have {count} nested loops - consider if there's a more efficient approach")
+        
+        # Check for nested loops
+        for_count = code.lower().count('for')
+        while_count = code.lower().count('while')
+        loop_count = for_count + while_count
+        if loop_count > 2:
+            improvements.append(f"You have {loop_count} loops - consider if there's a more efficient approach to reduce complexity")
+        
         if '#' not in code and len(non_empty_lines) > 5:
             improvements.append("Add comments to explain complex logic")
         if language == 'python' and 'def' in code and 'return' not in code:
@@ -1227,14 +1231,14 @@ def _extract_advanced_patterns(code, language):
     return patterns if patterns else ["Procedural programming approach", "Functional decomposition", "Clear abstraction layers"]
 
 def _estimate_time_complexity(code):
-    """Estimate time complexity"""
-    nested_loops = code.lower().count('for') + code.lower().count('while')
+    """Estimate time complexity based on loop keywords"""
+    loop_count = code.lower().count('for') + code.lower().count('while')
     
-    if nested_loops == 0:
+    if loop_count == 0:
         return "O(1) - Constant time"
-    elif nested_loops == 1:
+    elif loop_count == 1:
         return "O(n) - Linear time"
-    elif nested_loops == 2:
+    elif loop_count == 2:
         return "O(n²) - Quadratic time"
     else:
         return "O(n³) or higher - Consider optimization"
