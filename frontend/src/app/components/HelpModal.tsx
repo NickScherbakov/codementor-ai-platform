@@ -82,7 +82,7 @@ export function HelpModal({ show, onClose }: HelpModalProps) {
                       <h4 className="font-semibold text-slate-800">
                         <Link 
                           href="/playground" 
-                          className="hover:text-purple-600 transition-colors underline decoration-dotted underline-offset-2"
+                          className="text-purple-600 hover:text-purple-700 transition-colors underline decoration-dotted underline-offset-2"
                         >
                           Интерактивная песочница
                         </Link>
