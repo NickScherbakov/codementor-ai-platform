@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Zap, Brain, Code, BookOpen, Target, Trophy } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from './ui/button';
 
 interface HelpModalProps {
@@ -78,7 +79,14 @@ export function HelpModal({ show, onClose }: HelpModalProps) {
                       <Code className="w-5 h-5 text-purple-600" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-slate-800">Интерактивная песочница</h4>
+                      <h4 className="font-semibold text-slate-800">
+                        <Link 
+                          href="/playground" 
+                          className="hover:text-purple-600 transition-colors underline decoration-dotted underline-offset-2"
+                        >
+                          Интерактивная песочница
+                        </Link>
+                      </h4>
                       <p className="text-sm">
                         Пишите код прямо в браузере и получайте мгновенный AI-анализ. Экспериментируйте без страха что-то сломать.
                       </p>
