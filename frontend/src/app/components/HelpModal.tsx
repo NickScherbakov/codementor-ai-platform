@@ -83,6 +83,7 @@ export function HelpModal({ show, onClose }: HelpModalProps) {
                         <Link 
                           href="/playground" 
                           className="text-purple-600 hover:text-purple-700 transition-colors underline decoration-dotted underline-offset-2"
+                          aria-label="Перейти в интерактивную песочницу (AI Console)"
                         >
                           Интерактивная песочница
                         </Link>
