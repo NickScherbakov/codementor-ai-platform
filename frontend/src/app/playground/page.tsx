@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
   Check,
-  Code2,
   Copy,
   Send,
   Settings,
@@ -15,7 +14,6 @@ import {
   WifiOff,
   Loader2,
 } from "lucide-react";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface Message {
@@ -211,29 +209,17 @@ export default function PlaygroundPage() {
   ];
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <div className="h-[calc(100vh-theme(spacing.16)-2.5rem)] flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       {/* Decorative gradient blobs */}
       <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
       <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-slate-200/60 sticky top-0 z-20 shadow-sm">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center rounded-lg shadow-lg">
-              <Code2 className="w-5 h-5 text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="font-mono text-sm font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent uppercase tracking-wider">
-                CodeMentor
-              </h1>
-              <p className="font-mono text-xs text-slate-500">AI Console</p>
-            </div>
-          </Link>
+
+      {/* Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-10">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-indigo-600" />
+          <span className="font-mono text-xs text-slate-500 hidden sm:inline">AI Console</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -299,7 +285,7 @@ export default function PlaygroundPage() {
             <span className="hidden sm:inline">Settings</span>
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Settings Panel */}
       <AnimatePresence>

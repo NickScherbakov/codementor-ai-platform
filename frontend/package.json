@@ -41,7 +41,7 @@
     "axios": "^1.6.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
-    "framer-motion": "^10.16.4",
+    "framer-motion": "^11.15.0",
     "lucide-react": "^0.487.0",
     "monaco-editor": "^0.44.0",
     "next": "^16.1.1",

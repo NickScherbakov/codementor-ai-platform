@@ -15,7 +15,7 @@ export default function ReviewLayout({
   return (
     <div className="min-h-screen">
       {/* Review Section Navigation */}
-      <nav className="fixed top-0 left-0 right-0 bg-[#0F172A] border-b border-[#374151] z-50 shadow-lg">
+      <nav className="fixed top-16 left-0 right-0 bg-[#0F172A] border-b border-[#374151] z-40 shadow-lg">
         <div className="flex items-center justify-center gap-1 p-2 flex-wrap">
           <Link
             href="/review"
@@ -77,7 +77,7 @@ export default function ReviewLayout({
       </nav>
 
       {/* Page Content */}
-      <div className="pt-16">
+      <div className="pt-14">
         {children}
       </div>
     </div>
