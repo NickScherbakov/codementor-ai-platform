@@ -63,7 +63,7 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section id="about" className="anchor-section py-24 bg-white relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white" />
       

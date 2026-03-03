@@ -41,7 +41,7 @@ export function LearningModes() {
   ];
 
   return (
-    <section id="features" className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+    <section id="features" className="anchor-section py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent" />
 

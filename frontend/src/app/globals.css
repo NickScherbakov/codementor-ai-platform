@@ -105,3 +105,11 @@ body {
     animation-delay: 4s;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+.anchor-section {
+  scroll-margin-top: 7rem;
+}

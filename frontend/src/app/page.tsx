@@ -4,13 +4,17 @@ import CodeEditor from '@/components/CodeEditor'
 import HeroCodeDemo from '@/components/HeroCodeDemo'
 import OnboardingTour from '@/components/OnboardingTour'
 import QuickStartPlayground from '@/components/QuickStartPlayground'
+import { useHashScroll } from '@/hooks/useHashScroll'
 import { motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, BookOpen, Brain, CheckCircle2, Code, Lightbulb, Target, Trophy, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function HomePage() {
   const [showOnboarding, setShowOnboarding] = useState(false)
+
+  // Enable smooth anchor scrolling with fixed header offset
+  useHashScroll(64) // 64px offset for sticky header
 
   useEffect(() => {
     // Check if user has completed onboarding
@@ -109,7 +113,7 @@ export default function HomePage() {
       </section>
 
       {/* Feature Split Section */}
-      <section className="py-24 bg-gray-50">
+      <section id="features" className="anchor-section py-24 bg-gray-50">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Two Ways to Grow</h2>
@@ -187,14 +191,14 @@ export default function HomePage() {
       </section>
 
       {/* Live Sandbox Section */}
-      <section id="challenge" className="bg-slate-50 px-4 py-16 sm:px-6 lg:px-8">
+      <section id="demo" className="anchor-section bg-slate-50 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-base font-semibold leading-7 text-blue-600">Try it now</p>
               <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Live Code Editor & AI Analysis</h2>
               <p className="mt-4 text-lg leading-8 text-gray-600">
-                Write code and hit Run to get instant AI feedback. Our backend analyzes your code and opens it in the AI Console 
+                Write code and hit Run to get instant AI feedback. Our backend analyzes your code and opens it in the AI Console
                 with your choice of LLM: Google Gemini, local models, or any provider via OpenRouter.
               </p>
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-gray-700">
@@ -217,7 +221,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 sm:py-32">
+      <section id="about" className="anchor-section py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-base font-semibold leading-7 text-blue-600">Intelligent Learning</h2>
@@ -256,7 +260,7 @@ export default function HomePage() {
       <QuickStartPlayground />
 
       {/* Stats Section */}
-      <section className="bg-blue-600 py-24 sm:py-32">
+      <section id="pricing" className="anchor-section bg-blue-600 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
             <div className="text-center">
