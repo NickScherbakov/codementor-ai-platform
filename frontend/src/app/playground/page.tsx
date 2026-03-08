@@ -35,6 +35,9 @@ export default function PlaygroundPage() {
   const [llmProvider, setLlmProvider] = useState("local");
   const [openrouterModel, setOpenrouterModel] = useState("openai/gpt-4-turbo");
   const [openrouterKey, setOpenrouterKey] = useState("");
+  const [availableModels, setAvailableModels] = useState<{id: string, name: string}[]>([]);
+  const [modelsLoading, setModelsLoading] = useState(false);
+  const [modelsError, setModelsError] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [copied, setCopied] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<
@@ -85,6 +88,56 @@ export default function PlaygroundPage() {
       inputRef.current.style.height = inputRef.current.scrollHeight + "px";
     }
   }, [inputValue]);
+
+  // Fetch available OpenRouter models when the API key changes
+  useEffect(() => {
+    if (!openrouterKey.trim()) {
+      setAvailableModels([]);
+      setModelsError(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchModels = async () => {
+      setModelsLoading(true);
+      setModelsError(false);
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/models", {
+          headers: { Authorization: `Bearer ${openrouterKey}` },
+        });
+        if (!response.ok)
+          throw new Error(`Failed to fetch models: ${response.status} ${response.statusText}`);
+        const data = await response.json();
+        if (!cancelled) {
+          const models: { id: string; name: string }[] = (data.data ?? []).map(
+            (m: { id: string; name?: string }) => ({
+              id: m.id,
+              name: m.name ?? m.id,
+            })
+          );
+          setAvailableModels(models);
+          // Reset selected model if it's no longer available in the new list
+          setOpenrouterModel((current) => {
+            if (models.length > 0 && !models.find((m) => m.id === current)) {
+              return models[0].id;
+            }
+            return current;
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setAvailableModels([]);
+          setModelsError(true);
+        }
+      } finally {
+        if (!cancelled) setModelsLoading(false);
+      }
+    };
+
+    fetchModels();
+    return () => { cancelled = true; };
+  }, [openrouterKey]);
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -415,24 +468,24 @@ export default function PlaygroundPage() {
                       <select
                         value={openrouterModel}
                         onChange={(e) => setOpenrouterModel(e.target.value)}
-                        className="w-full px-3 py-2.5 bg-white text-slate-900 font-mono text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:outline-none transition-all"
+                        disabled={modelsLoading || availableModels.length === 0}
+                        className="w-full px-3 py-2.5 bg-white text-slate-900 font-mono text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:outline-none transition-all disabled:opacity-60"
                       >
-                        <option value="openai/gpt-4-turbo">
-                          GPT-4 Turbo (OpenAI)
-                        </option>
-                        <option value="openai/gpt-4">GPT-4 (OpenAI)</option>
-                        <option value="anthropic/claude-3-opus">
-                          Claude 3 Opus (Anthropic)
-                        </option>
-                        <option value="anthropic/claude-3-sonnet">
-                          Claude 3 Sonnet (Anthropic)
-                        </option>
-                        <option value="meta-llama/llama-2-70b-chat">
-                          Llama 2 70B (Meta)
-                        </option>
-                        <option value="mistralai/mistral-large">
-                          Mistral Large
-                        </option>
+                        {modelsLoading ? (
+                          <option value="">Loading models…</option>
+                        ) : availableModels.length === 0 ? (
+                          <option value="">
+                            {modelsError
+                              ? "Failed to load models — check API key"
+                              : "Enter API key to load models"}
+                          </option>
+                        ) : (
+                          availableModels.map((model) => (
+                            <option key={model.id} value={model.id}>
+                              {model.name}
+                            </option>
+                          ))
+                        )}
                       </select>
                     </div>
                   </motion.div>
