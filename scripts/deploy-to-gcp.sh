@@ -59,9 +59,9 @@ if ! command -v git &> /dev/null; then
     exit 1
 fi
 
-if ! gcloud auth application-default print-access-token &> /dev/null; then
+if ! gcloud auth print-access-token &> /dev/null; then
     echo -e "${RED}Error: Not authenticated with gcloud${NC}"
-    echo "Run: gcloud auth application-default login"
+    echo "Run: gcloud auth login"
     exit 1
 fi
 
