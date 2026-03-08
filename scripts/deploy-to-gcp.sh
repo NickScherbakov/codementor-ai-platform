@@ -180,12 +180,16 @@ docker build \
 docker push "${REGISTRY}/frontend:${IMAGE_TAG}"
 echo -e "  ${GREEN}✓ frontend image pushed${NC}"
 
+    # Three env vars are set to the same backend URL intentionally:
+    # BACKEND_API_URL: server-side only, highest priority in getBackendUrl() proxy, not exposed to the browser
+    # NEXT_PUBLIC_API_URL: alternative public env var consumed by getBackendUrl() in API routes
+    # NEXT_PUBLIC_API_BASE_URL: used by client-side code (playground page) and baked into the bundle at build time
 gcloud run deploy codementor-frontend \
     --image="${REGISTRY}/frontend:${IMAGE_TAG}" \
     --region="${REGION}" \
     --platform=managed \
     --allow-unauthenticated \
-    --set-env-vars="NODE_ENV=production"
+    --set-env-vars="NODE_ENV=production,NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL},NEXT_PUBLIC_API_URL=${BACKEND_URL},BACKEND_API_URL=${BACKEND_URL}"
 
 FRONTEND_URL=$(gcloud run services describe codementor-frontend \
     --region="${REGION}" \
