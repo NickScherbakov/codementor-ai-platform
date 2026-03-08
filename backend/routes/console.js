@@ -17,7 +17,7 @@ class GeminiProvider {
 
       const vertexAI = new VertexAI({ project: projectId, location });
       const model = vertexAI.getGenerativeModel({
-        model: "gemini-pro",
+        model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
       });
 
       const personalityPrompt = {
@@ -53,7 +53,7 @@ class GeminiProvider {
       };
     } catch (error) {
       console.error("Gemini error:", error);
-      throw new Error("Gemini API failed");
+      throw new Error("Gemini API failed: " + error.message);
     }
   }
 }
