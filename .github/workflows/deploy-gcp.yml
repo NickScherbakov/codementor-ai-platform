@@ -173,11 +173,13 @@ jobs:
   backend:
     name: ⚙️ Backend
     runs-on: ubuntu-latest
-    needs: analyze
+    needs: [analyze, ai-engine]
     if: |
-      needs.analyze.outputs.backend-changed == 'true' ||
+      always() &&
+      (needs.ai-engine.result == 'success' || needs.ai-engine.result == 'skipped') &&
+      (needs.analyze.outputs.backend-changed == 'true' ||
       github.event.inputs.services == 'all' ||
-      contains(github.event.inputs.services, 'backend')
+      contains(github.event.inputs.services, 'backend'))
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -239,12 +241,25 @@ jobs:
           docker push "$IMAGE"
           echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
 
+      - name: 🔗 Get AI Engine URL
+        if: github.event_name != 'pull_request'
+        run: |
+          AI_ENGINE_URL=$(gcloud run services describe codementor-ai-engine \
+            --region="${{ env.REGION }}" \
+            --format='value(status.url)')
+          if [ -z "${AI_ENGINE_URL}" ]; then
+            echo "::error::Failed to retrieve AI Engine URL. Ensure codementor-ai-engine is deployed in region ${{ env.REGION }}."
+            exit 1
+          fi
+          echo "AI_ENGINE_URL=${AI_ENGINE_URL}" >> "$GITHUB_ENV"
+
       - name: 🚀 Deploy to Cloud Run
         if: github.event_name != 'pull_request'
         run: |
           gcloud run deploy codementor-backend \
             --image="${{ env.IMAGE }}" \
             --region="${{ env.REGION }}" \
+            --set-env-vars="PYTHON_AI_ENGINE_URL=${AI_ENGINE_URL}" \
             --quiet
 
       - name: 📋 Output URL
