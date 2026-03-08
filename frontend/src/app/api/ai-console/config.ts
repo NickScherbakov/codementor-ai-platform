@@ -6,14 +6,23 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Get the backend API URL from environment variables
- * Priority: NEXT_PUBLIC_API_URL > BACKEND_API_URL > localhost fallback
+ * Priority: BACKEND_API_URL > NEXT_PUBLIC_API_URL > NEXT_PUBLIC_API_BASE_URL > localhost fallback
  */
 export function getBackendUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_API_URL || 
-    process.env.BACKEND_API_URL || 
-    'http://localhost:3001'
-  );
+  const url =
+    process.env.BACKEND_API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  if (!url) {
+    console.warn(
+      '[config] No backend URL env var found (BACKEND_API_URL, NEXT_PUBLIC_API_URL, NEXT_PUBLIC_API_BASE_URL). ' +
+      'Falling back to http://localhost:3001. Set one of these env vars for production deployments.'
+    );
+    return 'http://localhost:3001';
+  }
+
+  return url;
 }
 
 /**
