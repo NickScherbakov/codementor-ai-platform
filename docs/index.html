@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeMentor AI — Intelligent Programming Learning Platform</title>
+  <meta name="description" content="Master programming with AI-powered personalized tutoring, adaptive learning paths, hard code reviews, and real-time coding assessments." />
+  <meta property="og:title" content="CodeMentor AI Platform" />
+  <meta property="og:description" content="AI-Powered Code Evolution. Stop writing legacy code." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo: #4f46e5;
+      --indigo-light: #6366f1;
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --blue: #2563eb;
+      --blue-light: #3b82f6;
+      --red: #dc2626;
+      --purple: #7c3aed;
+      --pink: #db2777;
+      --gray-900: #111827;
+      --gray-800: #1f2937;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-400: #9ca3af;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --gray-50:  #f9fafb;
+      --white: #ffffff;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--gray-900);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── NAV ──────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 64px;
+    }
+    .nav-logo {
+      font-weight: 800; font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .9rem; font-weight: 500; color: var(--gray-600); transition: color .2s; }
+    .nav-links a:hover { color: var(--indigo); }
+    .nav-cta {
+      background: var(--indigo); color: #fff;
+      padding: .5rem 1.25rem; border-radius: 8px;
+      font-weight: 600; font-size: .875rem;
+      transition: background .2s, transform .1s;
+    }
+    .nav-cta:hover { background: var(--indigo-light); transform: translateY(-1px); }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* ── HERO ─────────────────────────────── */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 6rem 1.5rem 7rem;
+      background: linear-gradient(135deg, var(--indigo-50) 0%, #fff 60%);
+    }
+    .hero::before {
+      content: ''; position: absolute;
+      top: -10rem; right: -10rem;
+      width: 40rem; height: 40rem;
+      background: radial-gradient(circle, rgba(99,102,241,.15), transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--indigo-50); color: var(--indigo);
+      border: 1px solid var(--indigo-200); border-radius: 999px;
+      padding: .3rem .9rem; font-size: .8rem; font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--indigo); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .6; transform: scale(1.3); }
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.75rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -.03em; margin-bottom: 1.25rem;
+    }
+    .hero h1 span { color: var(--indigo); }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--gray-600);
+      max-width: 500px; margin-bottom: 2rem;
+    }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 2rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 1.5rem; border-radius: 10px;
+      font-weight: 600; font-size: .9rem; cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .btn-dark { background: var(--gray-900); color: #fff; }
+    .btn-indigo { background: var(--indigo); color: #fff; }
+    .btn-purple { background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; }
+    .btn-outline { background: transparent; color: var(--indigo); border: 1.5px solid var(--indigo-200); }
+    .hero-avatars { display: flex; align-items: center; gap: .75rem; font-size: .85rem; color: var(--gray-500); }
+    .avatars { display: flex; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--indigo-100); border: 2px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: var(--indigo);
+      margin-left: -8px;
+    }
+    .avatars .avatar:first-child { margin-left: 0; }
+
+    /* ── CODE WINDOW ──────────────────────── */
+    .code-window {
+      background: var(--gray-900); border-radius: 14px;
+      overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,.35);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-titlebar {
+      background: var(--gray-800); padding: .75rem 1rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #28ca41; }
+    .code-filename {
+      margin-left: .75rem; font-size: .75rem; color: var(--gray-400);
+    }
+    .code-body { padding: 1.25rem 1.5rem; font-size: .8rem; line-height: 1.7; }
+    .token-kw { color: #c792ea; }
+    .token-fn { color: #82aaff; }
+    .token-str { color: #c3e88d; }
+    .token-cm { color: #546e7a; font-style: italic; }
+    .token-num { color: #f78c6c; }
+    .token-const { color: #ffcb6b; }
+
+    /* AI feedback bubble */
+    .ai-bubble {
+      margin-top: .75rem; background: rgba(99,102,241,.15);
+      border-left: 3px solid var(--indigo-light);
+      padding: .75rem 1rem; border-radius: 0 8px 8px 0;
+      font-size: .75rem; color: #c7d2fe; line-height: 1.5;
+    }
+    .ai-bubble strong { color: #a5b4fc; }
+
+    /* ── SECTION WRAPPER ──────────────────── */
+    section { padding: 5rem 1.5rem; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      font-size: .8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--blue-light); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800; letter-spacing: -.02em; margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--gray-600); font-size: 1.05rem; max-width: 600px;
+    }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
+
+    /* ── TWO-MODE CARDS ───────────────────── */
+    .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 700px) { .modes-grid { grid-template-columns: 1fr; } }
+    .mode-card {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: 18px; padding: 2rem;
+      position: relative; overflow: hidden;
+      transition: box-shadow .25s, transform .25s;
+    }
+    .mode-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.1); }
+    .mode-card::before {
+      content: ''; position: absolute; inset: 0;
+      border-radius: 18px; opacity: 0; transition: opacity .3s;
+      pointer-events: none;
+    }
+    .mode-card.blue::before  { background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(6,182,212,.06)); }
+    .mode-card.red::before   { background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(234,88,12,.06)); }
+    .mode-card:hover::before { opacity: 1; }
+    .mode-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem; font-size: 1.5rem;
+    }
+    .mode-icon.blue { background: #dbeafe; }
+    .mode-icon.red  { background: #fee2e2; }
+    .mode-card h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: .75rem; }
+    .mode-card p { color: var(--gray-600); margin-bottom: 1.5rem; font-size: .95rem; }
+    .mode-features { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.75rem; }
+    .mode-features li { display: flex; align-items: center; gap: .6rem; font-size: .9rem; color: var(--gray-700); }
+    .check { font-size: 1rem; }
+    .check.blue { color: var(--blue-light); }
+    .check.red  { color: var(--red); }
+    .mode-link {
+      font-weight: 600; font-size: .9rem;
+      display: inline-flex; align-items: center; gap: .4rem;
+      transition: gap .2s;
+    }
+    .mode-link:hover { gap: .7rem; }
+    .mode-link.blue { color: var(--blue); }
+    .mode-link.red  { color: var(--red); }
+
+    /* ── FEATURES GRID ────────────────────── */
+    .features-bg { background: var(--gray-50); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: 14px; padding: 1.5rem;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .feature-icon { font-size: 1.75rem; margin-bottom: .75rem; }
+    .feature-card h4 { font-weight: 700; margin-bottom: .4rem; }
+    .feature-card p { font-size: .9rem; color: var(--gray-600); }
+
+    /* ── ARCH ─────────────────────────────── */
+    .arch-diagram {
+      background: var(--gray-900); color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 14px; padding: 2rem;
+      font-size: .8rem; line-height: 1.8;
+      overflow-x: auto;
+    }
+    .arch-diagram .layer { margin-bottom: 1.5rem; }
+    .arch-diagram .label { color: #a5b4fc; font-weight: 600; }
+    .arch-diagram .sublabel { color: #94a3b8; padding-left: 2rem; }
+    .arch-diagram .arrow { color: #64748b; padding-left: 1rem; }
+    .arch-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 700px) { .arch-cards { grid-template-columns: 1fr; } }
+    .arch-card {
+      background: var(--indigo-50); border: 1px solid var(--indigo-200);
+      border-radius: 12px; padding: 1.25rem;
+    }
+    .arch-card h4 { font-weight: 700; margin-bottom: .4rem; font-size: .95rem; }
+    .arch-card p { font-size: .8rem; color: var(--gray-600); }
+    .arch-badge {
+      display: inline-block; background: var(--indigo-100); color: var(--indigo);
+      border-radius: 6px; padding: .2rem .5rem; font-size: .72rem; font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    /* ── STATS ────────────────────────────── */
+    .stats-bg { background: var(--indigo); }
+    .stats-title { color: #fff; }
+    .stats-sub { color: #c7d2fe; }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+      margin-top: 3rem;
+    }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-cell {
+      background: rgba(255,255,255,.12);
+      border-radius: 14px; padding: 2rem 1rem; text-align: center;
+    }
+    .stat-value { font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1; }
+    .stat-label { font-size: .85rem; color: #c7d2fe; margin-top: .5rem; }
+
+    /* ── GETTING STARTED ──────────────────── */
+    .steps-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .step {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+    }
+    .step-num {
+      flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+      background: var(--indigo); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .85rem;
+    }
+    .step-content h4 { font-weight: 700; margin-bottom: .25rem; }
+    .step-content p { font-size: .9rem; color: var(--gray-600); margin-bottom: .6rem; }
+    .code-block {
+      background: var(--gray-900); color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem; padding: .75rem 1rem; border-radius: 8px;
+      overflow-x: auto; line-height: 1.7;
+    }
+    .code-block .cm { color: #546e7a; }
+
+    /* ── CTA ──────────────────────────────── */
+    .cta-section { text-align: center; padding: 6rem 1.5rem; }
+    .cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: 1rem; }
+    .cta-section p { font-size: 1.1rem; color: var(--gray-600); margin-bottom: 2.5rem; }
+    .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    /* ── FOOTER ───────────────────────────── */
+    footer {
+      background: var(--gray-900); color: var(--gray-400);
+      padding: 3rem 1.5rem; text-align: center;
+    }
+    .footer-logo {
+      font-weight: 800; font-size: 1.1rem; color: #fff;
+      margin-bottom: .5rem;
+    }
+    .footer-sub { font-size: .85rem; margin-bottom: 1.5rem; }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; font-size: .85rem; }
+    .footer-links a { color: var(--gray-400); transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-copy { margin-top: 1.5rem; font-size: .8rem; color: var(--gray-600); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--indigo)">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      CodeMentor AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#modes">Modes</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#getting-started">Get Started</a></li>
+    </ul>
+    <a href="https://github.com/NickScherbakov/codementor-ai-platform" target="_blank" rel="noreferrer" class="nav-cta">
+      View on GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        AI-Powered Code Evolution
+      </div>
+      <h1>Stop Writing<br /><span>Legacy Code</span></h1>
+      <p class="hero-sub">
+        Most coding platforms just check syntax. We check your <strong>engineering</strong>.
+        Get brutal, senior-level feedback or gentle, adaptive mentoring — you choose.
+      </p>
+      <div class="hero-buttons">
+        <a href="https://github.com/NickScherbakov/codementor-ai-platform" target="_blank" rel="noreferrer" class="btn btn-dark">
+          🔥 View Source
+        </a>
+        <a href="#getting-started" class="btn btn-indigo">
+          🧠 Get Started
+        </a>
+        <a href="#modes" class="btn btn-purple">
+          ⚡ See Features
+        </a>
+      </div>
+      <div class="hero-avatars">
+        <div class="avatars">
+          <div class="avatar">A</div>
+          <div class="avatar">B</div>
+          <div class="avatar">C</div>
+          <div class="avatar">D</div>
+        </div>
+        <span>Joined by 500+ developers this week</span>
+      </div>
+    </div>
+    <div>
+      <div class="code-window">
+        <div class="code-titlebar">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="code-filename">review.py</span>
+        </div>
+        <div class="code-body">
+<pre><span class="token-kw">def</span> <span class="token-fn">get_user</span>(user_id):
+    <span class="token-cm"># TODO: add validation</span>
+    query = <span class="token-str">f"SELECT * FROM users WHERE id={user_id}"</span>
+    <span class="token-kw">return</span> db.execute(query)</pre>
+          <div class="ai-bubble">
+            <strong>🤖 AI Senior Review:</strong><br />
+            ⚠️ <strong>Critical — SQL Injection.</strong> Never interpolate user input
+            directly into queries. Use parameterised statements:
+            <code style="background:rgba(0,0,0,.3);padding:.1em .4em;border-radius:4px">
+              db.execute("… WHERE id=?", (user_id,))
+            </code>.<br />
+            Also missing type hint &amp; docstring.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── TWO MODES ──────────────────────────── -->
+<section id="modes">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Two Modes</div>
+      <h2 class="section-title">Two Ways to Grow</h2>
+      <p class="section-sub">Whether you need a hug or a kick in the pants — we've got you.</p>
+    </div>
+    <div class="modes-grid">
+      <!-- Mentorship -->
+      <div class="mode-card blue">
+        <div class="mode-icon blue">🧠</div>
+        <h3>AI Mentorship</h3>
+        <p>A patient, adaptive tutor that guides you through concepts at your own pace. Perfect for learning new languages or frameworks from scratch.</p>
+        <ul class="mode-features">
+          <li><span class="check blue">✓</span> Personalised Learning Paths</li>
+          <li><span class="check blue">✓</span> Interactive Quizzes</li>
+          <li><span class="check blue">✓</span> Progress Tracking</li>
+          <li><span class="check blue">✓</span> Four Tutor Personalities</li>
+        </ul>
+        <a href="#getting-started" class="mode-link blue">Start Learning →</a>
+      </div>
+      <!-- Review -->
+      <div class="mode-card red">
+        <div class="mode-icon red">⚠️</div>
+        <h3>Hard Code Review</h3>
+        <p>Simulates a strict Senior Engineer review. It won't be nice. It will find security holes, performance issues, and bad patterns you didn't know you had.</p>
+        <ul class="mode-features">
+          <li><span class="check red">✓</span> Security Vulnerability Scan</li>
+          <li><span class="check red">✓</span> Performance Bottlenecks</li>
+          <li><span class="check red">✓</span> Idiomatic Refactoring</li>
+          <li><span class="check red">✓</span> Rigorous Assessment Tests</li>
+        </ul>
+        <a href="#getting-started" class="mode-link red">Get Roasted →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ────────────────────────────── -->
+<section id="features" class="features-bg">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Intelligent Learning</div>
+      <h2 class="section-title">Revolutionary Programming Education</h2>
+      <p class="section-sub">Experience the future of coding education with our AI-powered platform that adapts to your learning style.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h4>Multi-Provider LLMs</h4>
+        <p>Switch between Local Models (TinyLlama / CodeT5), Google Gemini via Vertex AI, or any hosted model via OpenRouter.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h4>AI Console (Playground)</h4>
+        <p>Interactive coding assistant with real-time connection health checker that polls the backend every 30 seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎭</div>
+        <h4>Tutor Personalities</h4>
+        <p>Four built-in personas: Encouraging 😊, Analytical 🧠, Creative 🎨, and Practical ⚙️ — pick your style.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h4>Monaco Code Editor</h4>
+        <p>VS-Code-grade editor with syntax highlighting, IntelliSense-like auto-completion, and in-browser code execution.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h4>Developer Assessment</h4>
+        <p>Timed coding tests (Junior / Middle / Senior), mock technical interviews, and comprehensive scoring reports.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h4>Self-Evolution Engine</h4>
+        <p>The platform analyses usage patterns and auto-generates improved variants — a self-improving AI system.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h4>Real-Time Updates</h4>
+        <p>Socket.io powered live feedback loop between frontend and backend for instant interactive experiences.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐳</div>
+        <h4>Docker Ready</h4>
+        <p>Fully containerised — run the entire 3-tier stack locally with a single <code style="background:var(--gray-100);padding:.1em .3em;border-radius:4px">docker-compose up</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ARCHITECTURE ────────────────────────── -->
+<section id="architecture">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Architecture</div>
+      <h2 class="section-title">3-Tier AI Platform</h2>
+      <p class="section-sub">Frontend → Backend → AI Engine, each independently deployable and scalable.</p>
+    </div>
+    <div class="arch-diagram">
+      <div class="layer">
+        <div class="label">┌─────────────────────────────────────────────────────────────┐</div>
+        <div class="sublabel">Frontend  (Next.js · React · Tailwind CSS · Framer Motion)</div>
+        <div class="sublabel">Real-time health checker · AI Console (Playground) · Monaco Editor</div>
+        <div class="label">└────────────────────────┬────────────────────────────────────┘</div>
+        <div class="arrow">                         │  HTTP / REST + Socket.io</div>
+        <div class="label">┌────────────────────────▼────────────────────────────────────┐</div>
+        <div class="sublabel">Backend  (Node.js · Express · Socket.io · JWT)</div>
+        <div class="sublabel">API routing · LLM provider switching · Gemini / Vertex AI</div>
+        <div class="label">└────────────────────────┬────────────────────────────────────┘</div>
+        <div class="arrow">                         │  HTTP (PYTHON_AI_ENGINE_URL)</div>
+        <div class="label">┌────────────────────────▼────────────────────────────────────┐</div>
+        <div class="sublabel">AI Engine  (Python · Flask · LangChain · ChromaDB)</div>
+        <div class="sublabel">Local models (TinyLlama, CodeT5) · Vertex AI · Self-Evolution · Assessment</div>
+        <div class="label">└─────────────────────────────────────────────────────────────┘</div>
+      </div>
+    </div>
+    <div class="arch-cards">
+      <div class="arch-card">
+        <div class="arch-badge">Frontend · Port 3000</div>
+        <h4>Next.js 16 + React 19</h4>
+        <p>Tailwind CSS 3, Framer Motion 11, Monaco Editor, Socket.io client</p>
+      </div>
+      <div class="arch-card">
+        <div class="arch-badge">Backend · Port 3001</div>
+        <h4>Node.js + Express 4</h4>
+        <p>Socket.io, JWT auth, API routing, LLM provider switching</p>
+      </div>
+      <div class="arch-card">
+        <div class="arch-badge">AI Engine · Port 5000</div>
+        <h4>Python + Flask 3</h4>
+        <p>Transformers, LangChain, ChromaDB, Vertex AI, Self-Evolution, Assessment</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ───────────────────────────────── -->
+<section class="stats-bg">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2 class="section-title stats-title">Trusted by developers worldwide</h2>
+      <p class="section-sub stats-sub" style="margin: 0 auto;">Join thousands of programmers who have accelerated their learning journey</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell"><div class="stat-value">50K+</div><div class="stat-label">Active Learners</div></div>
+      <div class="stat-cell"><div class="stat-value">10K+</div><div class="stat-label">Code Challenges</div></div>
+      <div class="stat-cell"><div class="stat-value">94%</div><div class="stat-label">Success Rate</div></div>
+      <div class="stat-cell"><div class="stat-value">15+</div><div class="stat-label">Languages Supported</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GETTING STARTED ────────────────────── -->
+<section id="getting-started" class="features-bg">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Local Development</div>
+      <h2 class="section-title">Up and Running in Minutes</h2>
+      <p class="section-sub">No cloud credentials required — everything runs locally.</p>
+    </div>
+    <div class="steps-list">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Clone the repository</h4>
+          <div class="code-block">git clone https://github.com/NickScherbakov/codementor-ai-platform.git
+cd codementor-ai-platform</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Start the AI Engine (Python / Flask)</h4>
+          <div class="code-block">cd ai-engine
+pip install -r requirements.txt
+python main.py  <span class="cm"># starts on :5000</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Start the Backend (Node.js / Express)</h4>
+          <div class="code-block">cd backend
+npm install
+PYTHON_AI_ENGINE_URL=http://localhost:5000 npm start  <span class="cm"># starts on :3001</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Start the Frontend (Next.js)</h4>
+          <div class="code-block">cd frontend
+npm install
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001 npm run dev  <span class="cm"># starts on :3000</span></div>
+          <p style="margin-top:.5rem">
+            Open <strong>http://localhost:3000</strong> — the AI Console is at
+            <strong>http://localhost:3000/playground</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">🐳</div>
+        <div class="step-content">
+          <h4>Or use Docker Compose (all services at once)</h4>
+          <div class="code-block">docker-compose up -d</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ─────────────────────────────────── -->
+<section class="cta-section">
+  <div class="section-inner">
+    <h2>Ready to revolutionize your coding journey?</h2>
+    <p>Open source, self-hostable, and free to run locally. No credit card required.</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/NickScherbakov/codementor-ai-platform" target="_blank" rel="noreferrer" class="btn btn-dark">
+        ⭐ Star on GitHub
+      </a>
+      <a href="https://github.com/NickScherbakov/codementor-ai-platform/fork" target="_blank" rel="noreferrer" class="btn btn-outline">
+        🍴 Fork the Repo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────── -->
+<footer>
+  <div class="footer-logo">CodeMentor AI</div>
+  <div class="footer-sub">AI-Powered Programming Education Platform</div>
+  <div class="footer-links">
+    <a href="https://github.com/NickScherbakov/codementor-ai-platform" target="_blank" rel="noreferrer">GitHub</a>
+    <a href="https://github.com/NickScherbakov/codementor-ai-platform/blob/main/README.md" target="_blank" rel="noreferrer">Documentation</a>
+    <a href="https://github.com/NickScherbakov/codementor-ai-platform/blob/main/DEPLOYMENT_GUIDE.md" target="_blank" rel="noreferrer">Deployment Guide</a>
+    <a href="https://github.com/NickScherbakov/codementor-ai-platform/issues" target="_blank" rel="noreferrer">Issues</a>
+  </div>
+  <div class="footer-copy">© 2025 CodeMentor AI Platform. Open source under the MIT License.</div>
+</footer>
+
+</body>
+</html>
