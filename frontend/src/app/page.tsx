@@ -92,7 +92,6 @@ export default function HomePage() {
                       </div>
                     ))}
                   </div>
-                  <p>Joined by 500+ developers this week</p>
                 </div>
               </motion.div>
             </div>
