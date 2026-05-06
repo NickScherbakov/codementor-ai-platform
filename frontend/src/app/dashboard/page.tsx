@@ -99,6 +99,13 @@ export default function DashboardPage() {
       .slice(0, 3)
   }, [progress?.achievements])
 
+  const preferredLanguagesText = useMemo(() => {
+    const preferredLanguages =
+      progress?.preferences?.preferredLanguages || user?.preferences?.preferredProgrammingLanguages || []
+
+    return preferredLanguages.join(', ') || 'Choose preferences after signup'
+  }, [progress?.preferences?.preferredLanguages, user?.preferences?.preferredProgrammingLanguages])
+
   if (isLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6 py-16">
@@ -202,7 +209,7 @@ export default function DashboardPage() {
               />
               <InfoRow
                 label="Preferred languages"
-                value={(progress?.preferences?.preferredLanguages || user.preferences?.preferredProgrammingLanguages || []).join(', ') || 'Choose preferences after signup'}
+                value={preferredLanguagesText}
               />
               <InfoRow
                 label="Average score"

@@ -18,8 +18,7 @@ function createReviewLimiter({ limit = DEFAULT_LIMIT, windowMs = DEFAULT_WINDOW_
         counts.set(key, nextEntry)
         return {
           allowed: true,
-          remaining: Math.max(0, limit - nextEntry.count),
-          retryAfterSeconds: Math.ceil(windowMs / 1000)
+          remaining: Math.max(0, limit - nextEntry.count)
         }
       }
 
@@ -35,8 +34,7 @@ function createReviewLimiter({ limit = DEFAULT_LIMIT, windowMs = DEFAULT_WINDOW_
       counts.set(key, entry)
       return {
         allowed: true,
-        remaining: Math.max(0, limit - entry.count),
-        retryAfterSeconds: Math.max(1, Math.ceil((entry.resetAt - now) / 1000))
+        remaining: Math.max(0, limit - entry.count)
       }
     },
     reset() {
