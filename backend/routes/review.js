@@ -3,19 +3,41 @@ const { generateHardReview } = require('../services/reviewEngine')
 
 const ALLOWED_LANGUAGES = ['python', 'javascript', 'typescript']
 const DEFAULT_LIMIT = 3
+const DEFAULT_WINDOW_MS = 15 * 60 * 1000
 
-function createReviewLimiter({ limit = DEFAULT_LIMIT } = {}) {
+function createReviewLimiter({ limit = DEFAULT_LIMIT, windowMs = DEFAULT_WINDOW_MS } = {}) {
   const counts = new Map()
 
   return {
     check(key) {
-      const currentCount = counts.get(key) || 0
-      if (currentCount >= limit) {
-        return { allowed: false, remaining: 0 }
+      const now = Date.now()
+      const entry = counts.get(key)
+
+      if (!entry || now >= entry.resetAt) {
+        const nextEntry = { count: 1, resetAt: now + windowMs }
+        counts.set(key, nextEntry)
+        return {
+          allowed: true,
+          remaining: Math.max(0, limit - nextEntry.count),
+          retryAfterSeconds: Math.ceil(windowMs / 1000)
+        }
       }
-      const nextCount = currentCount + 1
-      counts.set(key, nextCount)
-      return { allowed: true, remaining: Math.max(0, limit - nextCount) }
+
+      if (entry.count >= limit) {
+        return {
+          allowed: false,
+          remaining: 0,
+          retryAfterSeconds: Math.max(1, Math.ceil((entry.resetAt - now) / 1000))
+        }
+      }
+
+      entry.count += 1
+      counts.set(key, entry)
+      return {
+        allowed: true,
+        remaining: Math.max(0, limit - entry.count),
+        retryAfterSeconds: Math.max(1, Math.ceil((entry.resetAt - now) / 1000))
+      }
     },
     reset() {
       counts.clear()
@@ -61,8 +83,9 @@ function createReviewRouter({ limiter = createReviewLimiter() } = {}) {
     const limitResult = limiter.check(key)
 
     if (!limitResult.allowed) {
-      return res.status(402).json({
-        message: 'Free review limit reached. Subscribe to continue.'
+      return res.status(429).json({
+        message: 'Review rate limit reached. Please wait and try again.',
+        retryAfterSeconds: limitResult.retryAfterSeconds
       })
     }
 

@@ -23,6 +23,7 @@ interface BackendReviewResponse {
 interface ReviewError {
   message: string
   code?: 'LIMIT_REACHED' | 'VALIDATION_ERROR' | 'SERVER_ERROR'
+  retryAfterSeconds?: number
 }
 
 /**
@@ -50,11 +51,13 @@ export async function submitCodeReview(
       }),
     })
 
-    // Handle limit reached (402 Payment Required)
-    if (response.status === 402) {
+    // Handle rate limiting
+    if (response.status === 429) {
       const errorData: ReviewError = await response.json()
       throw new Error(
-        errorData.message || 'Free review limit reached. Subscribe to continue.'
+        errorData.retryAfterSeconds
+          ? `${errorData.message || 'Review rate limit reached.'} Retry in about ${errorData.retryAfterSeconds} seconds.`
+          : errorData.message || 'Review rate limit reached. Please wait and try again.'
       )
     }
 

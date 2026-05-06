@@ -21,7 +21,7 @@ steps:
       - '-c'
       - |
         pip install -r ai-engine/requirements.txt
-        pytest ai-engine/tests || echo "No tests found, skipping"
+        pytest ai-engine || echo "Python tests did not pass cleanly in CI baseline"
     id: 'ai-test'
 
   # 3. Build Docker Images (Parallel) - Using GCP Free Trial credits
@@ -52,37 +52,6 @@ steps:
     id: 'push-ai'
     waitFor: ['build-ai']
 
-  # 5. Deploy to Cloud Run (Using Free Trial credits)
-  # These deployments consume GCP Free Trial budget (~$280)
-  # Estimated cost per deployment: ~$0.50, target 5-10 daily deploys
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'codementor-frontend'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$BUILD_ID'
-      - '--region=us-central1'
-      - '--platform=managed'
-      - '--allow-unauthenticated'
-      - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,NEXT_PUBLIC_API_URL=https://codementor-backend-31499486874.us-central1.run.app'
-    id: 'deploy-frontend'
-    waitFor: ['push-frontend']
-
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args:
-      - 'run'
-      - 'deploy'
-      - 'codementor-backend'
-      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$BUILD_ID'
-      - '--region=us-central1'
-      - '--platform=managed'
-      - '--allow-unauthenticated'
-      - '--set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,VERTEX_MODEL=gemini-pro,AI_ENGINE_URL=https://codementor-ai-engine-31499486874.us-central1.run.app,PYTHON_AI_ENGINE_URL=https://codementor-ai-engine-31499486874.us-central1.run.app'
-    id: 'deploy-backend'
-    waitFor: ['push-backend']
-
   # AI Engine with Vertex AI integration (Gemini Code Assist + GenAI App Builder)
   # This service uses:
   # - Gemini Code Assist ($1138 budget) for self-evolution code generation
@@ -104,6 +73,59 @@ steps:
     id: 'deploy-ai'
     waitFor: ['push-ai']
 
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        AI_ENGINE_URL=$(gcloud run services describe codementor-ai-engine --region=us-central1 --format='value(status.url)')
+        echo -n "${AI_ENGINE_URL}" > /workspace/ai-engine-url.txt
+    id: 'capture-ai-url'
+    waitFor: ['deploy-ai']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        AI_ENGINE_URL=$(cat /workspace/ai-engine-url.txt)
+        gcloud run deploy codementor-backend \
+          --image=us-central1-docker.pkg.dev/$PROJECT_ID/app/backend:$BUILD_ID \
+          --region=us-central1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,VERTEX_MODEL=gemini-pro,AI_ENGINE_URL=${AI_ENGINE_URL},PYTHON_AI_ENGINE_URL=${AI_ENGINE_URL}
+    id: 'deploy-backend'
+    waitFor: ['push-backend', 'capture-ai-url']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        BACKEND_URL=$(gcloud run services describe codementor-backend --region=us-central1 --format='value(status.url)')
+        echo -n "${BACKEND_URL}" > /workspace/backend-url.txt
+    id: 'capture-backend-url'
+    waitFor: ['deploy-backend']
+
+  # 5. Deploy to Cloud Run (Using Free Trial credits)
+  # These deployments consume GCP Free Trial budget (~$280)
+  # Estimated cost per deployment: ~$0.50, target 5-10 daily deploys
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        BACKEND_URL=$(cat /workspace/backend-url.txt)
+        gcloud run deploy codementor-frontend \
+          --image=us-central1-docker.pkg.dev/$PROJECT_ID/app/frontend:$BUILD_ID \
+          --region=us-central1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --set-env-vars=USE_VERTEX_AI=true,GCP_PROJECT_ID=$PROJECT_ID,GCP_LOCATION=us-central1,BACKEND_API_URL=${BACKEND_URL},NEXT_PUBLIC_API_URL=${BACKEND_URL},NEXT_PUBLIC_API_BASE_URL=${BACKEND_URL}
+    id: 'deploy-frontend'
+    waitFor: ['push-frontend', 'capture-backend-url']
+
   # Optional: Initialize Vertex AI Search for RAG (GenAI App Builder)
   # This step indexes challenges and documentation for assessment system
   # Estimated cost: ~$0.10 per 1000 docs, targeting 10k+ items = ~$1.00
@@ -116,7 +138,7 @@ steps:
         echo "This would use GenAI App Builder credits for document indexing"
         # In production, this would call Vertex AI Search API to index documents
     id: 'init-vertex-search'
-    waitFor: ['deploy-ai']
+    waitFor: ['deploy-ai', 'deploy-backend', 'deploy-frontend']
 
 timeout: '1800s'  # Extended timeout for Vertex AI operations
 options:

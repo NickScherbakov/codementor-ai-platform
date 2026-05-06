@@ -9,22 +9,29 @@ const mongoose = require("mongoose");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
+const {
+  getAllowedOrigins,
+  getMongoUri,
+  getNodeEnv,
+  redactConnectionString,
+} = require("./utils/runtime");
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+const allowedOrigins = getAllowedOrigins();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
   },
 });
 
 const PORT = process.env.PORT || 3001;
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/codementor-ai";
+const NODE_ENV = getNodeEnv();
+const MONGODB_URI = getMongoUri();
 
 // Middleware
 app.use(helmet());
@@ -32,7 +39,12 @@ app.use(compression());
 app.use(morgan("combined"));
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Origin not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -273,12 +285,12 @@ app.use((err, req, res, next) => {
   }
 
   res.status(500).json({
-    success: false,
-    error: "Internal Server Error",
-    message:
-      process.env.NODE_ENV === "production"
-        ? "Something went wrong!"
-        : err.message,
+      success: false,
+      error: "Internal Server Error",
+      message:
+        NODE_ENV === "production"
+          ? "Something went wrong!"
+          : err.message,
   });
 });
 
@@ -312,6 +324,7 @@ process.on("SIGINT", () => {
 
 server.listen(PORT, () => {
   console.log(`🚀 CodeMentor AI Backend Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`MongoDB: ${MONGODB_URI}`);
+  console.log(`Environment: ${NODE_ENV}`);
+  console.log(`MongoDB: ${redactConnectionString(MONGODB_URI)}`);
+  console.log(`Allowed origins: ${allowedOrigins.join(", ")}`);
 });

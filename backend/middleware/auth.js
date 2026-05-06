@@ -1,5 +1,10 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const { getJwtSecret } = require("../utils/runtime");
+
+function resolveUserIdFromToken(decoded) {
+  return decoded?.user?.id || decoded?.id || decoded?.userId || null;
+}
 
 // Authenticate JWT token
 const authenticate = async (req, res, next) => {
@@ -15,15 +20,23 @@ const authenticate = async (req, res, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
+    const userId = resolveUserIdFromToken(decoded);
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid token payload",
+      });
+    }
 
     // Find user
-    const user = await User.findById(decoded.id).select('-password');
+    const user = await User.findById(userId).select("-password");
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        error: 'User not found'
+        error: "User not found",
       });
     }
 
@@ -61,8 +74,9 @@ const optionalAuth = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findById(decoded.id).select('-password');
+      const decoded = jwt.verify(token, getJwtSecret());
+      const userId = resolveUserIdFromToken(decoded);
+      const user = userId ? await User.findById(userId).select("-password") : null;
 
       if (user) {
         req.user = user;
@@ -86,10 +100,10 @@ const isAdmin = (req, res, next) => {
     });
   }
 
-  if (!req.user.isAdmin) {
+  if (!req.user.roles?.includes("admin")) {
     return res.status(403).json({
       success: false,
-      error: 'Admin access required'
+      error: "Admin access required",
     });
   }
 
@@ -105,10 +119,10 @@ const isVerified = (req, res, next) => {
     });
   }
 
-  if (!req.user.isVerified) {
+  if (!req.user.emailVerified) {
     return res.status(403).json({
       success: false,
-      error: 'Email verification required'
+      error: "Email verification required",
     });
   }
 
@@ -119,5 +133,5 @@ module.exports = {
   authenticate,
   optionalAuth,
   isAdmin,
-  isVerified
+  isVerified,
 };

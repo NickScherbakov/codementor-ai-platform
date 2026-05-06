@@ -15,6 +15,12 @@ export function getBackendUrl(): string {
     process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (!url) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'BACKEND_API_URL, NEXT_PUBLIC_API_URL, or NEXT_PUBLIC_API_BASE_URL must be configured in production.'
+      );
+    }
+
     console.warn(
       '[config] No backend URL env var found (BACKEND_API_URL, NEXT_PUBLIC_API_URL, NEXT_PUBLIC_API_BASE_URL). ' +
       'Falling back to http://localhost:3001. Set one of these env vars for production deployments.'

@@ -6,6 +6,7 @@
 
 const express = require("express");
 const router = express.Router();
+const { getAiEngineUrl } = require("../utils/runtime");
 
 // Google Gemini Provider
 class GeminiProvider {
@@ -127,11 +128,11 @@ class LocalModelsProvider {
   async chat(message, personality, context) {
     try {
       // Call local Python AI Engine
-      // Use PYTHON_AI_ENGINE_URL env var to override default
-      // Docker: http://ai-engine:8080 (default)
-      // Local dev: Set PYTHON_AI_ENGINE_URL=http://localhost:5000
-      const pythonBackendUrl =
-        process.env.PYTHON_AI_ENGINE_URL || "http://ai-engine:8080";
+      const pythonBackendUrl = getAiEngineUrl();
+
+      if (!pythonBackendUrl) {
+        throw new Error("AI engine URL is not configured");
+      }
 
       const response = await fetch(`${pythonBackendUrl}/ai-tutor/chat`, {
         method: "POST",

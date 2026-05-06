@@ -4,7 +4,7 @@ export default function DemoLimitationsPage() {
       <div className="mx-auto max-w-4xl">
         <h1 className="text-4xl font-bold text-gray-900">Platform Status</h1>
         <p className="mt-4 text-lg text-gray-700">
-          This deployment runs the full stack: frontend, backend API, AI engine, MongoDB, and Redis. Below is the current status of features.
+          This page tracks what is live in the current environment and what still needs more production hardening.
         </p>
 
         {/* Live Features */}
@@ -19,43 +19,37 @@ export default function DemoLimitationsPage() {
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>Backend API</strong> — Node.js/Express server (port 3001) with health checks, CORS, rate limiting
+                <strong>Backend API</strong> — Node.js/Express server with health checks, auth routes, and rate-limited review APIs
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>AI Engine</strong> — Python Flask service (port 5000) with local ML models for code analysis and tutoring
+                <strong>AI Engine</strong> — Python Flask service used by the mentorship and analysis paths when configured
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>MongoDB + Redis</strong> — Database and caching layer running (ports 27017, 6379)
+                <strong>Account flows</strong> — Signup, login, token-backed dashboard access, and password reset endpoints
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>Challenge Generation</strong> — AI endpoint <code className="rounded bg-gray-100 px-2 py-1 text-sm">/challenges/generate</code> creates adaptive coding tasks
+                <strong>Hard review</strong> — Public code review remains free, with operational throttling instead of subscription prompts
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>Code Execution (WebSocket)</strong> — Real-time code running via backend WebSocket with fallback to mock
+                <strong>Dashboard data</strong> — Authenticated dashboard reads live profile and progress endpoints
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-green-600">✓</span>
               <div>
-                <strong>Judge0 Sandbox</strong> — Secure code execution environment for multiple languages
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="mt-1 text-green-600">✓</span>
-              <div>
-                <strong>Monitoring</strong> — Prometheus + Grafana for metrics and observability
+                <strong>Platform messaging</strong> — UI no longer presents signup/dashboard as static preview-only pages
               </div>
             </li>
           </ul>
@@ -73,31 +67,25 @@ export default function DemoLimitationsPage() {
             <li className="flex items-start gap-3">
               <span className="mt-1 text-orange-600">⚠</span>
               <div>
-                <strong>Authentication</strong> — Sign up/login, JWT tokens, user sessions (routes exist but not connected)
+                <strong>Production-grade code execution</strong> — Some execution flows still rely on placeholder logic instead of a dedicated sandbox service
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-orange-600">⚠</span>
               <div>
-                <strong>User Progress Persistence</strong> — Completed challenges, XP, achievements not saved to DB yet
+                <strong>Progress depth</strong> — Dashboard persistence exists, but the broader challenge lifecycle still needs deeper end-to-end wiring
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-orange-600">⚠</span>
               <div>
-                <strong>Real-time Collaboration</strong> — Pair programming, shared sessions (WebSocket handlers ready, UI not integrated)
+                <strong>Real-time collaboration</strong> — WebSocket handlers exist, but collaboration UI and operational readiness are not complete yet
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="mt-1 text-orange-600">⚠</span>
               <div>
-                <strong>AI Tutor Chat</strong> — Full conversational AI (endpoint exists, frontend integration pending)
-              </div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="mt-1 text-orange-600">⚠</span>
-              <div>
-                <strong>Learning Path Recommendations</strong> — Personalized curriculum (backend logic stubbed, needs ML training)
+                <strong>Cost routing and observability</strong> — Budget-aware AI routing and full launch dashboards still need additional hardening
               </div>
             </li>
           </ul>
@@ -112,7 +100,7 @@ export default function DemoLimitationsPage() {
             Demo Capacity
           </h3>
           <p className="mt-2 text-sm text-blue-800">
-            The current deployment is configured for <strong>~50 concurrent users</strong> due to local AI model constraints (no GPU acceleration). For production use, the AI engine should be scaled with cloud GPU instances or switched to API-based services.
+            Capacity depends on the configured backend, AI provider, and guardrails in this environment. Public access is free, but operational rate limits remain in place to protect reliability.
           </p>
         </div>
 

@@ -35,7 +35,7 @@ describe('POST /api/review', () => {
     )
   })
 
-  it('enforces the free review limit', async () => {
+  it('enforces the review rate limit', async () => {
     const limiter = createReviewLimiter({ limit: 3 })
     const app = createTestApp(limiter)
     const payload = {
@@ -57,10 +57,11 @@ describe('POST /api/review', () => {
       .set('x-user-id', 'limited-user')
       .send(payload)
 
-    expect(blockedResponse.status).toBe(402)
+    expect(blockedResponse.status).toBe(429)
     expect(blockedResponse.body).toEqual(
       expect.objectContaining({
-        message: expect.stringContaining('Subscribe')
+        message: expect.stringContaining('wait'),
+        retryAfterSeconds: expect.any(Number)
       })
     )
   })
