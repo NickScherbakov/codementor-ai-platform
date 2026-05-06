@@ -41,7 +41,7 @@ type ProgressResponse = {
       successRate: number
       averageScore: number
     }
-    achievements: Array<{ achievement?: { title?: string; icon?: string } }>
+    achievements: Array<{ achievement?: { _id?: string; title?: string; icon?: string } }>
     preferences?: {
       difficultyLevel?: string
       learningStyle?: string
@@ -216,7 +216,7 @@ export default function DashboardPage() {
             <div className="mt-6 space-y-4 text-sm text-slate-200">
               {achievementPreview.length > 0 ? (
                 achievementPreview.map((achievement, index) => (
-                  <div key={`${achievement?.title || 'achievement'}-${index}`} className="rounded-2xl border border-slate-700 bg-slate-950/60 p-4">
+                  <div key={achievement?._id || achievement?.title || achievement?.icon || `achievement-${index}`} className="rounded-2xl border border-slate-700 bg-slate-950/60 p-4">
                     <p className="font-semibold text-white">{achievement?.icon || '🏁'} {achievement?.title || 'Unlocked achievement'}</p>
                   </div>
                 ))

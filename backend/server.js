@@ -40,6 +40,7 @@ app.use(morgan("combined"));
 app.use(
   cors({
     origin(origin, callback) {
+      // Allow requests without an Origin header for health checks and trusted server-to-server traffic.
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }

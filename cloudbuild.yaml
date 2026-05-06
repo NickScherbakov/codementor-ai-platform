@@ -21,7 +21,7 @@ steps:
       - '-c'
       - |
         pip install -r ai-engine/requirements.txt
-        pytest ai-engine || echo "Python tests did not pass cleanly in CI baseline"
+        pytest ai-engine
     id: 'ai-test'
 
   # 3. Build Docker Images (Parallel) - Using GCP Free Trial credits

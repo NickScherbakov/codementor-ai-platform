@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const rateLimit = require("express-rate-limit");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
 const Progress = require("../models/Progress");
@@ -8,6 +9,18 @@ const { authenticate } = require("../middleware/auth");
 const { getJwtSecret, getPublicAppUrl } = require("../utils/runtime");
 
 const router = express.Router();
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many authentication requests. Please wait and try again.",
+  },
+});
+
+router.use(authLimiter);
 
 function buildTokenPayload(user) {
   return {
@@ -50,7 +63,11 @@ router.post("/register", [
   body("password").isLength({ min: 6 }),
   body("firstName").trim().isLength({ min: 1 }),
   body("lastName").trim().isLength({ min: 1 }),
-  body("username").trim().isLength({ min: 3 }).matches(/^[a-zA-Z0-9_]+$/)
+  body("username")
+    .trim()
+    .isLength({ min: 3 })
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage("Username can only contain letters, numbers, and underscores")
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

@@ -25,9 +25,15 @@ function requireEnv(name, { developmentFallback } = {}) {
 }
 
 function getJwtSecret() {
-  return requireEnv("JWT_SECRET", {
+  const secret = requireEnv("JWT_SECRET", {
     developmentFallback: "dev-jwt-secret-change-me",
   });
+
+  if (secret === "dev-jwt-secret-change-me") {
+    console.warn("[runtime] Using the development JWT secret fallback. Set JWT_SECRET explicitly before sharing this environment.");
+  }
+
+  return secret;
 }
 
 function getMongoUri() {
