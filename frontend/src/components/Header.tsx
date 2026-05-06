@@ -4,11 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Code, Menu, X, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { clearAuthToken, getAuthToken } from '@/lib/backend'
 
 export default function Header() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   const isActive = (href: string) => pathname === href
   const showLandingAnchors = pathname === '/' || pathname === '/page-new'
@@ -23,7 +25,12 @@ export default function Header() {
   const appLinks = [
     { href: '/playground', label: 'AI Console', icon: Zap },
     { href: '/review', label: 'Code Review', icon: Code },
+    { href: '/dashboard', label: 'Dashboard', icon: Zap },
   ]
+
+  useEffect(() => {
+    setIsAuthenticated(Boolean(getAuthToken()))
+  }, [pathname])
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -63,6 +70,29 @@ export default function Header() {
                 {label}
               </Link>
             ))}
+
+            {isAuthenticated ? (
+              <button
+                onClick={() => {
+                  clearAuthToken()
+                  setIsAuthenticated(false)
+                  setIsOpen(false)
+                  window.location.href = '/login'
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+              >
+                Log out
+              </button>
+            ) : (
+              <>
+                <Link href="/login" className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all">
+                  Log in
+                </Link>
+                <Link href="/signup" className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 transition-all">
+                  Sign up
+                </Link>
+              </>
+            )}
           </nav>
 
           <button
@@ -114,6 +144,37 @@ export default function Header() {
                   {label}
                 </Link>
               ))}
+
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    clearAuthToken()
+                    setIsAuthenticated(false)
+                    setIsOpen(false)
+                    window.location.href = '/login'
+                  }}
+                  className="block w-full px-4 py-2 rounded-lg text-left text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                >
+                  Log out
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="block px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setIsOpen(false)}
+                    className="block px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white transition-all"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </nav>
           </motion.div>
         )}

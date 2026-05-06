@@ -7,8 +7,8 @@ export default function DemoPage() {
         <div>
           <h1 className="text-4xl font-bold text-gray-900">Interactive demo tour</h1>
           <p className="mt-3 max-w-3xl text-gray-700">
-            Explore how the platform feels. Core flows are mocked here, but the live stack (frontend + backend + local AI)
-            is already running on the server instance and can handle ~50 concurrent users.
+            Explore the product surface and current launch posture. This page focuses on honest status and guided entry
+            points instead of pretending every flow is production-complete.
           </p>
         </div>
 
@@ -16,20 +16,20 @@ export default function DemoPage() {
           <div className="rounded-2xl border border-gray-200 bg-slate-50 p-6 shadow-sm">
             <p className="text-sm font-semibold text-gray-500">What you can try right now</p>
             <ul className="mt-3 space-y-2 text-sm text-gray-700">
-              <li>• Play with the live coding challenge on the home page</li>
-              <li>• Toggle hints and see XP deductions (mocked)</li>
-              <li>• View execution results flow (real-time AI feedback)</li>
-              <li>• Navigate Dashboard/Playground/Signup guided previews</li>
+              <li>• Use the playground and hard review entry points</li>
+              <li>• Create an account and open the live dashboard flow</li>
+              <li>• Review the current production gaps before launch</li>
+              <li>• Validate which features are live in this environment</li>
             </ul>
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold text-gray-500">What’s available when fully connected</p>
+            <p className="text-sm font-semibold text-gray-500">What still needs hardening</p>
             <ul className="mt-3 space-y-2 text-sm text-gray-700">
-              <li>• Auth, persistence, and XP/achievements in MongoDB/Redis</li>
-              <li>• AI tutor chat and code analysis via local AI engine</li>
-              <li>• WebSocket collaboration and live execution sandbox</li>
-              <li>• Adaptive challenge generation and progress analytics</li>
+              <li>• Sandbox code execution for challenge submissions</li>
+              <li>• Budget-aware AI routing and degradation policies</li>
+              <li>• Collaboration UX and broader persistence coverage</li>
+              <li>• Production observability and launch automation</li>
             </ul>
           </div>
         </div>

@@ -62,11 +62,11 @@ export function HardCodeReviewApp() {
             <p className="text-[#E5E7EB] font-mono text-sm">{error}</p>
           </div>
 
-          {error?.includes('limit') && (
+          {error?.toLowerCase().includes('limit') && (
             <div className="bg-[#1E293B] border border-[#F59E0B] rounded p-4 mb-6">
-              <p className="text-[#FCD34D] font-mono text-sm font-bold mb-2">🔒 Free Tier Limit Reached</p>
+              <p className="text-[#FCD34D] font-mono text-sm font-bold mb-2">⏳ Review rate limit reached</p>
               <p className="text-[#D1D5DB] text-sm">
-                You've used your 3 free reviews. Subscribe to continue getting hard, honest feedback.
+                Free access is still available. Please wait for the rate-limit window to reset and try again.
               </p>
             </div>
           )}

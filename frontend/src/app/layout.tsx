@@ -1,10 +1,7 @@
 import Header from '@/components/Header'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'CodeMentor AI - Intelligent Programming Learning Platform',
@@ -22,12 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className="bg-white text-slate-900 antialiased">
         <Header />
         {/* Status banner */}
-          <div className="w-full border-b border-green-200 bg-green-50 px-4 py-2 text-sm text-green-900">
+          <div className="w-full border-b border-blue-200 bg-blue-50 px-4 py-2 text-sm text-blue-900">
             <div className="mx-auto flex max-w-7xl flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-              <p>✅ Full stack online: Backend + AI engine + MongoDB connected (~50 user capacity).</p>
+              <p>Free public alpha: playground, review, signup, login, and dashboard use live APIs when this environment is configured.</p>
               <div className="flex gap-3">
                 <a
                   className="underline hover:no-underline"
