@@ -79,6 +79,7 @@ steps:
       - '-c'
       - |
         AI_ENGINE_URL=$(gcloud run services describe codementor-ai-engine --region=us-central1 --format='value(status.url)')
+        test -n "${AI_ENGINE_URL}"
         echo -n "${AI_ENGINE_URL}" > /workspace/ai-engine-url.txt
     id: 'capture-ai-url'
     waitFor: ['deploy-ai']
@@ -104,6 +105,7 @@ steps:
       - '-c'
       - |
         BACKEND_URL=$(gcloud run services describe codementor-backend --region=us-central1 --format='value(status.url)')
+        test -n "${BACKEND_URL}"
         echo -n "${BACKEND_URL}" > /workspace/backend-url.txt
     id: 'capture-backend-url'
     waitFor: ['deploy-backend']

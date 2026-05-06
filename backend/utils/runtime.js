@@ -6,6 +6,8 @@ function isProduction() {
   return getNodeEnv() === "production";
 }
 
+let hasWarnedAboutDevelopmentJwtSecret = false;
+
 function getEnv(name) {
   const value = process.env[name];
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
@@ -30,6 +32,11 @@ function getJwtSecret() {
   });
 
   if (secret === "dev-jwt-secret-change-me") {
+    if (hasWarnedAboutDevelopmentJwtSecret) {
+      return secret;
+    }
+
+    hasWarnedAboutDevelopmentJwtSecret = true;
     console.warn("[runtime] Using the development JWT secret fallback. Set JWT_SECRET explicitly before sharing this environment.");
   }
 

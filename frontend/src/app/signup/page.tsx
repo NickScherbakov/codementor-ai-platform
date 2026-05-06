@@ -109,6 +109,7 @@ export default function SignupPage() {
                 <input
                   required
                   minLength={3}
+                  maxLength={20}
                   value={form.username}
                   onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))}
                   className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
