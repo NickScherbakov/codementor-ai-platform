@@ -173,3 +173,4 @@ open "https://console.cloud.google.com/run?project=${GCP_PROJECT_ID}"
 - [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) — detailed deployment notes
 - [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) — implementation details
 - [SECURITY_SUMMARY.md](SECURITY_SUMMARY.md) — security review
+- [SERVICE_MAP_AND_LOCAL_RUN.md](SERVICE_MAP_AND_LOCAL_RUN.md) — service map and local run checklist
