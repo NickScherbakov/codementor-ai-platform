@@ -45,7 +45,7 @@
 ### Prerequisites
 
 - [ ] Node.js 20 installed
-- [ ] Python 3.9+ installed
+- [ ] Python 3.11+ installed
 - [ ] Docker + Docker Compose installed (if using compose)
 - [ ] MongoDB running
 - [ ] Redis running (optional but recommended for AI engine)
@@ -111,4 +111,3 @@ Open `http://localhost:3000`.
 chmod +x scripts/dev.sh
 ./scripts/dev.sh
 ```
-
