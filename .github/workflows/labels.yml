@@ -3,6 +3,9 @@ name: 🏷️ Sync repository labels
 on:
   workflow_dispatch:
 
+permissions:
+  issues: write
+
 jobs:
   sync-labels:
     runs-on: ubuntu-latest
