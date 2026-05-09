@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support and security policy
+    url: https://github.com/NickScherbakov/codementor-ai-platform/blob/main/SUPPORT.md
+    about: Read support channels and security reporting rules
+  - name: Project roadmap
+    url: https://github.com/NickScherbakov/codementor-ai-platform/blob/main/ROADMAP.md
+    about: See current priorities and milestones

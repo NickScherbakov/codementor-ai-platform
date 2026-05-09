@@ -198,7 +198,6 @@ jobs:
       - name: 🧪 Run Tests
         working-directory: backend
         run: npm test --if-present
-        continue-on-error: true
 
       - name: ✅ Validate GCP Credentials
         if: github.event_name != 'pull_request'
@@ -305,8 +304,7 @@ jobs:
         working-directory: ai-engine
         run: |
           pip install pytest pytest-cov
-          pytest --cov=. --cov-report=xml || echo "Tests completed"
-        continue-on-error: true
+          pytest --cov=. --cov-report=xml
 
       - name: ✅ Validate GCP Credentials
         if: github.event_name != 'pull_request'
