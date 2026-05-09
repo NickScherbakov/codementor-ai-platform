@@ -1,0 +1,30 @@
+name: 📦 Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (example: v1.0.0)'
+        required: true
+        type: string
+      notes_file:
+        description: 'Markdown file with release notes (example: docs/releases/v1.0.0.md)'
+        required: true
+        default: 'docs/releases/v1.0.0.md'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          body_path: ${{ github.event.inputs.notes_file }}
+          draft: false
+          prerelease: false

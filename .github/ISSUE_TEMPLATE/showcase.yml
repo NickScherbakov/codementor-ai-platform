@@ -1,0 +1,23 @@
+name: Showcase / success story
+description: Share how you used CodeMentor AI
+labels: [showcase]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What did you build or improve?
+    validations:
+      required: true
+  - type: textarea
+    id: before_after
+    attributes:
+      label: Before / After
+      description: What changed after using the platform?
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: Links / screenshots
+      description: Optional links, PRs, screenshots, or notes

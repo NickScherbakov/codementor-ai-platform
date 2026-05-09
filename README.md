@@ -1,176 +1,128 @@
 # CodeMentor AI Platform
 
-A modern, **3-tier AI-powered coding assistant** for code reviews, concept explanations, and debugging. The platform connects a Next.js frontend to a Node.js backend and a Python-based AI engine, supporting multiple LLM providers and selectable tutor personalities.
+[![GitHub stars](https://img.shields.io/github/stars/NickScherbakov/codementor-ai-platform?style=for-the-badge)](https://github.com/NickScherbakov/codementor-ai-platform/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/NickScherbakov/codementor-ai-platform?style=for-the-badge)](https://github.com/NickScherbakov/codementor-ai-platform/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/NickScherbakov/codementor-ai-platform?style=for-the-badge)](https://github.com/NickScherbakov/codementor-ai-platform/issues)
+[![CI](https://img.shields.io/github/actions/workflow/status/NickScherbakov/codementor-ai-platform/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/NickScherbakov/codementor-ai-platform/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/NickScherbakov/codementor-ai-platform?style=for-the-badge)](LICENSE)
 
----
+A 3-tier open-source AI coding platform: **Next.js frontend + Node.js backend + Python AI engine**.
+
+> If this project helps you, please **star the repo** ⭐ — it directly helps us reach the first **1,000 stars** milestone.
+
+## Why star this project
+
+- End-to-end architecture you can run locally or deploy to GCP.
+- AI mentorship + hard code review modes in one product.
+- Multi-provider model routing (local models, Gemini/Vertex AI, OpenRouter).
+- Open roadmap, contribution flow, and weekly shipping cadence.
+
+## 1-minute quick start (Docker)
+
+```bash
+git clone https://github.com/NickScherbakov/codementor-ai-platform.git
+cd codementor-ai-platform
+docker compose up --build
+```
+
+Open:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
+- AI Engine: http://localhost:5000
+
+## Local development (manual)
+
+### Prerequisites
+- Node.js >= 18
+- Python >= 3.10
+
+### Fastest local run
+```bash
+./scripts/dev.sh
+```
+
+### Manual run
+```bash
+# 1) AI Engine
+cd ai-engine
+pip install -r requirements.txt
+python main.py
+
+# 2) Backend
+cd ../backend
+npm install
+npm start
+
+# 3) Frontend
+cd ../frontend
+npm install --legacy-peer-deps
+npm run dev
+```
+
+## Live demo
+
+- GitHub Pages landing: https://nickscherbakov.github.io/codementor-ai-platform/
+- Playground route (local): http://localhost:3000/playground
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Frontend  (Next.js · React · Tailwind CSS · Framer Motion) │
-│  Real-time connection health checker · AI Console (Playground)│
-└───────────────────────┬─────────────────────────────────────┘
-                        │  HTTP / REST
-┌───────────────────────▼─────────────────────────────────────┐
-│  Backend  (Node.js · Express)                               │
-│  API routing · LLM provider switching                       │
-│  Gemini / Vertex AI integration · OpenRouter support        │
-└───────────────────────┬─────────────────────────────────────┘
-                        │  HTTP (PYTHON_AI_ENGINE_URL)
-┌───────────────────────▼─────────────────────────────────────┐
-│  AI Engine  (Python · Flask)                                │
-│  Local models (TinyLlama, CodeT5) · Vertex AI               │
-│  LangChain · ChromaDB · Selectable tutor personalities      │
-└─────────────────────────────────────────────────────────────┘
+```text
+Frontend (Next.js) -> Backend (Express) -> AI Engine (Flask)
 ```
 
-### Services at a glance
+## Project highlights
 
-| Service | Stack | Default port |
-|---------|-------|-------------|
-| **Frontend** | Next.js 16, React 19, Tailwind CSS 3, Framer Motion 11, Monaco Editor | 3000 |
-| **Backend** | Node.js, Express 4, Socket.io, JWT auth | 3001 |
-| **AI Engine** | Python, Flask 3, Transformers, LangChain, ChromaDB, Vertex AI | 5000 |
+- AI Console with model/provider selection
+- Hard code review mode for stricter feedback
+- Learning dashboard and assessment flows
+- Docker and Cloud Run deployment paths
 
----
+## FAQ
 
-## Key Features
+**Is this production-ready?**
+- It is actively developed, with CI and deployment workflows, and a public roadmap.
 
-- **AI Console (Playground)** — interactive coding assistant with a real-time connection health checker that polls the backend every 30 seconds.
-- **Multi-provider LLM support** — switch between:
-  - 🖥️ **Local Models** — TinyLlama-1.1B-Chat and CodeT5-Small (zero cloud cost).
-  - 🌐 **OpenRouter** — route to any hosted model (e.g. `openai/gpt-4-turbo`).
-  - ☁️ **Google Gemini via Vertex AI** — leverages GCP credits (`gemini-pro`, `code-bison`).
-- **Selectable tutor personalities** — four built-in personas: Encouraging 😊, Analytical 🧠, Creative 🎨, and Practical ⚙️.
-- **Monaco-powered code editor** — syntax highlighting and editing in the browser.
-- **Real-time updates** — Socket.io for live feedback between frontend and backend.
+**Do I need paid APIs?**
+- No. Local model options are supported.
 
----
+**Can I self-host?**
+- Yes. Docker Compose and GCP deployment guides are included.
 
-## Local Development
+## Road to 1,000 stars
 
-### Prerequisites
+We track this publicly in [`ROADMAP.md`](ROADMAP.md), weekly ship logs, and releases.
 
-- **Node.js** ≥ 18
-- **Python** ≥ 3.10
-- (Optional) A GCP project with Vertex AI enabled, if you want cloud LLM support.
+Milestones:
+- 31 May 2026: 200★
+- 15 Jun 2026: 550★
+- 25 Jun 2026: 800★
+- 01 Jul 2026: 1000★
 
----
+## Contributing and community
 
-### 1 · AI Engine (Python / Flask)
+- [Contributing guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Support](SUPPORT.md)
+- [Security policy](SECURITY.md)
+- [Roadmap](ROADMAP.md)
 
-```bash
-cd ai-engine
-pip install -r requirements.txt
+If GitHub Discussions are enabled in repository settings, use Discussions for Q&A and ideas.
 
-# Optional: point at your GCP project for Vertex AI
-export GCP_PROJECT_ID=your-project-id
-export GCP_LOCATION=us-central1        # defaults to us-central1
+## Releases and showcases
 
-python main.py                         # starts on port 5000
-```
-
----
-
-### 2 · Backend (Node.js / Express)
-
-```bash
-cd backend
-npm install
-
-# Required environment variables
-export PORT=3001
-export PYTHON_AI_ENGINE_URL=http://localhost:5000   # URL of the AI Engine above
-export NODE_ENV=development
-
-# Optional — needed only if you use cloud LLM providers
-export USE_VERTEX_AI=false             # set to true to enable Gemini/Vertex AI
-export GCP_PROJECT_ID=your-project-id
-export GCP_LOCATION=us-central1
-
-npm start                              # or: npm run dev
-```
-
----
-
-### 3 · Frontend (Next.js)
-
-```bash
-cd frontend
-npm install
-
-# Point the frontend at your local backend
-export NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
-
-npm run dev                            # starts on port 3000
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.  
-The **AI Console** is available at [http://localhost:3000/playground](http://localhost:3000/playground).
-
----
-
-## GCP Deployment Guide
-
-All three services are deployed to **Google Cloud Run** using a single, self-contained script that resolves inter-service URL dependencies automatically.
-
-### How it works
-
-The script at `scripts/deploy-to-gcp.sh`:
-
-1. Validates prerequisites (`gcloud`, `docker`, `git`).
-2. Resets the local repository to the latest `main` branch.
-3. Configures the GCP project and authenticates Docker with Artifact Registry.
-4. Builds and pushes Docker images for all three services.
-5. Deploys **AI Engine** → captures its Cloud Run URL.
-6. Deploys **Backend** with `PYTHON_AI_ENGINE_URL` wired to the AI Engine URL → captures its URL.
-7. Builds the **Frontend** image with `NEXT_PUBLIC_API_BASE_URL` baked in at build time → deploys it.
-
-### Steps to deploy
-
-```bash
-# 1. Authenticate with GCP
-gcloud auth login
-
-# 2. Set your project ID
-export GCP_PROJECT_ID=your-project-id
-
-# 3. (Optional) Override the default region
-export GCP_REGION=us-central1
-
-# 4. Make the script executable and run it
-chmod +x scripts/deploy-to-gcp.sh
-./scripts/deploy-to-gcp.sh
-```
-
-After a successful run the script prints the public URLs for all three services:
-
-```
-Service URLs:
-  AI Engine:  https://codementor-ai-engine-xxxx.run.app
-  Backend:    https://codementor-backend-xxxx.run.app
-  Frontend:   https://codementor-frontend-xxxx.run.app
-```
-
-### Useful post-deployment commands
-
-```bash
-# List deployed services
-gcloud run services list --region=us-central1
-
-# Tail logs for the backend
-gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=codementor-backend" --limit 50
-
-# Open Cloud Run console
-open "https://console.cloud.google.com/run?project=${GCP_PROJECT_ID}"
-```
-
----
+- [v1.0.0 release draft](docs/releases/v1.0.0.md)
+- [Showcase #1 — Hard review before/after](docs/showcases/01-hard-review-before-after.md)
+- [Showcase #2 — Learning path progression](docs/showcases/02-learning-path-progression.md)
+- [Showcase #3 — AI Console workflow](docs/showcases/03-ai-console-workflow.md)
+- [Weekly ship log template](docs/ship-log/TEMPLATE.md)
 
 ## Documentation
 
-- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) — detailed deployment notes
-- [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) — implementation details
-- [SECURITY_SUMMARY.md](SECURITY_SUMMARY.md) — security review
-- [SERVICE_MAP_AND_LOCAL_RUN.md](SERVICE_MAP_AND_LOCAL_RUN.md) — service map and local run checklist
+- [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
+- [SECURITY_SUMMARY.md](SECURITY_SUMMARY.md)
+- [SERVICE_MAP_AND_LOCAL_RUN.md](SERVICE_MAP_AND_LOCAL_RUN.md)
+
+---
+
+Built in public. Star the repo to support development ⭐

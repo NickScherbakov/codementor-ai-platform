@@ -71,7 +71,6 @@ jobs:
       - name: 📋 Terraform Plan
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -out=tfplan -no-color
-        continue-on-error: true
 
       - name: 💬 Comment Plan on PR
         if: github.event_name == 'pull_request'
